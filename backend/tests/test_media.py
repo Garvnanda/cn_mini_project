@@ -109,3 +109,21 @@ def test_low_margin_warning():
 def test_over_10g_rejected():
     with pytest.raises(InvalidParameterError, match="10G"):
         select_media(link(50, gbps=40))
+
+
+def test_latency_budget_ok():
+    from engine.media import check_latency
+    r = check_latency(Link(a="A", b="B", distance_m=35_000, max_latency_ms=5))
+    assert r.inputs["prop_ms"] == 0.175 and r.inputs["headroom_ms"] == 4.825
+
+
+def test_latency_budget_violation():
+    from engine.media import check_latency
+    with pytest.raises(PhysicalDistanceViolationError, match="propagation"):
+        check_latency(Link(a="A", b="B", distance_m=1_150_000, max_latency_ms=5))  # 5.75 ms
+
+
+def test_latency_boundary():
+    from engine.media import check_latency
+    assert check_latency(Link(a="A", b="B", distance_m=1_000_000, max_latency_ms=5))  # exactly 5 ms
+    assert check_latency(Link(a="A", b="B", distance_m=10)) is None

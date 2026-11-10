@@ -94,7 +94,7 @@ Each phase ends with an **Exit check** that must hold before moving on.
 
 ## Phase 9 — Presets & custom input
 - [x] 9.1 `presets/campus_lan.json` (3 buildings, <400 m, 1600 endpoints, PoE APs)
-- [x] 9.2 `presets/metro_man.json` (HQ + 2 remotes 15–35 km, 450 users, colo, dual-homed, QoS)
+- [x] 9.2 `presets/metro_man.json` (HQ + 2 remotes 15–35 km, 450 users, colo, dual-homed, QoS: 5 ms latency budget checked; QoS config pending owner OK, D-026)
 - [x] 9.3 `presets/global_wan.json` (4 cities + cloud VPC, 2000 IoT, IPsec, multi-area/BGP)
 - [x] 9.4 `examples/` invalid inputs (copper 150 m, exhausted root, bad VLAN)
 - [x] 9.5 `engine/planner.py` orchestrator: input → full `DesignResult`
@@ -126,42 +126,42 @@ Each phase ends with an **Exit check** that must hold before moving on.
 - [x] 13.4 Test marked `@pytest.mark.batfish` (skipped by default)
 
 ## Phase 14 — What-if failure engine
-- [ ] 14.1 Fail link / node → rebuild graph → rerun SPF → new paths
-- [ ] 14.2 Affected flows diff (before vs after trace)
-- [ ] 14.3 Convergence estimate from timers (values from standards.md)
-- [ ] 14.4 Single points of failure (articulation points + bridges)
-- [ ] 14.5 Resilience score + rationale
-- [ ] 14.6 Tests: Metro MAN survives single HQ uplink loss; campus SPOF detected
+- [x] 14.1 Fail link / node → rebuild graph → rerun SPF → new paths
+- [x] 14.2 Affected flows diff (before vs after trace)
+- [x] 14.3 Convergence estimate from timers (values from standards.md)
+- [x] 14.4 Single points of failure (articulation points + bridges)
+- [x] 14.5 Resilience score + rationale
+- [x] 14.6 Tests: Metro MAN survives single HQ uplink loss; campus SPOF detected
 
 ## Phase 15 — Security linter
-- [ ] 15.1 Rule set (each with id, severity, fix): unpruned trunk, native VLAN 1, no BPDU guard, unused ports up, telnet, no password encryption, no OSPF auth, no SSH v2, ACL without explicit deny log
-- [ ] 15.2 Score 0–100 with weights
-- [ ] 15.3 Lint arbitrary pasted IOS
-- [ ] 15.4 Tests: generated configs ≥ threshold; bad sample fails expected rules
+- [x] 15.1 Rule set (each with id, severity, fix): unpruned trunk, native VLAN 1, no BPDU guard, unused ports up, telnet, no password encryption, no OSPF auth, no SSH v2, ACL without explicit deny log
+- [x] 15.2 Score 0–100 with weights
+- [x] 15.3 Lint arbitrary pasted IOS
+- [x] 15.4 Tests: generated configs ≥ threshold; bad sample fails expected rules
 
 ## Phase 16 — BOM / cost estimator
-- [ ] 16.1 `data/prices.json` (INR, labelled estimate, editable)
-- [ ] 16.2 Counts: cable m per type (+slack %), transceivers, switches, routers, PoE watts
-- [ ] 16.3 Each line linked to decision rule id
-- [ ] 16.4 Cheaper-alternative hints (only when constraints still satisfied)
-- [ ] 16.5 Tests: counts per preset
+- [x] 16.1 `data/prices.json` (INR, labelled estimate, editable)
+- [x] 16.2 Counts: cable m per type (+slack %), transceivers, switches, routers, PoE watts
+- [x] 16.3 Each line linked to decision rule id
+- [x] 16.4 Cheaper-alternative hints (only when constraints still satisfied)
+- [x] 16.5 Tests: counts per preset
 
 ## Phase 17 — Design diff & versioning
-- [ ] 17.1 Serialize `DesignResult` as versioned JSON
-- [ ] 17.2 Diff layers: decisions (old/new rationale), IP plan, configs (unified diff)
-- [ ] 17.3 Tests: changing distance 380 → 420 flips media with rationale diff
+- [x] 17.1 Serialize `DesignResult` as versioned JSON
+- [x] 17.2 Diff layers: decisions (old/new rationale), IP plan, configs (unified diff)
+- [x] 17.3 Tests: changing distance 380 → 420 flips media with rationale diff
 
 ## Phase 18 — Exporters
-- [ ] 18.1 Per-device `.cfg` + `design_report.md` + `design.json`
-- [ ] 18.2 GNS3 `.gns3project` zip (topology JSON + configs); verify schema against a real GNS3 export before claiming support
-- [ ] 18.3 Packet Tracer cabling guide (port-to-port table)
-- [ ] 18.4 Commit `exports/` for 3 presets (owner commits)
+- [x] 18.1 Per-device `.cfg` + `design_report.md` + `design.json`
+- [ ] 18.2 GNS3 `.gns3project` zip (topology JSON + configs); verify schema against a real GNS3 export before claiming support (deferred, D-030: needs a real GNS3 export to check against)
+- [x] 18.3 Packet Tracer cabling guide (port-to-port table)
+- [x] 18.4 Commit `exports/` for 3 presets (generated in `exports/`; owner commits)
 
 ## Phase 19 — CLI (Typer)
-- [ ] 19.1 `netarch design <preset|file> --export DIR`
-- [ ] 19.2 `netarch explain`, `netarch verify`, `netarch trace SRC DST`, `netarch fail LINK`
-- [ ] 19.3 `netarch lint FILE`, `netarch bom`, `netarch diff A B`, `netarch nl "text"`
-- [ ] 19.4 Exit codes per error type; tests with `CliRunner`
+- [x] 19.1 `netarch design <preset|file> --export DIR`
+- [x] 19.2 `netarch explain`, `netarch verify`, `netarch trace SRC DST`, `netarch fail LINK`
+- [ ] 19.3 `netarch lint FILE`, `netarch bom`, `netarch diff A B` done; `netarch nl "text"` waits for Phase 21
+- [x] 19.4 Exit codes per error type; tests with `CliRunner`
 
 ## Phase 20 — FastAPI backend
 - [ ] 20.1 Endpoints: `/presets`, `/design`, `/verify`, `/trace`, `/whatif`, `/lint`, `/bom`, `/diff`, `/nl`, `/export/{fmt}`, `/health`

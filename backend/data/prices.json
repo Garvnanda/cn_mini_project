@@ -1,0 +1,30 @@
+{
+  "_note": "PLACEHOLDER ESTIMATES in INR, not quotes. Owner must replace with real vendor prices before using totals. Units: per item unless stated.",
+  "currency": "INR",
+  "cable_per_m": {
+    "Cat6a UTP": 60,
+    "Cat6 UTP": 40,
+    "OM4 multimode fiber": 110,
+    "OM3 multimode fiber": 80,
+    "OS2 single-mode fiber": 70
+  },
+  "patch_cord_cat6a": 600,
+  "transceiver": {
+    "10GBASE-SR": 2500,
+    "10GBASE-LR": 6000,
+    "10GBASE-ER": 25000
+  },
+  "switch": {
+    "access_48_poe": 350000,
+    "access_48": 220000,
+    "core": 900000,
+    "distribution": 600000
+  },
+  "router": 500000,
+  "cloud_vgw": 0,
+  "wan_service_per_month": {
+    "carrier": 60000,
+    "internet": 15000
+  },
+  "cable_slack_pct": 10
+}

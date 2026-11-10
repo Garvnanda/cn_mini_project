@@ -86,3 +86,21 @@ Do not change a decision without adding a new entry that supersedes it.
 
 ### D-024 — Batfish optional dependency (2026-11-10)
 - Decision: pybatfish lives in `requirements-batfish.txt` (local only, pulls pandas); never in the Render build. Adapter imports it lazily.
+
+### D-025 — Lone router uplinks to every core (2026-11-10)
+- Decision: when a site has as many routers as cores they pair 1:1; otherwise each router connects to every core. Found by SPOF analysis (ai_audit_log.md entry 3).
+
+### D-026 — Latency budget per link (2026-11-10)
+- Decision: optional `Link.max_latency_ms` (one-way). Engine checks propagation only (5 µs/km); exceeding it raises `PhysicalDistanceViolationError`. Metro preset sets 5 ms. QoS configuration (priority queuing) is not generated yet: it needs new IOS commands in ios_reference.md, pending owner confirmation.
+
+### D-027 — Security score (2026-11-10)
+- Decision: 13 rules (SEC-01..13), weights high 15 / medium 8 / low 3 / info 0, each rule counted once per device; device score = 100 − penalties (min 0); design score = average. Generated configs keep SEC-09 (no OSPF auth: commands pending owner OK) and SEC-11 (CHANGE_ME placeholders) on purpose.
+
+### D-028 — BOM prices are placeholders (2026-11-10)
+- Decision: `backend/data/prices.json` holds placeholder INR estimates, flagged in every BOM output; cable meters = link distance × circuits × (1 + 10 % slack); optics = 2 per fiber cable; in-building runs counted as patch cords; carrier/internet circuits are monthly.
+
+### D-029 — What-if model (2026-11-10)
+- Decision: failures are applied by shutting interfaces in the parsed configs and re-running the simulator over every segment pair; SPOF = removing one non-access device or one cable separates segment-hosting devices; resilience score = 100 × (1 − SPOF elements / infra elements).
+
+### D-030 — GNS3 export deferred (2026-11-10)
+- Decision: no `.gns3project` is generated until its schema can be checked against a real GNS3 export (task 18.2). Exports are .cfg files, design.json, design_report.md and cabling_guide.md.

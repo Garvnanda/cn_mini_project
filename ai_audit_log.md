@@ -95,3 +95,36 @@ MUMBAI-CORE1 TenGigabitEthernet1/0/3 -> Vlan20 : deliver connected 10.100.8.0/23
 outcome: delivered
 ```
 - **Regression tests:** `tests/test_verifier.py::test_detects_ad1_null0_blackhole`, `tests/test_simulator.py::test_null0_discard_and_floating_static`
+
+### Entry 3 — "Redundant" branch with a single router uplinked to only one core
+- **Date / phase:** 2026-11-10, written in Phase 5, caught in Phase 14 by the SPOF analysis
+- **AI tool & model:** Claude Code (Claude Opus 5.5)
+- **Prompt given:** "continue with phase 5, 6, 7 and 8" (task 5.5: redundancy, dual-homed uplinks when resiliency=high)
+- **AI-generated code (buggy):** `backend/engine/topology.py`
+```python
+for i in range(1, n + 1):
+    r = t.add(Device(hostname=hostname(site, f"R{i}"), role="router", site=site, location=hub, l3=True))
+    routers.append(r.hostname)
+    if cores:
+        t.connect(r.hostname, cores[min(i, len(cores)) - 1], "routed")
+```
+  With resiliency=high a branch gets 2 core switches but 1 router (D-017); `min(1, 2) - 1 = 0`, so BRANCH-R1 was cabled only to BRANCH-CORE1.
+- **Symptom:** `spof_analysis(design("metro_man"))` listed BRANCH-CORE1 as a single point of failure even though the site had a core pair, HSRP and dual-homed access stacks. Verification of the healthy design passed, so no earlier test could see it.
+- **Packet-flow analysis (before fix):** reproduced on the fixed design by failing BRANCH-CORE1 *and* the BRANCH-R1–BRANCH-CORE2 uplink that the fix added (= the old cabling with CORE1 down): 7 flows broken.
+```
+HQ-Users -> Branch-Users : dropped
+host 10.20.0.254 > HQ-CORE1 > HQ-R1 > BRANCH-R1
+BRANCH-R1 discards via 10.20.2.0/24 [summary 110/0] via Null0
+```
+  HSRP had already moved the branch gateway to BRANCH-CORE2, but BRANCH-R1 (the area 1 ABR) had no remaining path into its own area, so traffic from HQ hit the ABR's summary discard route.
+- **Root cause:** redundancy was added per layer (core pair, HSRP, dual-homed access) but the layer-3 path between the WAN router and the core pair was single-homed. A lone router must attach to every core, otherwise the core it uses is a cut vertex of the topology graph.
+- **Fix:** pairs map 1:1 (R1–CORE1, R2–CORE2); a lone router uplinks to every core (D-025).
+```python
+for c in ([cores[i - 1]] if n == len(cores) else cores):
+    t.connect(r.hostname, c, "routed")
+```
+- **Packet-flow after fix:** `simulate_failure(metro_man, nodes=["BRANCH-CORE1"])`: survives, 0 broken flows.
+```
+Branch-Users -> HQ-Users : host 10.20.2.126 > BRANCH-CORE2 > BRANCH-R1 > HQ-R1 > HQ-CORE1
+```
+- **Regression test:** `tests/test_whatif.py::test_metro_branch_core_not_spof_after_fix`

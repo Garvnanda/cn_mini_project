@@ -8,8 +8,8 @@
     {"name": "Colo", "kind": "datacenter"}
   ],
   "links": [
-    {"a": "HQ", "b": "Branch", "distance_m": 22000, "media_preference": "singlemode"},
-    {"a": "HQ", "b": "Colo", "distance_m": 35000, "media_preference": "singlemode"}
+    {"a": "HQ", "b": "Branch", "distance_m": 22000, "media_preference": "singlemode", "max_latency_ms": 5},
+    {"a": "HQ", "b": "Colo", "distance_m": 35000, "media_preference": "singlemode", "max_latency_ms": 5}
   ],
   "segments": [
     {"name": "HQ-Users", "vlan": 10, "hosts": 250, "role": "user", "location": "HQ"},

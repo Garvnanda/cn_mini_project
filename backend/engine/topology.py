@@ -181,8 +181,9 @@ def _build_site(t: Topology, inp: DesignInput, site: str, links: dict, log: Rati
         for i in range(1, n + 1):
             r = t.add(Device(hostname=hostname(site, f"R{i}"), role="router", site=site, location=hub, l3=True))
             routers.append(r.hostname)
-            if cores:
-                t.connect(r.hostname, cores[min(i, len(cores)) - 1], "routed")
+            # pairs map 1:1 (R1-CORE1, R2-CORE2); a lone router uplinks to every core so no core is a SPOF
+            for c in ([cores[i - 1]] if n == len(cores) else cores):
+                t.connect(r.hostname, c, "routed")
     t.routers[site] = routers
 
     if redundant:

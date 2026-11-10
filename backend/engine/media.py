@@ -118,3 +118,16 @@ def select_media(link: Link, splices: int = 0) -> MediaDecision:
         else "exceeds the 400 m attenuation/dispersion limit of OM4 multimode fiber"
     )
     return _smf(link, why, splices)
+
+
+def check_latency(link: Link) -> Rationale | None:
+    """One-way propagation delay vs the link's latency budget (None when no budget is set)."""
+    if link.max_latency_ms is None:
+        return None
+    km = link.distance_m / 1000
+    prop_ms = round(km * C.FIBER_US_PER_KM / 1000, 3)
+    args = dict(link=link.key, km=_r(km), us_per_km=C.FIBER_US_PER_KM, prop_ms=prop_ms, budget_ms=link.max_latency_ms)
+    if prop_ms > link.max_latency_ms:
+        r = explain("L1.latency_violation", **args)
+        raise PhysicalDistanceViolationError(r.text, link=link.key, prop_ms=prop_ms, budget_ms=link.max_latency_ms)
+    return explain("L1.latency", headroom_ms=round(link.max_latency_ms - prop_ms, 3), **args)

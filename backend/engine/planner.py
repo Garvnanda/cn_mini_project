@@ -4,7 +4,7 @@ from typing import Any
 
 from engine.acl import build_acls
 from engine.l2 import apply_l2
-from engine.media import CAT6A, select_media
+from engine.media import CAT6A, check_latency, select_media
 from engine.models import DesignInput, DesignResult, MediaDecision, Transport, parse_design_input
 from engine.rationale import RationaleLog, explain
 from engine.routing import plan_routing
@@ -23,6 +23,8 @@ def design(data: dict[str, Any] | DesignInput) -> DesignResult:
             m = MediaDecision(link=ln.key, distance_m=ln.distance_m, media=f"{ln.transport.value} handoff ({CAT6A})",
                               transceiver="10GBASE-T",
                               rationale=[explain("L1.provider", link=ln.key, transport=ln.transport.value)])
+        if lat := check_latency(ln):
+            m.rationale.append(lat)
         media.append(m)
         log.extend(m.rationale)
 

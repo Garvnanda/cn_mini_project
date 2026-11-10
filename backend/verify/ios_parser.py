@@ -51,6 +51,7 @@ class PIface(BaseModel):
     tunnel_destination: str | None = None
     tunnel_mode: str | None = None
     tunnel_profile: str | None = None
+    ospf_auth: bool = False
 
 
 class POspf(BaseModel):
@@ -62,6 +63,7 @@ class POspf(BaseModel):
     passive_default: bool = False
     summaries: list[tuple[int, str, str]] = []
     redistribute_bgp: int | None = None
+    area_auth: list[int] = []
 
 
 class PBgp(BaseModel):
@@ -91,6 +93,14 @@ class PDevice(BaseModel):
     statics: list[PStatic] = []
     acls: dict[str, list[PAclEntry]] = {}
     isakmp_peers: list[str] = []
+    services: list[str] = []
+    ssh_v2: bool = False
+    enable_secret: bool = False
+    enable_password: bool = False
+    placeholder_secrets: bool = False
+    vty_transport: list[str] | None = None  # None = not stated (IOS default allows telnet on many images)
+    vty_login_local: bool = False
+    vty_password: bool = False
     unparsed: list[str] = []
 
     @property
@@ -129,7 +139,8 @@ def parse_acl_entry(line: str) -> PAclEntry:
     return PAclEntry(action=action, proto=proto, src=src, src_wc=swc, dst=dst, dst_wc=dwc, port=port)
 
 
-def parse_config(text: str) -> PDevice:
+def parse_config(text: str, strict: bool = True) -> PDevice:
+    """strict=False keeps unknown interface lines in `unparsed` instead of raising (for pasted configs)."""
     d = PDevice()
     ctx: tuple[str, str | int] | None = None  # (kind, key)
     for n, raw in enumerate(text.splitlines(), start=1):
@@ -146,13 +157,28 @@ def parse_config(text: str) -> PDevice:
             else:
                 _sub(d, ctx, line, t)
         except (IndexError, ValueError) as e:
+            if not strict:
+                d.unparsed.append(line)
+                continue
             raise ParseError(f"line {n}: cannot parse {line!r}: {e}", line=n, text=line) from None
     return d
 
 
 def _top(d: PDevice, line: str, t: list[str]):
+    if "CHANGE_ME" in line:
+        d.placeholder_secrets = True
     if t[0] == "hostname":
         d.hostname = t[1]
+    elif t[0] == "service":
+        d.services.append(" ".join(t[1:]))
+    elif line == "ip ssh version 2":
+        d.ssh_v2 = True
+    elif t[:2] == ["enable", "secret"]:
+        d.enable_secret = True
+    elif t[:2] == ["enable", "password"]:
+        d.enable_password = True
+    elif line.startswith("line vty"):
+        return ("vty", 0)
     elif line == "ip routing":
         d.ip_routing = True
     elif t[0] == "vlan" and len(t) == 2:
@@ -217,6 +243,8 @@ def _sub(d: PDevice, ctx, line: str, t: list[str]) -> None:
             o.summaries.append((int(t[1]), t[3], t[4]))
         elif line.startswith("redistribute bgp"):
             o.redistribute_bgp = int(t[2])
+        elif t[0] == "area" and t[2] == "authentication":
+            o.area_auth.append(int(t[1]))
         else:
             d.unparsed.append(line)
     elif kind == "bgp":
@@ -231,6 +259,13 @@ def _sub(d: PDevice, ctx, line: str, t: list[str]) -> None:
             d.unparsed.append(line)
     elif kind == "acl":
         d.acls[key].append(parse_acl_entry(line))
+    elif kind == "vty":
+        if line.startswith("transport input"):
+            d.vty_transport = t[2:]
+        elif line == "login local":
+            d.vty_login_local = True
+        elif t[0] == "password":
+            d.vty_password = True
     elif kind == "ignore":
         pass
     else:
@@ -286,5 +321,7 @@ def _iface(i: PIface, line: str, t: list[str]) -> None:
         i.tunnel_mode = " ".join(t[2:])
     elif line.startswith("tunnel protection ipsec profile"):
         i.tunnel_profile = t[4]
+    elif line.startswith(("ip ospf authentication", "ip ospf message-digest-key")):
+        i.ospf_auth = True
     else:
         raise ValueError("unknown interface command")

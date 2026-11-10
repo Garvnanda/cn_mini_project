@@ -79,6 +79,9 @@ Consequence with current values: ER passes up to 38 km with 2 connectors; 40 km 
 | Tunnel interface | 0.1 Mb/s (100 kb/s) [verify per IOS version] | Cisco default |
 | OSPF cost | ref_bw / bw, min 1, max 65535; loopback 1 | RFC 2328 / Cisco |
 | Floating static AD for BGP anchors | 254 | project choice (D-021) |
+| Propagation delay in fiber | ≈ 5 µs/km (c / n, n ≈ 1.47) [verify n for the fiber used] | physics |
+| HSRP hello / hold | 3 s / 10 s | Cisco default (RFC 2281) |
+| OM3 / Cat6 limits used for BOM alternatives | 300 m / 55 m | IEEE 802.3ae / 802.3an (rows above) |
 
 ## Other references used (Phases 5-8)
 | Item | Ref |

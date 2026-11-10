@@ -1,0 +1,4886 @@
+{
+  "version": 1,
+  "design": {
+    "input": {
+      "profile": "global_wan",
+      "root_prefix": "10.100.0.0/16",
+      "sites": [
+        {
+          "name": "Delhi",
+          "kind": "hq"
+        },
+        {
+          "name": "Mumbai",
+          "kind": "branch"
+        },
+        {
+          "name": "Bengaluru",
+          "kind": "branch"
+        },
+        {
+          "name": "Singapore",
+          "kind": "branch"
+        },
+        {
+          "name": "CloudVPC",
+          "kind": "cloud"
+        }
+      ],
+      "buildings": [],
+      "links": [
+        {
+          "a": "Delhi",
+          "b": "Mumbai",
+          "distance_m": 1150000.0,
+          "required_gbps": 10.0,
+          "media_preference": "auto",
+          "transport": "carrier",
+          "max_latency_ms": null
+        },
+        {
+          "a": "Delhi",
+          "b": "Bengaluru",
+          "distance_m": 1740000.0,
+          "required_gbps": 10.0,
+          "media_preference": "auto",
+          "transport": "carrier",
+          "max_latency_ms": null
+        },
+        {
+          "a": "Delhi",
+          "b": "Singapore",
+          "distance_m": 4150000.0,
+          "required_gbps": 10.0,
+          "media_preference": "auto",
+          "transport": "internet",
+          "max_latency_ms": null
+        },
+        {
+          "a": "Delhi",
+          "b": "CloudVPC",
+          "distance_m": 1000.0,
+          "required_gbps": 10.0,
+          "media_preference": "auto",
+          "transport": "internet",
+          "max_latency_ms": null
+        }
+      ],
+      "segments": [
+        {
+          "name": "Delhi-IoT",
+          "vlan": 10,
+          "hosts": 600,
+          "role": "iot",
+          "location": "Delhi",
+          "poe": false
+        },
+        {
+          "name": "Mumbai-IoT",
+          "vlan": 20,
+          "hosts": 500,
+          "role": "iot",
+          "location": "Mumbai",
+          "poe": false
+        },
+        {
+          "name": "Blr-IoT",
+          "vlan": 30,
+          "hosts": 500,
+          "role": "iot",
+          "location": "Bengaluru",
+          "poe": false
+        },
+        {
+          "name": "Sg-IoT",
+          "vlan": 40,
+          "hosts": 400,
+          "role": "iot",
+          "location": "Singapore",
+          "poe": false
+        },
+        {
+          "name": "VPC-Apps",
+          "vlan": 100,
+          "hosts": 200,
+          "role": "server",
+          "location": "CloudVPC",
+          "poe": false
+        }
+      ],
+      "resiliency": "standard",
+      "policies": [
+        {
+          "src": "Sg-IoT",
+          "dst": "VPC-Apps",
+          "action": "allow",
+          "proto": "tcp",
+          "port": 8883
+        },
+        {
+          "src": "Sg-IoT",
+          "dst": "VPC-Apps",
+          "action": "deny",
+          "proto": "ip",
+          "port": null
+        }
+      ]
+    },
+    "media": [
+      {
+        "link": "Delhi--Mumbai",
+        "distance_m": 1150000.0,
+        "media": "carrier handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T",
+        "rationale": [
+          {
+            "rule_id": "L1.provider",
+            "domain": "L1",
+            "inputs": {
+              "link": "Delhi--Mumbai",
+              "transport": "carrier"
+            },
+            "threshold": null,
+            "standard_ref": "IEEE 802.3an-2006 (handoff)",
+            "text": "Delhi--Mumbai uses a carrier service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+          }
+        ]
+      },
+      {
+        "link": "Delhi--Bengaluru",
+        "distance_m": 1740000.0,
+        "media": "carrier handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T",
+        "rationale": [
+          {
+            "rule_id": "L1.provider",
+            "domain": "L1",
+            "inputs": {
+              "link": "Delhi--Bengaluru",
+              "transport": "carrier"
+            },
+            "threshold": null,
+            "standard_ref": "IEEE 802.3an-2006 (handoff)",
+            "text": "Delhi--Bengaluru uses a carrier service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+          }
+        ]
+      },
+      {
+        "link": "Delhi--Singapore",
+        "distance_m": 4150000.0,
+        "media": "internet handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T",
+        "rationale": [
+          {
+            "rule_id": "L1.provider",
+            "domain": "L1",
+            "inputs": {
+              "link": "Delhi--Singapore",
+              "transport": "internet"
+            },
+            "threshold": null,
+            "standard_ref": "IEEE 802.3an-2006 (handoff)",
+            "text": "Delhi--Singapore uses a internet service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+          }
+        ]
+      },
+      {
+        "link": "Delhi--CloudVPC",
+        "distance_m": 1000.0,
+        "media": "internet handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T",
+        "rationale": [
+          {
+            "rule_id": "L1.provider",
+            "domain": "L1",
+            "inputs": {
+              "link": "Delhi--CloudVPC",
+              "transport": "internet"
+            },
+            "threshold": null,
+            "standard_ref": "IEEE 802.3an-2006 (handoff)",
+            "text": "Delhi--CloudVPC uses a internet service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+          }
+        ]
+      }
+    ],
+    "subnets": [
+      {
+        "name": "Delhi-IoT",
+        "vlan": 10,
+        "requested_hosts": 600,
+        "network": "10.100.0.0",
+        "prefix": 22,
+        "mask": "255.255.252.0",
+        "wildcard": "0.0.3.255",
+        "gateway": "10.100.0.1",
+        "broadcast": "10.100.3.255",
+        "first_usable": "10.100.0.1",
+        "last_usable": "10.100.3.254",
+        "usable_hosts": 1022,
+        "utilization_pct": 58.81,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-R1 Tunnel1--SINGAPORE-R1 Tunnel1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.4.0",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.0",
+        "last_usable": "10.100.4.1",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-R1 Tunnel2--CLOUDVPC-VGW Tunnel1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.4.2",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.2",
+        "last_usable": "10.100.4.3",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-R1--BENGALURU-R1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.4.4",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.4",
+        "last_usable": "10.100.4.5",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-R1--DELHI-CORE1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.4.6",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.6",
+        "last_usable": "10.100.4.7",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-R1--MUMBAI-R1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.4.8",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.8",
+        "last_usable": "10.100.4.9",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-CORE1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.4.10",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.10",
+        "last_usable": "10.100.4.10",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "DELHI-R1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.4.11",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.4.11",
+        "last_usable": "10.100.4.11",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 0 (Delhi)"
+      },
+      {
+        "name": "Mumbai-IoT",
+        "vlan": 20,
+        "requested_hosts": 500,
+        "network": "10.100.8.0",
+        "prefix": 23,
+        "mask": "255.255.254.0",
+        "wildcard": "0.0.1.255",
+        "gateway": "10.100.8.1",
+        "broadcast": "10.100.9.255",
+        "first_usable": "10.100.8.1",
+        "last_usable": "10.100.9.254",
+        "usable_hosts": 510,
+        "utilization_pct": 98.24,
+        "unit": "Area 1 (Mumbai)"
+      },
+      {
+        "name": "MUMBAI-R1--MUMBAI-CORE1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.10.0",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.10.0",
+        "last_usable": "10.100.10.1",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 1 (Mumbai)"
+      },
+      {
+        "name": "MUMBAI-CORE1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.10.2",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.10.2",
+        "last_usable": "10.100.10.2",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 1 (Mumbai)"
+      },
+      {
+        "name": "MUMBAI-R1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.10.3",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.10.3",
+        "last_usable": "10.100.10.3",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 1 (Mumbai)"
+      },
+      {
+        "name": "Blr-IoT",
+        "vlan": 30,
+        "requested_hosts": 500,
+        "network": "10.100.12.0",
+        "prefix": 23,
+        "mask": "255.255.254.0",
+        "wildcard": "0.0.1.255",
+        "gateway": "10.100.12.1",
+        "broadcast": "10.100.13.255",
+        "first_usable": "10.100.12.1",
+        "last_usable": "10.100.13.254",
+        "usable_hosts": 510,
+        "utilization_pct": 98.24,
+        "unit": "Area 2 (Bengaluru)"
+      },
+      {
+        "name": "BENGALURU-R1--BENGALURU-CORE1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.14.0",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.14.0",
+        "last_usable": "10.100.14.1",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 2 (Bengaluru)"
+      },
+      {
+        "name": "BENGALURU-CORE1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.14.2",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.14.2",
+        "last_usable": "10.100.14.2",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 2 (Bengaluru)"
+      },
+      {
+        "name": "BENGALURU-R1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.14.3",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.14.3",
+        "last_usable": "10.100.14.3",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 2 (Bengaluru)"
+      },
+      {
+        "name": "Sg-IoT",
+        "vlan": 40,
+        "requested_hosts": 400,
+        "network": "10.100.16.0",
+        "prefix": 23,
+        "mask": "255.255.254.0",
+        "wildcard": "0.0.1.255",
+        "gateway": "10.100.16.1",
+        "broadcast": "10.100.17.255",
+        "first_usable": "10.100.16.1",
+        "last_usable": "10.100.17.254",
+        "usable_hosts": 510,
+        "utilization_pct": 78.63,
+        "unit": "Area 3 (Singapore)"
+      },
+      {
+        "name": "SINGAPORE-R1--SINGAPORE-CORE1",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "10.100.18.0",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.18.0",
+        "last_usable": "10.100.18.1",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "Area 3 (Singapore)"
+      },
+      {
+        "name": "SINGAPORE-CORE1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.18.2",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.18.2",
+        "last_usable": "10.100.18.2",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 3 (Singapore)"
+      },
+      {
+        "name": "SINGAPORE-R1 Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.18.3",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.18.3",
+        "last_usable": "10.100.18.3",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Area 3 (Singapore)"
+      },
+      {
+        "name": "VPC-Apps",
+        "vlan": 100,
+        "requested_hosts": 200,
+        "network": "10.100.20.0",
+        "prefix": 24,
+        "mask": "255.255.255.0",
+        "wildcard": "0.0.0.255",
+        "gateway": "10.100.20.1",
+        "broadcast": "10.100.20.255",
+        "first_usable": "10.100.20.1",
+        "last_usable": "10.100.20.254",
+        "usable_hosts": 254,
+        "utilization_pct": 79.13,
+        "unit": "Cloud CloudVPC"
+      },
+      {
+        "name": "CLOUDVPC-VGW Loopback0",
+        "vlan": null,
+        "requested_hosts": 1,
+        "network": "10.100.21.0",
+        "prefix": 32,
+        "mask": "255.255.255.255",
+        "wildcard": "0.0.0.0",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "10.100.21.0",
+        "last_usable": "10.100.21.0",
+        "usable_hosts": 1,
+        "utilization_pct": 100.0,
+        "unit": "Cloud CloudVPC"
+      },
+      {
+        "name": "DELHI-R1--CLOUDVPC-VGW underlay",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "203.0.113.0",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "203.0.113.0",
+        "last_usable": "203.0.113.1",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "internet underlay"
+      },
+      {
+        "name": "DELHI-R1--SINGAPORE-R1 underlay",
+        "vlan": null,
+        "requested_hosts": 2,
+        "network": "203.0.113.2",
+        "prefix": 31,
+        "mask": "255.255.255.254",
+        "wildcard": "0.0.0.1",
+        "gateway": null,
+        "broadcast": null,
+        "first_usable": "203.0.113.2",
+        "last_usable": "203.0.113.3",
+        "usable_hosts": 2,
+        "utilization_pct": 100.0,
+        "unit": "internet underlay"
+      }
+    ],
+    "routing": {
+      "protocol": "OSPF multi-area + eBGP",
+      "areas": {
+        "Area 0 (Delhi)": 0,
+        "Area 1 (Mumbai)": 1,
+        "Area 2 (Bengaluru)": 2,
+        "Area 3 (Singapore)": 3
+      },
+      "asn": {
+        "CLOUDVPC-VGW": 65100,
+        "DELHI-R1": 65000
+      },
+      "rationale": [
+        {
+          "rule_id": "ROUTE.ospf_multi_site",
+          "domain": "ROUTE",
+          "inputs": {
+            "sites": 5,
+            "backbone": "Delhi"
+          },
+          "threshold": "multi-site",
+          "standard_ref": "RFC 2328; Assignment \u00a73",
+          "text": "Multi-area OSPF because the design spans 5 sites: Delhi is the backbone (area 0) and every other site gets its own area, so flooding and SPF runs stay inside one site."
+        },
+        {
+          "rule_id": "ROUTE.ipsec",
+          "domain": "ROUTE",
+          "inputs": {
+            "link": "Delhi--Singapore",
+            "a": "DELHI-R1",
+            "b": "SINGAPORE-R1",
+            "underlay": "203.0.113.0/24"
+          },
+          "threshold": null,
+          "standard_ref": "RFC 4301; RFC 5737",
+          "text": "Delhi--Singapore runs over the internet, so traffic between DELHI-R1 and SINGAPORE-R1 is encrypted in a route-based IPsec tunnel (VTI, AES-256 / SHA-256, DH group 14). Underlay addresses come from 203.0.113.0/24 (RFC 5737 documentation range): replace them with the real public IPs."
+        },
+        {
+          "rule_id": "ROUTE.ipsec",
+          "domain": "ROUTE",
+          "inputs": {
+            "link": "Delhi--CloudVPC",
+            "a": "DELHI-R1",
+            "b": "CLOUDVPC-VGW",
+            "underlay": "203.0.113.0/24"
+          },
+          "threshold": null,
+          "standard_ref": "RFC 4301; RFC 5737",
+          "text": "Delhi--CloudVPC runs over the internet, so traffic between DELHI-R1 and CLOUDVPC-VGW is encrypted in a route-based IPsec tunnel (VTI, AES-256 / SHA-256, DH group 14). Underlay addresses come from 203.0.113.0/24 (RFC 5737 documentation range): replace them with the real public IPs."
+        },
+        {
+          "rule_id": "ROUTE.area",
+          "domain": "ROUTE",
+          "inputs": {
+            "unit": "Area 0 (Delhi)",
+            "area": 0,
+            "block": "10.100.0.0/21"
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328",
+          "text": "Area 0 (Delhi) is OSPF area 0 with address block 10.100.0.0/21."
+        },
+        {
+          "rule_id": "ROUTE.area",
+          "domain": "ROUTE",
+          "inputs": {
+            "unit": "Area 1 (Mumbai)",
+            "area": 1,
+            "block": "10.100.8.0/22"
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328",
+          "text": "Area 1 (Mumbai) is OSPF area 1 with address block 10.100.8.0/22."
+        },
+        {
+          "rule_id": "ROUTE.area",
+          "domain": "ROUTE",
+          "inputs": {
+            "unit": "Area 2 (Bengaluru)",
+            "area": 2,
+            "block": "10.100.12.0/22"
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328",
+          "text": "Area 2 (Bengaluru) is OSPF area 2 with address block 10.100.12.0/22."
+        },
+        {
+          "rule_id": "ROUTE.area",
+          "domain": "ROUTE",
+          "inputs": {
+            "unit": "Area 3 (Singapore)",
+            "area": 3,
+            "block": "10.100.16.0/22"
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328",
+          "text": "Area 3 (Singapore) is OSPF area 3 with address block 10.100.16.0/22."
+        },
+        {
+          "rule_id": "ROUTE.rid",
+          "domain": "ROUTE",
+          "inputs": {},
+          "threshold": null,
+          "standard_ref": "RFC 2328",
+          "text": "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable."
+        },
+        {
+          "rule_id": "ROUTE.ref_bw",
+          "domain": "ROUTE",
+          "inputs": {
+            "ref": 100000,
+            "default": 100
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328 (interface cost)",
+          "text": "OSPF reference bandwidth is 100000 Mbps. With the default 100 Mbps every link of 100 Mb/s or more gets cost 1, so 10G and 1G paths would look equal."
+        },
+        {
+          "rule_id": "ROUTE.summary",
+          "domain": "ROUTE",
+          "inputs": {
+            "abr": "MUMBAI-R1",
+            "area": 1,
+            "block": "10.100.8.0/22",
+            "count": 4
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328; RFC 4632",
+          "text": "ABR MUMBAI-R1 summarizes area 1 as 10.100.8.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block."
+        },
+        {
+          "rule_id": "ROUTE.summary",
+          "domain": "ROUTE",
+          "inputs": {
+            "abr": "BENGALURU-R1",
+            "area": 2,
+            "block": "10.100.12.0/22",
+            "count": 4
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328; RFC 4632",
+          "text": "ABR BENGALURU-R1 summarizes area 2 as 10.100.12.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block."
+        },
+        {
+          "rule_id": "ROUTE.summary",
+          "domain": "ROUTE",
+          "inputs": {
+            "abr": "SINGAPORE-R1",
+            "area": 3,
+            "block": "10.100.16.0/22",
+            "count": 4
+          },
+          "threshold": null,
+          "standard_ref": "RFC 2328; RFC 4632",
+          "text": "ABR SINGAPORE-R1 summarizes area 3 as 10.100.16.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block."
+        },
+        {
+          "rule_id": "ROUTE.bgp_anchor",
+          "domain": "ROUTE",
+          "inputs": {
+            "router": "DELHI-R1",
+            "ad": 254,
+            "count": 4
+          },
+          "threshold": "AD {ad} > OSPF 110",
+          "standard_ref": "RFC 4271; Cisco IOS administrative distance",
+          "text": "DELHI-R1 anchors its 4 BGP-advertised area block(s) with Null0 static routes at administrative distance 254 (floating). BGP `network` needs an exact route in the RIB, but an AD-1 static would beat the OSPF summary for the same prefix and blackhole remote areas; at AD 254 the static is used only when OSPF has no route."
+        },
+        {
+          "rule_id": "ROUTE.ebgp",
+          "domain": "ROUTE",
+          "inputs": {
+            "ent": "DELHI-R1",
+            "ent_asn": 65000,
+            "cloud": "CLOUDVPC-VGW",
+            "cloud_asn": 65100
+          },
+          "threshold": null,
+          "standard_ref": "RFC 4271; RFC 6996",
+          "text": "eBGP between DELHI-R1 (AS 65000) and CLOUDVPC-VGW (AS 65100) because the cloud VPC is a separate administrative domain. BGP keeps policy control at the boundary and OSPF is not extended into the provider. Both ASNs are private (RFC 6996)."
+        }
+      ]
+    },
+    "devices": [
+      {
+        "hostname": "DELHI-CORE1",
+        "role": "core",
+        "site": "Delhi",
+        "location": "Delhi",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.10",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/0/1",
+            "mode": "trunk",
+            "description": "to DELHI-ACC1 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              10
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "DELHI-ACC1 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/2",
+            "mode": "trunk",
+            "description": "to DELHI-ACC2 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              10
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "DELHI-ACC2 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/3",
+            "mode": "routed",
+            "description": "to DELHI-R1 TenGigabitEthernet0/0/0 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.7",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 TenGigabitEthernet0/0/0",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Vlan10",
+            "mode": "svi",
+            "description": "Gateway Delhi-IoT",
+            "range": false,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.0.1",
+            "mask": "255.255.252.0",
+            "peer": null,
+            "segment": "Delhi-IoT",
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {
+          "10": "Delhi-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [
+          10
+        ],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.4.10",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.4.10",
+              "0.0.0.0",
+              0
+            ],
+            [
+              "10.100.4.7",
+              "0.0.0.0",
+              0
+            ],
+            [
+              "10.100.0.1",
+              "0.0.0.0",
+              0
+            ]
+          ],
+          "passive": [
+            "Loopback0",
+            "Vlan10"
+          ],
+          "summaries": [],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "DELHI-ACC1",
+        "role": "access",
+        "site": "Delhi",
+        "location": "Delhi",
+        "l3": false,
+        "members": 7,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet6/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet7/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to DELHI-CORE1 TenGigabitEthernet1/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              10
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "DELHI-CORE1 TenGigabitEthernet1/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "10": "Delhi-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "DELHI-ACC2",
+        "role": "access",
+        "site": "Delhi",
+        "location": "Delhi",
+        "l3": false,
+        "members": 6,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 48",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet6/0/1 - 24",
+            "mode": "access",
+            "description": "Delhi-IoT (iot)",
+            "range": true,
+            "vlan": 10,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet6/0/25 - 48",
+            "mode": "unused",
+            "description": "unused",
+            "range": true,
+            "vlan": 999,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to DELHI-CORE1 TenGigabitEthernet1/0/2 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              10
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "DELHI-CORE1 TenGigabitEthernet1/0/2",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "10": "Delhi-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "DELHI-R1",
+        "role": "router",
+        "site": "Delhi",
+        "location": "Delhi",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.11",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/0",
+            "mode": "routed",
+            "description": "to DELHI-CORE1 TenGigabitEthernet1/0/3 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.6",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-CORE1 TenGigabitEthernet1/0/3",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet0/0/1",
+            "mode": "routed",
+            "description": "to MUMBAI-R1 TenGigabitEthernet0/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.8",
+            "mask": "255.255.255.254",
+            "peer": "MUMBAI-R1 TenGigabitEthernet0/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "carrier handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet0/0/2",
+            "mode": "routed",
+            "description": "to BENGALURU-R1 TenGigabitEthernet0/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.4",
+            "mask": "255.255.255.254",
+            "peer": "BENGALURU-R1 TenGigabitEthernet0/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "carrier handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet0/0/3",
+            "mode": "underlay",
+            "description": "to SINGAPORE-R1 TenGigabitEthernet0/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "203.0.113.2",
+            "mask": "255.255.255.254",
+            "peer": "SINGAPORE-R1 TenGigabitEthernet0/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "internet handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Tunnel1",
+            "mode": "tunnel",
+            "description": "IPsec to SINGAPORE-R1",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.0",
+            "mask": "255.255.255.254",
+            "peer": "SINGAPORE-R1 Tunnel1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": "TenGigabitEthernet0/0/3",
+            "tunnel_destination": "203.0.113.3",
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/4",
+            "mode": "underlay",
+            "description": "to CLOUDVPC-VGW TenGigabitEthernet0/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "203.0.113.0",
+            "mask": "255.255.255.254",
+            "peer": "CLOUDVPC-VGW TenGigabitEthernet0/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "internet handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Tunnel2",
+            "mode": "tunnel",
+            "description": "IPsec to CLOUDVPC-VGW",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.2",
+            "mask": "255.255.255.254",
+            "peer": "CLOUDVPC-VGW Tunnel1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": "TenGigabitEthernet0/0/4",
+            "tunnel_destination": "203.0.113.1",
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {},
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.4.11",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.4.11",
+              "0.0.0.0",
+              0
+            ],
+            [
+              "10.100.4.6",
+              "0.0.0.0",
+              0
+            ],
+            [
+              "10.100.4.8",
+              "0.0.0.0",
+              0
+            ],
+            [
+              "10.100.4.4",
+              "0.0.0.0",
+              0
+            ],
+            [
+              "10.100.4.0",
+              "0.0.0.0",
+              0
+            ]
+          ],
+          "passive": [
+            "Loopback0"
+          ],
+          "summaries": [],
+          "redistribute_bgp": 65000
+        },
+        "bgp": {
+          "asn": 65000,
+          "router_id": "10.100.4.11",
+          "neighbors": [
+            [
+              "10.100.4.3",
+              65100
+            ]
+          ],
+          "networks": [
+            [
+              "10.100.0.0",
+              "255.255.248.0"
+            ],
+            [
+              "10.100.8.0",
+              "255.255.252.0"
+            ],
+            [
+              "10.100.12.0",
+              "255.255.252.0"
+            ],
+            [
+              "10.100.16.0",
+              "255.255.252.0"
+            ]
+          ]
+        },
+        "acls": [],
+        "static_routes": [
+          {
+            "network": "10.100.0.0",
+            "mask": "255.255.248.0",
+            "next_hop": "Null0",
+            "distance": 254
+          },
+          {
+            "network": "10.100.8.0",
+            "mask": "255.255.252.0",
+            "next_hop": "Null0",
+            "distance": 254
+          },
+          {
+            "network": "10.100.12.0",
+            "mask": "255.255.252.0",
+            "next_hop": "Null0",
+            "distance": 254
+          },
+          {
+            "network": "10.100.16.0",
+            "mask": "255.255.252.0",
+            "next_hop": "Null0",
+            "distance": 254
+          }
+        ],
+        "ipsec_peers": [
+          "203.0.113.3",
+          "203.0.113.1"
+        ],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "MUMBAI-CORE1",
+        "role": "core",
+        "site": "Mumbai",
+        "location": "Mumbai",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.10.2",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 1,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/0/1",
+            "mode": "trunk",
+            "description": "to MUMBAI-ACC1 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              20
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "MUMBAI-ACC1 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/2",
+            "mode": "trunk",
+            "description": "to MUMBAI-ACC2 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              20
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "MUMBAI-ACC2 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/3",
+            "mode": "routed",
+            "description": "to MUMBAI-R1 TenGigabitEthernet0/0/0 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.10.1",
+            "mask": "255.255.255.254",
+            "peer": "MUMBAI-R1 TenGigabitEthernet0/0/0",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 1,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Vlan20",
+            "mode": "svi",
+            "description": "Gateway Mumbai-IoT",
+            "range": false,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.8.1",
+            "mask": "255.255.254.0",
+            "peer": null,
+            "segment": "Mumbai-IoT",
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 1,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {
+          "20": "Mumbai-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [
+          20
+        ],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.10.2",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.10.2",
+              "0.0.0.0",
+              1
+            ],
+            [
+              "10.100.10.1",
+              "0.0.0.0",
+              1
+            ],
+            [
+              "10.100.8.1",
+              "0.0.0.0",
+              1
+            ]
+          ],
+          "passive": [
+            "Loopback0",
+            "Vlan20"
+          ],
+          "summaries": [],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "MUMBAI-ACC1",
+        "role": "access",
+        "site": "Mumbai",
+        "location": "Mumbai",
+        "l3": false,
+        "members": 6,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet6/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to MUMBAI-CORE1 TenGigabitEthernet1/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              20
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "MUMBAI-CORE1 TenGigabitEthernet1/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "20": "Mumbai-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "MUMBAI-ACC2",
+        "role": "access",
+        "site": "Mumbai",
+        "location": "Mumbai",
+        "l3": false,
+        "members": 5,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 20",
+            "mode": "access",
+            "description": "Mumbai-IoT (iot)",
+            "range": true,
+            "vlan": 20,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/21 - 48",
+            "mode": "unused",
+            "description": "unused",
+            "range": true,
+            "vlan": 999,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to MUMBAI-CORE1 TenGigabitEthernet1/0/2 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              20
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "MUMBAI-CORE1 TenGigabitEthernet1/0/2",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "20": "Mumbai-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "MUMBAI-R1",
+        "role": "router",
+        "site": "Mumbai",
+        "location": "Mumbai",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.10.3",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 1,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/0",
+            "mode": "routed",
+            "description": "to MUMBAI-CORE1 TenGigabitEthernet1/0/3 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.10.0",
+            "mask": "255.255.255.254",
+            "peer": "MUMBAI-CORE1 TenGigabitEthernet1/0/3",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 1,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet0/0/1",
+            "mode": "routed",
+            "description": "to DELHI-R1 TenGigabitEthernet0/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.9",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 TenGigabitEthernet0/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "carrier handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {},
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.10.3",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.10.3",
+              "0.0.0.0",
+              1
+            ],
+            [
+              "10.100.10.0",
+              "0.0.0.0",
+              1
+            ],
+            [
+              "10.100.4.9",
+              "0.0.0.0",
+              0
+            ]
+          ],
+          "passive": [
+            "Loopback0"
+          ],
+          "summaries": [
+            [
+              1,
+              "10.100.8.0",
+              "255.255.252.0"
+            ]
+          ],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "BENGALURU-CORE1",
+        "role": "core",
+        "site": "Bengaluru",
+        "location": "Bengaluru",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.14.2",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 2,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/0/1",
+            "mode": "trunk",
+            "description": "to BENGALURU-ACC1 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              30
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "BENGALURU-ACC1 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/2",
+            "mode": "trunk",
+            "description": "to BENGALURU-ACC2 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              30
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "BENGALURU-ACC2 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/3",
+            "mode": "routed",
+            "description": "to BENGALURU-R1 TenGigabitEthernet0/0/0 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.14.1",
+            "mask": "255.255.255.254",
+            "peer": "BENGALURU-R1 TenGigabitEthernet0/0/0",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 2,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Vlan30",
+            "mode": "svi",
+            "description": "Gateway Blr-IoT",
+            "range": false,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.12.1",
+            "mask": "255.255.254.0",
+            "peer": null,
+            "segment": "Blr-IoT",
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 2,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {
+          "30": "Blr-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [
+          30
+        ],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.14.2",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.14.2",
+              "0.0.0.0",
+              2
+            ],
+            [
+              "10.100.14.1",
+              "0.0.0.0",
+              2
+            ],
+            [
+              "10.100.12.1",
+              "0.0.0.0",
+              2
+            ]
+          ],
+          "passive": [
+            "Loopback0",
+            "Vlan30"
+          ],
+          "summaries": [],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "BENGALURU-ACC1",
+        "role": "access",
+        "site": "Bengaluru",
+        "location": "Bengaluru",
+        "l3": false,
+        "members": 6,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet6/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to BENGALURU-CORE1 TenGigabitEthernet1/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              30
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "BENGALURU-CORE1 TenGigabitEthernet1/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "30": "Blr-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "BENGALURU-ACC2",
+        "role": "access",
+        "site": "Bengaluru",
+        "location": "Bengaluru",
+        "l3": false,
+        "members": 5,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 20",
+            "mode": "access",
+            "description": "Blr-IoT (iot)",
+            "range": true,
+            "vlan": 30,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/21 - 48",
+            "mode": "unused",
+            "description": "unused",
+            "range": true,
+            "vlan": 999,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to BENGALURU-CORE1 TenGigabitEthernet1/0/2 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              30
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "BENGALURU-CORE1 TenGigabitEthernet1/0/2",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "30": "Blr-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "BENGALURU-R1",
+        "role": "router",
+        "site": "Bengaluru",
+        "location": "Bengaluru",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.14.3",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 2,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/0",
+            "mode": "routed",
+            "description": "to BENGALURU-CORE1 TenGigabitEthernet1/0/3 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.14.0",
+            "mask": "255.255.255.254",
+            "peer": "BENGALURU-CORE1 TenGigabitEthernet1/0/3",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 2,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet0/0/1",
+            "mode": "routed",
+            "description": "to DELHI-R1 TenGigabitEthernet0/0/2 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.5",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 TenGigabitEthernet0/0/2",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "carrier handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {},
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.14.3",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.14.3",
+              "0.0.0.0",
+              2
+            ],
+            [
+              "10.100.14.0",
+              "0.0.0.0",
+              2
+            ],
+            [
+              "10.100.4.5",
+              "0.0.0.0",
+              0
+            ]
+          ],
+          "passive": [
+            "Loopback0"
+          ],
+          "summaries": [
+            [
+              2,
+              "10.100.12.0",
+              "255.255.252.0"
+            ]
+          ],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "SINGAPORE-CORE1",
+        "role": "core",
+        "site": "Singapore",
+        "location": "Singapore",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.18.2",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 3,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/0/1",
+            "mode": "trunk",
+            "description": "to SINGAPORE-ACC1 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              40
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "SINGAPORE-ACC1 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/2",
+            "mode": "trunk",
+            "description": "to SINGAPORE-ACC2 TenGigabitEthernet1/1/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              40
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "SINGAPORE-ACC2 TenGigabitEthernet1/1/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet1/0/3",
+            "mode": "routed",
+            "description": "to SINGAPORE-R1 TenGigabitEthernet0/0/0 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.18.1",
+            "mask": "255.255.255.254",
+            "peer": "SINGAPORE-R1 TenGigabitEthernet0/0/0",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 3,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Vlan40",
+            "mode": "svi",
+            "description": "Gateway Sg-IoT",
+            "range": false,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.16.1",
+            "mask": "255.255.254.0",
+            "peer": null,
+            "segment": "Sg-IoT",
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 3,
+            "acl_in": "ACL-SG-IOT-IN",
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {
+          "40": "Sg-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [
+          40
+        ],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.18.2",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.18.2",
+              "0.0.0.0",
+              3
+            ],
+            [
+              "10.100.18.1",
+              "0.0.0.0",
+              3
+            ],
+            [
+              "10.100.16.1",
+              "0.0.0.0",
+              3
+            ]
+          ],
+          "passive": [
+            "Loopback0",
+            "Vlan40"
+          ],
+          "summaries": [],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [
+          {
+            "name": "ACL-SG-IOT-IN",
+            "entries": [
+              {
+                "action": "permit",
+                "proto": "tcp",
+                "src": "10.100.16.0",
+                "src_wc": "0.0.1.255",
+                "dst": "10.100.20.0",
+                "dst_wc": "0.0.0.255",
+                "port": 8883
+              },
+              {
+                "action": "deny",
+                "proto": "ip",
+                "src": "10.100.16.0",
+                "src_wc": "0.0.1.255",
+                "dst": "10.100.20.0",
+                "dst_wc": "0.0.0.255",
+                "port": null
+              },
+              {
+                "action": "permit",
+                "proto": "ip",
+                "src": "any",
+                "src_wc": "",
+                "dst": "any",
+                "dst_wc": "",
+                "port": null
+              }
+            ]
+          }
+        ],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "SINGAPORE-ACC1",
+        "role": "access",
+        "site": "Singapore",
+        "location": "Singapore",
+        "l3": false,
+        "members": 5,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet5/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to SINGAPORE-CORE1 TenGigabitEthernet1/0/1 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              40
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "SINGAPORE-CORE1 TenGigabitEthernet1/0/1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "40": "Sg-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "SINGAPORE-ACC2",
+        "role": "access",
+        "site": "Singapore",
+        "location": "Singapore",
+        "l3": false,
+        "members": 4,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet2/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet3/0/1 - 48",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/1 - 16",
+            "mode": "access",
+            "description": "Sg-IoT (iot)",
+            "range": true,
+            "vlan": 40,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "GigabitEthernet4/0/17 - 48",
+            "mode": "unused",
+            "description": "unused",
+            "range": true,
+            "vlan": 999,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": null,
+            "mask": null,
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet1/1/1",
+            "mode": "trunk",
+            "description": "to SINGAPORE-CORE1 TenGigabitEthernet1/0/2 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [
+              40
+            ],
+            "native_vlan": 999,
+            "ip": null,
+            "mask": null,
+            "peer": "SINGAPORE-CORE1 TenGigabitEthernet1/0/2",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          }
+        ],
+        "vlans": {
+          "40": "Sg-IoT",
+          "999": "BLACKHOLE"
+        },
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "SINGAPORE-R1",
+        "role": "router",
+        "site": "Singapore",
+        "location": "Singapore",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.18.3",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 3,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/0",
+            "mode": "routed",
+            "description": "to SINGAPORE-CORE1 TenGigabitEthernet1/0/3 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.18.0",
+            "mask": "255.255.255.254",
+            "peer": "SINGAPORE-CORE1 TenGigabitEthernet1/0/3",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 3,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "Cat6a UTP",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "TenGigabitEthernet0/0/1",
+            "mode": "underlay",
+            "description": "to DELHI-R1 TenGigabitEthernet0/0/3 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "203.0.113.3",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 TenGigabitEthernet0/0/3",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "internet handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Tunnel1",
+            "mode": "tunnel",
+            "description": "IPsec to DELHI-R1",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.1",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 Tunnel1",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": 0,
+            "acl_in": null,
+            "tunnel_source": "TenGigabitEthernet0/0/1",
+            "tunnel_destination": "203.0.113.2",
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {},
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": {
+          "pid": 1,
+          "router_id": "10.100.18.3",
+          "ref_bw": 100000,
+          "networks": [
+            [
+              "10.100.18.3",
+              "0.0.0.0",
+              3
+            ],
+            [
+              "10.100.18.0",
+              "0.0.0.0",
+              3
+            ],
+            [
+              "10.100.4.1",
+              "0.0.0.0",
+              0
+            ]
+          ],
+          "passive": [
+            "Loopback0"
+          ],
+          "summaries": [
+            [
+              3,
+              "10.100.16.0",
+              "255.255.252.0"
+            ]
+          ],
+          "redistribute_bgp": null
+        },
+        "bgp": null,
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [
+          "203.0.113.2"
+        ],
+        "poe_watts": 0.0
+      },
+      {
+        "hostname": "CLOUDVPC-VGW",
+        "role": "cloud",
+        "site": "CloudVPC",
+        "location": "CloudVPC",
+        "l3": true,
+        "members": 1,
+        "interfaces": [
+          {
+            "name": "Loopback0",
+            "mode": "loopback",
+            "description": "Router ID",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.21.0",
+            "mask": "255.255.255.255",
+            "peer": null,
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/0",
+            "mode": "routed",
+            "description": "VPC subnet VPC-Apps",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.20.1",
+            "mask": "255.255.255.0",
+            "peer": null,
+            "segment": "VPC-Apps",
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": null,
+            "transceiver": null
+          },
+          {
+            "name": "TenGigabitEthernet0/0/1",
+            "mode": "underlay",
+            "description": "to DELHI-R1 TenGigabitEthernet0/0/4 [10GBASE-T]",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "203.0.113.1",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 TenGigabitEthernet0/0/4",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": null,
+            "tunnel_destination": null,
+            "media": "internet handoff (Cat6a UTP)",
+            "transceiver": "10GBASE-T"
+          },
+          {
+            "name": "Tunnel1",
+            "mode": "tunnel",
+            "description": "IPsec to DELHI-R1",
+            "range": false,
+            "vlan": null,
+            "allowed_vlans": [],
+            "native_vlan": null,
+            "ip": "10.100.4.3",
+            "mask": "255.255.255.254",
+            "peer": "DELHI-R1 Tunnel2",
+            "segment": null,
+            "hsrp_group": null,
+            "hsrp_vip": null,
+            "hsrp_priority": null,
+            "area": null,
+            "acl_in": null,
+            "tunnel_source": "TenGigabitEthernet0/0/1",
+            "tunnel_destination": "203.0.113.0",
+            "media": null,
+            "transceiver": null
+          }
+        ],
+        "vlans": {},
+        "stp_primary": [],
+        "stp_secondary": [],
+        "ospf": null,
+        "bgp": {
+          "asn": 65100,
+          "router_id": "10.100.21.0",
+          "neighbors": [
+            [
+              "10.100.4.2",
+              65000
+            ]
+          ],
+          "networks": [
+            [
+              "10.100.21.0",
+              "255.255.255.255"
+            ],
+            [
+              "10.100.20.0",
+              "255.255.255.0"
+            ]
+          ]
+        },
+        "acls": [],
+        "static_routes": [],
+        "ipsec_peers": [
+          "203.0.113.0"
+        ],
+        "poe_watts": 0.0
+      }
+    ],
+    "cables": [
+      {
+        "a": "DELHI-ACC1",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "DELHI-CORE1",
+        "b_if": "TenGigabitEthernet1/0/1",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "DELHI-ACC2",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "DELHI-CORE1",
+        "b_if": "TenGigabitEthernet1/0/2",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "DELHI-R1",
+        "a_if": "TenGigabitEthernet0/0/0",
+        "b": "DELHI-CORE1",
+        "b_if": "TenGigabitEthernet1/0/3",
+        "kind": "routed",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "MUMBAI-ACC1",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "MUMBAI-CORE1",
+        "b_if": "TenGigabitEthernet1/0/1",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "MUMBAI-ACC2",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "MUMBAI-CORE1",
+        "b_if": "TenGigabitEthernet1/0/2",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "MUMBAI-R1",
+        "a_if": "TenGigabitEthernet0/0/0",
+        "b": "MUMBAI-CORE1",
+        "b_if": "TenGigabitEthernet1/0/3",
+        "kind": "routed",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "BENGALURU-ACC1",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "BENGALURU-CORE1",
+        "b_if": "TenGigabitEthernet1/0/1",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "BENGALURU-ACC2",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "BENGALURU-CORE1",
+        "b_if": "TenGigabitEthernet1/0/2",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "BENGALURU-R1",
+        "a_if": "TenGigabitEthernet0/0/0",
+        "b": "BENGALURU-CORE1",
+        "b_if": "TenGigabitEthernet1/0/3",
+        "kind": "routed",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "SINGAPORE-ACC1",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "SINGAPORE-CORE1",
+        "b_if": "TenGigabitEthernet1/0/1",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "SINGAPORE-ACC2",
+        "a_if": "TenGigabitEthernet1/1/1",
+        "b": "SINGAPORE-CORE1",
+        "b_if": "TenGigabitEthernet1/0/2",
+        "kind": "trunk",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "SINGAPORE-R1",
+        "a_if": "TenGigabitEthernet0/0/0",
+        "b": "SINGAPORE-CORE1",
+        "b_if": "TenGigabitEthernet1/0/3",
+        "kind": "routed",
+        "link": null,
+        "media": "Cat6a UTP",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "DELHI-R1",
+        "a_if": "TenGigabitEthernet0/0/1",
+        "b": "MUMBAI-R1",
+        "b_if": "TenGigabitEthernet0/0/1",
+        "kind": "routed",
+        "link": "Delhi--Mumbai",
+        "media": "carrier handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "DELHI-R1",
+        "a_if": "TenGigabitEthernet0/0/2",
+        "b": "BENGALURU-R1",
+        "b_if": "TenGigabitEthernet0/0/1",
+        "kind": "routed",
+        "link": "Delhi--Bengaluru",
+        "media": "carrier handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "DELHI-R1",
+        "a_if": "TenGigabitEthernet0/0/3",
+        "b": "SINGAPORE-R1",
+        "b_if": "TenGigabitEthernet0/0/1",
+        "kind": "underlay",
+        "link": "Delhi--Singapore",
+        "media": "internet handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T"
+      },
+      {
+        "a": "DELHI-R1",
+        "a_if": "TenGigabitEthernet0/0/4",
+        "b": "CLOUDVPC-VGW",
+        "b_if": "TenGigabitEthernet0/0/1",
+        "kind": "underlay",
+        "link": "Delhi--CloudVPC",
+        "media": "internet handoff (Cat6a UTP)",
+        "transceiver": "10GBASE-T"
+      }
+    ],
+    "tiers": {
+      "Delhi": "collapsed_core",
+      "Mumbai": "collapsed_core",
+      "Bengaluru": "collapsed_core",
+      "Singapore": "collapsed_core"
+    },
+    "rationale": [
+      {
+        "rule_id": "L1.provider",
+        "domain": "L1",
+        "inputs": {
+          "link": "Delhi--Mumbai",
+          "transport": "carrier"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.3an-2006 (handoff)",
+        "text": "Delhi--Mumbai uses a carrier service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+      },
+      {
+        "rule_id": "L1.provider",
+        "domain": "L1",
+        "inputs": {
+          "link": "Delhi--Bengaluru",
+          "transport": "carrier"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.3an-2006 (handoff)",
+        "text": "Delhi--Bengaluru uses a carrier service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+      },
+      {
+        "rule_id": "L1.provider",
+        "domain": "L1",
+        "inputs": {
+          "link": "Delhi--Singapore",
+          "transport": "internet"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.3an-2006 (handoff)",
+        "text": "Delhi--Singapore uses a internet service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+      },
+      {
+        "rule_id": "L1.provider",
+        "domain": "L1",
+        "inputs": {
+          "link": "Delhi--CloudVPC",
+          "transport": "internet"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.3an-2006 (handoff)",
+        "text": "Delhi--CloudVPC uses a internet service: the inter-site physical layer belongs to the provider, so only the local handoff is designed (Cat6a 10GBASE-T to the demarc, assumed \u2264 100 m)."
+      },
+      {
+        "rule_id": "TOPO.collapsed_core",
+        "domain": "TOPO",
+        "inputs": {
+          "site": "Delhi",
+          "buildings": 1,
+          "threshold": 4,
+          "endpoints": 600
+        },
+        "threshold": "buildings < 4",
+        "standard_ref": "Cisco hierarchical campus design; Project rule",
+        "text": "Delhi: collapsed-core design (core and distribution combined) because the site has 1 building(s), below the 4-building point where a separate distribution layer pays off. Fewer devices and hops for 600 endpoints."
+      },
+      {
+        "rule_id": "TOPO.access",
+        "domain": "TOPO",
+        "inputs": {
+          "location": "Delhi",
+          "ports": 600,
+          "members": 13,
+          "per": 48,
+          "stacks": 2,
+          "max_members": 8,
+          "spare": 24
+        },
+        "threshold": "48 ports per switch, 8 per stack",
+        "standard_ref": "Project rule",
+        "text": "Delhi: 600 access ports needed, so 13 \u00d7 48-port switch(es) in 2 stack(s) (\u2264 8 members per stack). 24 spare port(s) are shut down."
+      },
+      {
+        "rule_id": "TOPO.collapsed_core",
+        "domain": "TOPO",
+        "inputs": {
+          "site": "Mumbai",
+          "buildings": 1,
+          "threshold": 4,
+          "endpoints": 500
+        },
+        "threshold": "buildings < 4",
+        "standard_ref": "Cisco hierarchical campus design; Project rule",
+        "text": "Mumbai: collapsed-core design (core and distribution combined) because the site has 1 building(s), below the 4-building point where a separate distribution layer pays off. Fewer devices and hops for 500 endpoints."
+      },
+      {
+        "rule_id": "TOPO.access",
+        "domain": "TOPO",
+        "inputs": {
+          "location": "Mumbai",
+          "ports": 500,
+          "members": 11,
+          "per": 48,
+          "stacks": 2,
+          "max_members": 8,
+          "spare": 28
+        },
+        "threshold": "48 ports per switch, 8 per stack",
+        "standard_ref": "Project rule",
+        "text": "Mumbai: 500 access ports needed, so 11 \u00d7 48-port switch(es) in 2 stack(s) (\u2264 8 members per stack). 28 spare port(s) are shut down."
+      },
+      {
+        "rule_id": "TOPO.collapsed_core",
+        "domain": "TOPO",
+        "inputs": {
+          "site": "Bengaluru",
+          "buildings": 1,
+          "threshold": 4,
+          "endpoints": 500
+        },
+        "threshold": "buildings < 4",
+        "standard_ref": "Cisco hierarchical campus design; Project rule",
+        "text": "Bengaluru: collapsed-core design (core and distribution combined) because the site has 1 building(s), below the 4-building point where a separate distribution layer pays off. Fewer devices and hops for 500 endpoints."
+      },
+      {
+        "rule_id": "TOPO.access",
+        "domain": "TOPO",
+        "inputs": {
+          "location": "Bengaluru",
+          "ports": 500,
+          "members": 11,
+          "per": 48,
+          "stacks": 2,
+          "max_members": 8,
+          "spare": 28
+        },
+        "threshold": "48 ports per switch, 8 per stack",
+        "standard_ref": "Project rule",
+        "text": "Bengaluru: 500 access ports needed, so 11 \u00d7 48-port switch(es) in 2 stack(s) (\u2264 8 members per stack). 28 spare port(s) are shut down."
+      },
+      {
+        "rule_id": "TOPO.collapsed_core",
+        "domain": "TOPO",
+        "inputs": {
+          "site": "Singapore",
+          "buildings": 1,
+          "threshold": 4,
+          "endpoints": 400
+        },
+        "threshold": "buildings < 4",
+        "standard_ref": "Cisco hierarchical campus design; Project rule",
+        "text": "Singapore: collapsed-core design (core and distribution combined) because the site has 1 building(s), below the 4-building point where a separate distribution layer pays off. Fewer devices and hops for 400 endpoints."
+      },
+      {
+        "rule_id": "TOPO.access",
+        "domain": "TOPO",
+        "inputs": {
+          "location": "Singapore",
+          "ports": 400,
+          "members": 9,
+          "per": 48,
+          "stacks": 2,
+          "max_members": 8,
+          "spare": 32
+        },
+        "threshold": "48 ports per switch, 8 per stack",
+        "standard_ref": "Project rule",
+        "text": "Singapore: 400 access ports needed, so 9 \u00d7 48-port switch(es) in 2 stack(s) (\u2264 8 members per stack). 32 spare port(s) are shut down."
+      },
+      {
+        "rule_id": "L2.native",
+        "domain": "L2",
+        "inputs": {
+          "native": 999
+        },
+        "threshold": "native \u2260 VLAN 1",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "Native VLAN is the unused VLAN 999 on every trunk (not VLAN 1) and it is left out of the allowed lists. This blocks double-tagging VLAN hopping. Unused access ports are parked in it and shut down."
+      },
+      {
+        "rule_id": "L2.edge_ports",
+        "domain": "L2",
+        "inputs": {},
+        "threshold": null,
+        "standard_ref": "IEEE 802.1w",
+        "text": "Access ports use PortFast (RSTP edge port, forwards immediately) and BPDU Guard (err-disables the port if a switch is plugged in), preventing accidental loops."
+      },
+      {
+        "rule_id": "L2.vlan_plan",
+        "domain": "L2",
+        "inputs": {
+          "block": "Delhi",
+          "vlans": "10"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1Q",
+        "text": "Delhi: VLANs 10 each carry one segment, giving each role its own broadcast domain."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "DELHI-ACC1",
+          "peer": "DELHI-CORE1",
+          "vlans": "10"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "DELHI-ACC1 trunk to DELHI-CORE1 allows only VLANs 10, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "DELHI-ACC2",
+          "peer": "DELHI-CORE1",
+          "vlans": "10"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "DELHI-ACC2 trunk to DELHI-CORE1 allows only VLANs 10, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.stp_root",
+        "domain": "L2",
+        "inputs": {
+          "block": "Delhi",
+          "primary": "DELHI-CORE1",
+          "secondary": ""
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1w (Rapid PVST+)",
+        "text": "Delhi: Rapid PVST+ root primary on DELHI-CORE1, so the root bridge is also the default gateway and frames never take a detour through an access switch."
+      },
+      {
+        "rule_id": "L2.vlan_plan",
+        "domain": "L2",
+        "inputs": {
+          "block": "Mumbai",
+          "vlans": "20"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1Q",
+        "text": "Mumbai: VLANs 20 each carry one segment, giving each role its own broadcast domain."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "MUMBAI-ACC1",
+          "peer": "MUMBAI-CORE1",
+          "vlans": "20"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "MUMBAI-ACC1 trunk to MUMBAI-CORE1 allows only VLANs 20, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "MUMBAI-ACC2",
+          "peer": "MUMBAI-CORE1",
+          "vlans": "20"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "MUMBAI-ACC2 trunk to MUMBAI-CORE1 allows only VLANs 20, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.stp_root",
+        "domain": "L2",
+        "inputs": {
+          "block": "Mumbai",
+          "primary": "MUMBAI-CORE1",
+          "secondary": ""
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1w (Rapid PVST+)",
+        "text": "Mumbai: Rapid PVST+ root primary on MUMBAI-CORE1, so the root bridge is also the default gateway and frames never take a detour through an access switch."
+      },
+      {
+        "rule_id": "L2.vlan_plan",
+        "domain": "L2",
+        "inputs": {
+          "block": "Bengaluru",
+          "vlans": "30"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1Q",
+        "text": "Bengaluru: VLANs 30 each carry one segment, giving each role its own broadcast domain."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "BENGALURU-ACC1",
+          "peer": "BENGALURU-CORE1",
+          "vlans": "30"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "BENGALURU-ACC1 trunk to BENGALURU-CORE1 allows only VLANs 30, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "BENGALURU-ACC2",
+          "peer": "BENGALURU-CORE1",
+          "vlans": "30"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "BENGALURU-ACC2 trunk to BENGALURU-CORE1 allows only VLANs 30, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.stp_root",
+        "domain": "L2",
+        "inputs": {
+          "block": "Bengaluru",
+          "primary": "BENGALURU-CORE1",
+          "secondary": ""
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1w (Rapid PVST+)",
+        "text": "Bengaluru: Rapid PVST+ root primary on BENGALURU-CORE1, so the root bridge is also the default gateway and frames never take a detour through an access switch."
+      },
+      {
+        "rule_id": "L2.vlan_plan",
+        "domain": "L2",
+        "inputs": {
+          "block": "Singapore",
+          "vlans": "40"
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1Q",
+        "text": "Singapore: VLANs 40 each carry one segment, giving each role its own broadcast domain."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "SINGAPORE-ACC1",
+          "peer": "SINGAPORE-CORE1",
+          "vlans": "40"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "SINGAPORE-ACC1 trunk to SINGAPORE-CORE1 allows only VLANs 40, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.trunk_prune",
+        "domain": "L2",
+        "inputs": {
+          "device": "SINGAPORE-ACC2",
+          "peer": "SINGAPORE-CORE1",
+          "vlans": "40"
+        },
+        "threshold": "allowed = VLANs present",
+        "standard_ref": "IEEE 802.1Q",
+        "text": "SINGAPORE-ACC2 trunk to SINGAPORE-CORE1 allows only VLANs 40, the VLANs that have ports behind it, instead of all 4094. This limits broadcast flooding and blast radius."
+      },
+      {
+        "rule_id": "L2.stp_root",
+        "domain": "L2",
+        "inputs": {
+          "block": "Singapore",
+          "primary": "SINGAPORE-CORE1",
+          "secondary": ""
+        },
+        "threshold": null,
+        "standard_ref": "IEEE 802.1w (Rapid PVST+)",
+        "text": "Singapore: Rapid PVST+ root primary on SINGAPORE-CORE1, so the root bridge is also the default gateway and frames never take a detour through an access switch."
+      },
+      {
+        "rule_id": "ROUTE.ospf_multi_site",
+        "domain": "ROUTE",
+        "inputs": {
+          "sites": 5,
+          "backbone": "Delhi"
+        },
+        "threshold": "multi-site",
+        "standard_ref": "RFC 2328; Assignment \u00a73",
+        "text": "Multi-area OSPF because the design spans 5 sites: Delhi is the backbone (area 0) and every other site gets its own area, so flooding and SPF runs stay inside one site."
+      },
+      {
+        "rule_id": "VLSM.block",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Area 0 (Delhi)",
+          "network": "10.100.0.0",
+          "prefix": 21,
+          "size": 2048
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4632",
+        "text": "Area 0 (Delhi) gets the contiguous block 10.100.0.0/21 (2048 addresses) so all of its subnets can be summarized as one route."
+      },
+      {
+        "rule_id": "VLSM.block",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Area 1 (Mumbai)",
+          "network": "10.100.8.0",
+          "prefix": 22,
+          "size": 1024
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4632",
+        "text": "Area 1 (Mumbai) gets the contiguous block 10.100.8.0/22 (1024 addresses) so all of its subnets can be summarized as one route."
+      },
+      {
+        "rule_id": "VLSM.block",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Area 2 (Bengaluru)",
+          "network": "10.100.12.0",
+          "prefix": 22,
+          "size": 1024
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4632",
+        "text": "Area 2 (Bengaluru) gets the contiguous block 10.100.12.0/22 (1024 addresses) so all of its subnets can be summarized as one route."
+      },
+      {
+        "rule_id": "VLSM.block",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Area 3 (Singapore)",
+          "network": "10.100.16.0",
+          "prefix": 22,
+          "size": 1024
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4632",
+        "text": "Area 3 (Singapore) gets the contiguous block 10.100.16.0/22 (1024 addresses) so all of its subnets can be summarized as one route."
+      },
+      {
+        "rule_id": "VLSM.block",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Cloud CloudVPC",
+          "network": "10.100.20.0",
+          "prefix": 23,
+          "size": 512
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4632",
+        "text": "Cloud CloudVPC gets the contiguous block 10.100.20.0/23 (512 addresses) so all of its subnets can be summarized as one route."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "10.100.0.0/16",
+          "root_size": 65536,
+          "allocated": 5632,
+          "root_util": 8.59,
+          "requested": 5632,
+          "eff": 100.0,
+          "waste": 0
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 5632 of 65536 addresses in 10.100.0.0/16 (8.59% of the root used). 5632 addresses were actually needed, so packing efficiency is 100.0% (0 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "VLSM.subnet",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Delhi-IoT",
+          "hosts": 600,
+          "needed": 601,
+          "prefix": 22,
+          "host_bits": 10,
+          "usable": 1022,
+          "util": 58.81
+        },
+        "threshold": "usable = 2^(32\u2212p) \u2212 2",
+        "standard_ref": "RFC 950, RFC 1878",
+        "text": "Delhi-IoT: 600 hosts + 1 gateway need 601 usable addresses; the smallest block is /22 (2^10 \u2212 2 = 1022 usable), giving 58.81% utilization."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1 Tunnel1--SINGAPORE-R1 Tunnel1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1 Tunnel1--SINGAPORE-R1 Tunnel1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1 Tunnel2--CLOUDVPC-VGW Tunnel1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1 Tunnel2--CLOUDVPC-VGW Tunnel1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1--BENGALURU-R1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1--BENGALURU-R1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1--DELHI-CORE1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1--DELHI-CORE1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1--MUMBAI-R1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1--MUMBAI-R1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-CORE1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "DELHI-CORE1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "DELHI-R1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "10.100.0.0/21",
+          "root_size": 2048,
+          "allocated": 1036,
+          "root_util": 50.59,
+          "requested": 613,
+          "eff": 59.17,
+          "waste": 423
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 1036 of 2048 addresses in 10.100.0.0/21 (50.59% of the root used). 613 addresses were actually needed, so packing efficiency is 59.17% (423 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "VLSM.subnet",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Mumbai-IoT",
+          "hosts": 500,
+          "needed": 501,
+          "prefix": 23,
+          "host_bits": 9,
+          "usable": 510,
+          "util": 98.24
+        },
+        "threshold": "usable = 2^(32\u2212p) \u2212 2",
+        "standard_ref": "RFC 950, RFC 1878",
+        "text": "Mumbai-IoT: 500 hosts + 1 gateway need 501 usable addresses; the smallest block is /23 (2^9 \u2212 2 = 510 usable), giving 98.24% utilization."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "MUMBAI-R1--MUMBAI-CORE1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "MUMBAI-R1--MUMBAI-CORE1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "MUMBAI-CORE1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "MUMBAI-CORE1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "MUMBAI-R1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "MUMBAI-R1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "10.100.8.0/22",
+          "root_size": 1024,
+          "allocated": 516,
+          "root_util": 50.39,
+          "requested": 505,
+          "eff": 97.87,
+          "waste": 11
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 516 of 1024 addresses in 10.100.8.0/22 (50.39% of the root used). 505 addresses were actually needed, so packing efficiency is 97.87% (11 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "VLSM.subnet",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Blr-IoT",
+          "hosts": 500,
+          "needed": 501,
+          "prefix": 23,
+          "host_bits": 9,
+          "usable": 510,
+          "util": 98.24
+        },
+        "threshold": "usable = 2^(32\u2212p) \u2212 2",
+        "standard_ref": "RFC 950, RFC 1878",
+        "text": "Blr-IoT: 500 hosts + 1 gateway need 501 usable addresses; the smallest block is /23 (2^9 \u2212 2 = 510 usable), giving 98.24% utilization."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "BENGALURU-R1--BENGALURU-CORE1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "BENGALURU-R1--BENGALURU-CORE1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "BENGALURU-CORE1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "BENGALURU-CORE1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "BENGALURU-R1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "BENGALURU-R1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "10.100.12.0/22",
+          "root_size": 1024,
+          "allocated": 516,
+          "root_util": 50.39,
+          "requested": 505,
+          "eff": 97.87,
+          "waste": 11
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 516 of 1024 addresses in 10.100.12.0/22 (50.39% of the root used). 505 addresses were actually needed, so packing efficiency is 97.87% (11 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "VLSM.subnet",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "Sg-IoT",
+          "hosts": 400,
+          "needed": 401,
+          "prefix": 23,
+          "host_bits": 9,
+          "usable": 510,
+          "util": 78.63
+        },
+        "threshold": "usable = 2^(32\u2212p) \u2212 2",
+        "standard_ref": "RFC 950, RFC 1878",
+        "text": "Sg-IoT: 400 hosts + 1 gateway need 401 usable addresses; the smallest block is /23 (2^9 \u2212 2 = 510 usable), giving 78.63% utilization."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "SINGAPORE-R1--SINGAPORE-CORE1"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "SINGAPORE-R1--SINGAPORE-CORE1: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "SINGAPORE-CORE1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "SINGAPORE-CORE1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "SINGAPORE-R1 Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "SINGAPORE-R1 Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "10.100.16.0/22",
+          "root_size": 1024,
+          "allocated": 516,
+          "root_util": 50.39,
+          "requested": 405,
+          "eff": 78.49,
+          "waste": 111
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 516 of 1024 addresses in 10.100.16.0/22 (50.39% of the root used). 405 addresses were actually needed, so packing efficiency is 78.49% (111 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "VLSM.subnet",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "VPC-Apps",
+          "hosts": 200,
+          "needed": 201,
+          "prefix": 24,
+          "host_bits": 8,
+          "usable": 254,
+          "util": 79.13
+        },
+        "threshold": "usable = 2^(32\u2212p) \u2212 2",
+        "standard_ref": "RFC 950, RFC 1878",
+        "text": "VPC-Apps: 200 hosts + 1 gateway need 201 usable addresses; the smallest block is /24 (2^8 \u2212 2 = 254 usable), giving 79.13% utilization."
+      },
+      {
+        "rule_id": "VLSM.loopback",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "CLOUDVPC-VGW Loopback0"
+        },
+        "threshold": "/32 host route",
+        "standard_ref": "RFC 4632",
+        "text": "CLOUDVPC-VGW Loopback0: loopback gets a /32, a single stable address used as the router ID."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "10.100.20.0/23",
+          "root_size": 512,
+          "allocated": 257,
+          "root_util": 50.2,
+          "requested": 202,
+          "eff": 78.6,
+          "waste": 55
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 257 of 512 addresses in 10.100.20.0/23 (50.2% of the root used). 202 addresses were actually needed, so packing efficiency is 78.6% (55 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1--CLOUDVPC-VGW underlay"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1--CLOUDVPC-VGW underlay: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.p2p",
+        "domain": "VLSM",
+        "inputs": {
+          "name": "DELHI-R1--SINGAPORE-R1 underlay"
+        },
+        "threshold": "/31 for point-to-point",
+        "standard_ref": "RFC 3021",
+        "text": "DELHI-R1--SINGAPORE-R1 underlay: point-to-point link gets a /31 (RFC 3021): both addresses are usable, so no network/broadcast addresses are wasted as a /30 would."
+      },
+      {
+        "rule_id": "VLSM.efficiency",
+        "domain": "VLSM",
+        "inputs": {
+          "root": "203.0.113.0/24",
+          "root_size": 256,
+          "allocated": 4,
+          "root_util": 1.56,
+          "requested": 4,
+          "eff": 100.0,
+          "waste": 0
+        },
+        "threshold": null,
+        "standard_ref": "RFC 1878, RFC 4632",
+        "text": "Allocated 4 of 256 addresses in 203.0.113.0/24 (1.56% of the root used). 4 addresses were actually needed, so packing efficiency is 100.0% (0 addresses lost to power-of-two rounding). Blocks were allocated largest-first, so each block starts on its natural boundary and none overlap."
+      },
+      {
+        "rule_id": "ROUTE.ipsec",
+        "domain": "ROUTE",
+        "inputs": {
+          "link": "Delhi--Singapore",
+          "a": "DELHI-R1",
+          "b": "SINGAPORE-R1",
+          "underlay": "203.0.113.0/24"
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4301; RFC 5737",
+        "text": "Delhi--Singapore runs over the internet, so traffic between DELHI-R1 and SINGAPORE-R1 is encrypted in a route-based IPsec tunnel (VTI, AES-256 / SHA-256, DH group 14). Underlay addresses come from 203.0.113.0/24 (RFC 5737 documentation range): replace them with the real public IPs."
+      },
+      {
+        "rule_id": "ROUTE.ipsec",
+        "domain": "ROUTE",
+        "inputs": {
+          "link": "Delhi--CloudVPC",
+          "a": "DELHI-R1",
+          "b": "CLOUDVPC-VGW",
+          "underlay": "203.0.113.0/24"
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4301; RFC 5737",
+        "text": "Delhi--CloudVPC runs over the internet, so traffic between DELHI-R1 and CLOUDVPC-VGW is encrypted in a route-based IPsec tunnel (VTI, AES-256 / SHA-256, DH group 14). Underlay addresses come from 203.0.113.0/24 (RFC 5737 documentation range): replace them with the real public IPs."
+      },
+      {
+        "rule_id": "ROUTE.area",
+        "domain": "ROUTE",
+        "inputs": {
+          "unit": "Area 0 (Delhi)",
+          "area": 0,
+          "block": "10.100.0.0/21"
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328",
+        "text": "Area 0 (Delhi) is OSPF area 0 with address block 10.100.0.0/21."
+      },
+      {
+        "rule_id": "ROUTE.area",
+        "domain": "ROUTE",
+        "inputs": {
+          "unit": "Area 1 (Mumbai)",
+          "area": 1,
+          "block": "10.100.8.0/22"
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328",
+        "text": "Area 1 (Mumbai) is OSPF area 1 with address block 10.100.8.0/22."
+      },
+      {
+        "rule_id": "ROUTE.area",
+        "domain": "ROUTE",
+        "inputs": {
+          "unit": "Area 2 (Bengaluru)",
+          "area": 2,
+          "block": "10.100.12.0/22"
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328",
+        "text": "Area 2 (Bengaluru) is OSPF area 2 with address block 10.100.12.0/22."
+      },
+      {
+        "rule_id": "ROUTE.area",
+        "domain": "ROUTE",
+        "inputs": {
+          "unit": "Area 3 (Singapore)",
+          "area": 3,
+          "block": "10.100.16.0/22"
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328",
+        "text": "Area 3 (Singapore) is OSPF area 3 with address block 10.100.16.0/22."
+      },
+      {
+        "rule_id": "ROUTE.rid",
+        "domain": "ROUTE",
+        "inputs": {},
+        "threshold": null,
+        "standard_ref": "RFC 2328",
+        "text": "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable."
+      },
+      {
+        "rule_id": "ROUTE.ref_bw",
+        "domain": "ROUTE",
+        "inputs": {
+          "ref": 100000,
+          "default": 100
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328 (interface cost)",
+        "text": "OSPF reference bandwidth is 100000 Mbps. With the default 100 Mbps every link of 100 Mb/s or more gets cost 1, so 10G and 1G paths would look equal."
+      },
+      {
+        "rule_id": "ROUTE.summary",
+        "domain": "ROUTE",
+        "inputs": {
+          "abr": "MUMBAI-R1",
+          "area": 1,
+          "block": "10.100.8.0/22",
+          "count": 4
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328; RFC 4632",
+        "text": "ABR MUMBAI-R1 summarizes area 1 as 10.100.8.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block."
+      },
+      {
+        "rule_id": "ROUTE.summary",
+        "domain": "ROUTE",
+        "inputs": {
+          "abr": "BENGALURU-R1",
+          "area": 2,
+          "block": "10.100.12.0/22",
+          "count": 4
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328; RFC 4632",
+        "text": "ABR BENGALURU-R1 summarizes area 2 as 10.100.12.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block."
+      },
+      {
+        "rule_id": "ROUTE.summary",
+        "domain": "ROUTE",
+        "inputs": {
+          "abr": "SINGAPORE-R1",
+          "area": 3,
+          "block": "10.100.16.0/22",
+          "count": 4
+        },
+        "threshold": null,
+        "standard_ref": "RFC 2328; RFC 4632",
+        "text": "ABR SINGAPORE-R1 summarizes area 3 as 10.100.16.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block."
+      },
+      {
+        "rule_id": "ROUTE.bgp_anchor",
+        "domain": "ROUTE",
+        "inputs": {
+          "router": "DELHI-R1",
+          "ad": 254,
+          "count": 4
+        },
+        "threshold": "AD {ad} > OSPF 110",
+        "standard_ref": "RFC 4271; Cisco IOS administrative distance",
+        "text": "DELHI-R1 anchors its 4 BGP-advertised area block(s) with Null0 static routes at administrative distance 254 (floating). BGP `network` needs an exact route in the RIB, but an AD-1 static would beat the OSPF summary for the same prefix and blackhole remote areas; at AD 254 the static is used only when OSPF has no route."
+      },
+      {
+        "rule_id": "ROUTE.ebgp",
+        "domain": "ROUTE",
+        "inputs": {
+          "ent": "DELHI-R1",
+          "ent_asn": 65000,
+          "cloud": "CLOUDVPC-VGW",
+          "cloud_asn": 65100
+        },
+        "threshold": null,
+        "standard_ref": "RFC 4271; RFC 6996",
+        "text": "eBGP between DELHI-R1 (AS 65000) and CLOUDVPC-VGW (AS 65100) because the cloud VPC is a separate administrative domain. BGP keeps policy control at the boundary and OSPF is not extended into the provider. Both ASNs are private (RFC 6996)."
+      },
+      {
+        "rule_id": "ACL.policy",
+        "domain": "ACL",
+        "inputs": {
+          "src": "Sg-IoT",
+          "dst": "VPC-Apps",
+          "action": "permit",
+          "proto": "tcp",
+          "port": " port 8883",
+          "acl": "ACL-SG-IOT-IN"
+        },
+        "threshold": null,
+        "standard_ref": "Cisco IOS extended ACL (first match)",
+        "text": "Sg-IoT \u2192 VPC-Apps: permit tcp port 8883 via ACL-SG-IOT-IN, applied inbound on the Sg-IoT gateway so the decision is made at the first layer-3 hop."
+      },
+      {
+        "rule_id": "ACL.policy",
+        "domain": "ACL",
+        "inputs": {
+          "src": "Sg-IoT",
+          "dst": "VPC-Apps",
+          "action": "deny",
+          "proto": "ip",
+          "port": "",
+          "acl": "ACL-SG-IOT-IN"
+        },
+        "threshold": null,
+        "standard_ref": "Cisco IOS extended ACL (first match)",
+        "text": "Sg-IoT \u2192 VPC-Apps: deny ip via ACL-SG-IOT-IN, applied inbound on the Sg-IoT gateway so the decision is made at the first layer-3 hop."
+      },
+      {
+        "rule_id": "ACL.default",
+        "domain": "ACL",
+        "inputs": {
+          "acl": "ACL-SG-IOT-IN",
+          "src": "Sg-IoT"
+        },
+        "threshold": null,
+        "standard_ref": "Cisco IOS extended ACL (implicit deny)",
+        "text": "ACL-SG-IOT-IN ends with 'permit ip any any' so traffic not covered by a policy is allowed; otherwise the IOS implicit deny would drop all other traffic from Sg-IoT."
+      },
+      {
+        "rule_id": "L1.in_building",
+        "domain": "L1",
+        "inputs": {
+          "count": 12
+        },
+        "threshold": "copper \u2264 100 m",
+        "standard_ref": "IEEE 802.3an-2006",
+        "text": "12 in-building connection(s) (switch-to-switch and router-to-switch in the same building) are patch runs assumed \u2264 100 m, so Cat6a 10GBASE-T is used."
+      }
+    ]
+  }
+}

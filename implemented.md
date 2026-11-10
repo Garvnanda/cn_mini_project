@@ -28,7 +28,13 @@ Only list items whose tests were actually run and passed.
 | 11 Simulator | done |
 | 12 Verifier | done |
 | 13 Batfish adapter | code written; live run UNVERIFIED (13.2, 13.3 open) |
-| 14–26 | not started |
+| 14 What-if | done |
+| 15 Security linter | done |
+| 16 BOM | done (placeholder prices) |
+| 17 Diff & versioning | done |
+| 18 Exporters | done except 18.2 GNS3 (deferred, D-030) |
+| 19 CLI | done except `nl` (Phase 21) |
+| 20–26 | not started |
 
 ## Done
 ### Docs bootstrap  (2026-11-10)
@@ -102,3 +108,20 @@ Only list items whose tests were actually run and passed.
 - Golden files regenerated on purpose: new presets added; `wan` fixture changed by the AD 254 fix.
 - Run: `cd backend && .venv/Scripts/python -m pytest` -> 330 passed, 1 skipped (live Batfish)
 - Known gaps / UNVERIFIED: interface bandwidths used for OSPF cost (TenGig 10000, Gig/Vlan 1000, Tunnel 0.1 Mb/s) are [verify]; sim ignores STP blocking (L2 domains only), ARP/return-path is not traced separately (each ordered pair is probed one way, both directions are covered by the matrix); hosts are modelled one per segment (last usable address).
+
+### Completion pass on Phases 0-13  (2026-11-10)
+- Latency budget (closes the 9.2 "sub-5 ms" gap at the design level): `Link.max_latency_ms`, `media.check_latency()` (5 µs/km propagation), rules `L1.latency` / `L1.latency_violation`; Metro preset links carry `max_latency_ms: 5` (35 km -> 0.175 ms). QoS config itself not generated (needs new IOS commands; owner OK pending).
+- Topology fix found by Phase 14 SPOF analysis: a lone router now uplinks to every core (D-025, ai_audit_log.md entry 3). Goldens for `metro` and `metro_man` regenerated on purpose.
+- Still open: 13.2 / 13.3 need a live Batfish container (Docker is installed but its daemon was not running).
+
+### Phases 14-19 — What-if, linter, BOM, diff, exporters, CLI  (2026-11-10)
+- `analysis/whatif.py`: `simulate_failure(design, links=["A--B" | "A:IF--B:IF"], nodes=[...])` shuts interfaces in the parsed configs, re-runs the full segment-pair matrix and reports broken / rerouted / unaffected flows with before/after paths; convergence rationale `WHATIF.ospf` (dead 40 s / hello 10 s), `WHATIF.hsrp` (hold 10 s / hello 3 s), `WHATIF.rstp`. `spof_analysis(design)`: removes each non-access device and each cable, reports elements that separate segment-hosting devices, resilience score (campus_lan 100, metro_man 97, global_wan 4).
+- `analysis/lint.py`: 13 rules SEC-01..13 (unpruned trunk, native VLAN 1, no BPDU Guard, no PortFast, port left in VLAN 1, telnet/unrestricted VTY, no password encryption, no SSHv2, OSPF without auth, no enable secret, CHANGE_ME placeholders, ACL ends permit any (info), VTY without login). `lint_configs()` for designs, `lint_text()` for pasted IOS (parser `strict=False`). Generated presets score 86-90.
+- Parser additions: services, ssh v2, enable secret/password, placeholder detection, `line vty` transport/login/password, OSPF auth (area + interface), non-strict mode.
+- `analysis/bom.py` + `data/prices.json` (PLACEHOLDER INR prices): cable meters per media (+10 % slack), optics per cable end, PoE vs non-PoE access members, core/distribution/routers/VGW, monthly carrier/internet circuits, PoE watts per stack; every line names its rule id; OM3 / Cat6 hints only when every run fits (300 m / 55 m).
+- `analysis/diff.py`: versioned snapshot (`version: 1`) + `load_snapshot`; diff of decisions (grouped by rule family + identifying inputs, e.g. `L1.media[link=BldgA--BldgC]` L1.mmf -> L1.smf_lr), IP plan, per-device unified config diff, devices added/removed.
+- `export/exporter.py`: per-device .cfg, `design.json`, `design_report.md` (summary, media, IP plan, rationale, verification, security findings, SPOFs, BOM), `cabling_guide.md` (port-to-port table for Packet Tracer). `exports/{campus_lan,metro_man,global_wan}/` regenerated (owner commits).
+- `cli.py` (Typer): `design [--export]`, `explain [--domain]`, `verify`, `trace TARGET SRC DST [--proto --port]` (segment names or IPs), `fail [--link] [--node]` (no options = SPOF report), `lint FILE|TARGET`, `bom`, `diff A B`. Exit codes: InvalidParameter 2, InvalidPrefix 3, PhysicalDistance 4, AddressSpace 5, Topology 6, verify/trace/fail failure 1. UTF-8 output forced on Windows. Run: `cd backend && .venv/Scripts/python cli.py --help`.
+- Tests: `test_whatif.py`, `test_lint.py`, `test_bom.py`, `test_diff.py`, `test_export.py`, `test_cli.py`, latency tests in `test_media.py`.
+- Run: `cd backend && .venv/Scripts/python -m pytest` -> 391 passed, 1 skipped (live Batfish)
+- Not done: 18.2 GNS3 project (D-030), `nl` command (Phase 21).

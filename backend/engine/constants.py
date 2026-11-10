@@ -6,6 +6,7 @@ OM4_MAX_M = 400           # 10GBASE-SR on OM4, IEEE 802.3ae
 LR_MAX_M = 10_000         # 10GBASE-LR on OS2, IEEE 802.3ae
 ER_MAX_M = 40_000         # 10GBASE-ER on OS2, IEEE 802.3ae
 MAX_MODELLED_GBPS = 10    # only 10G transceivers are modelled
+FIBER_US_PER_KM = 5.0     # propagation in glass, c / n with n ~ 1.47 (docs/standards.md [verify])
 
 # --- Optical loss figures (dB)
 MMF_850_DB_PER_KM = 3.5   # TIA-568 max
@@ -59,3 +60,9 @@ ENTERPRISE_ASN = 65000             # RFC 6996 private range
 CLOUD_ASN_BASE = 65100
 INTERNET_UNDERLAY = "203.0.113.0/24"  # RFC 5737 TEST-NET-3, stands in for public IPs
 IPSEC_PSK = "CHANGE_ME_PSK"           # placeholder, must be replaced before deployment
+
+# --- Timers (protocol defaults, docs/standards.md)
+OSPF_HELLO_S = 10
+OSPF_DEAD_S = 40
+HSRP_HELLO_S = 3
+HSRP_HOLD_S = 10

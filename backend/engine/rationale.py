@@ -110,6 +110,17 @@ RULES: dict[str, tuple[str, str, str | None, str]] = {
         "{count} in-building connection(s) (switch-to-switch and router-to-switch in the same building) "
         "are patch runs assumed ≤ 100 m, so Cat6a 10GBASE-T is used.",
     ),
+    "L1.latency": (
+        "L1", "Project rule; physics: fiber propagation ≈ 5 µs/km", "one-way ≤ {budget_ms} ms",
+        "{link}: {km} km × {us_per_km} µs/km = {prop_ms} ms one-way propagation, within the {budget_ms} ms "
+        "budget ({headroom_ms} ms left for serialization, queuing and switching). Delay-sensitive traffic "
+        "still needs priority queuing so congestion does not consume that headroom.",
+    ),
+    "L1.latency_violation": (
+        "L1", "Project rule; physics: fiber propagation ≈ 5 µs/km", "one-way ≤ {budget_ms} ms",
+        "{link}: {km} km of fiber alone adds {prop_ms} ms one-way, above the {budget_ms} ms budget. "
+        "No equipment choice can beat propagation delay; move the site closer or relax the requirement.",
+    ),
     # ---- Topology
     "TOPO.collapsed_core": (
         "TOPO", "Cisco hierarchical campus design; Project rule", "buildings < 4",
@@ -232,6 +243,40 @@ RULES: dict[str, tuple[str, str, str | None, str]] = {
         "distance {ad} (floating). BGP `network` needs an exact route in the RIB, but an AD-1 static would beat "
         "the OSPF summary for the same prefix and blackhole remote areas; at AD {ad} the static is used only "
         "when OSPF has no route.",
+    ),
+    # ---- What-if
+    "WHATIF.ospf": (
+        "WHATIF", "RFC 2328", "dead = 4 × hello",
+        "Routed path {element} failed. A physical link-down is seen at once (loss of carrier) and OSPF "
+        "reruns SPF; a silent failure (e.g. inside a carrier service) is detected only after the OSPF "
+        "dead interval of {dead} s (hello {hello} s).",
+    ),
+    "WHATIF.hsrp": (
+        "WHATIF", "RFC 2281", "hold {hold} s",
+        "HSRP active gateway {element} failed. The standby router takes over the virtual IP after the "
+        "hold time of {hold} s (hello {hello} s); hosts keep the same default gateway address.",
+    ),
+    "WHATIF.rstp": (
+        "WHATIF", "IEEE 802.1w", None,
+        "Layer-2 path {element} failed. RSTP moves the alternate port to forwarding through its "
+        "proposal/agreement handshake instead of the timer-based listening/learning of classic STP.",
+    ),
+    "WHATIF.spof": (
+        "WHATIF", "Project rule (graph cut analysis)", None,
+        "{element} is a single point of failure: removing it separates {count} segment-hosting device(s) "
+        "({examples}) from the rest of the network.",
+    ),
+    "WHATIF.score": (
+        "WHATIF", "Project rule (graph cut analysis)", None,
+        "Resilience score {score}/100: {spof} of {total} infrastructure elements (non-access devices and "
+        "cables) are single points of failure. Access stacks are excluded because users on a stack always "
+        "depend on it.",
+    ),
+    # ---- BOM
+    "BOM.alternative": (
+        "BOM", "IEEE 802.3ae; IEEE 802.3an", None,
+        "Cheaper option: {alt} instead of {current} on {links} because every such run is ≤ {limit} m "
+        "(the {alt} limit), saving about ₹{saving} at the listed estimate prices.",
     ),
     # ---- ACL
     "ACL.policy": (

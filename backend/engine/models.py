@@ -83,6 +83,7 @@ class Link(_Input):
     required_gbps: float = Field(default=10, gt=0)
     media_preference: MediaPreference = MediaPreference.AUTO
     transport: Transport = Transport.FIBER
+    max_latency_ms: float | None = Field(default=None, gt=0)  # one-way budget
 
     @model_validator(mode="after")
     def _distinct_ends(self) -> "Link":
