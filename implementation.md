@@ -7,21 +7,21 @@ Each phase ends with an **Exit check** that must hold before moving on.
 ---
 
 ## Phase 0 — Project skeleton & tooling
-- [ ] 0.1 Create layout: `backend/`, `frontend/`, `docs/`, `exports/`
-- [ ] 0.2 `backend/pyproject.toml` (or `requirements.txt`) with pinned: pydantic, jinja2, fastapi, uvicorn, typer, textual, httpx, pytest, hypothesis
-- [ ] 0.3 `pytest.ini`, empty `backend/engine/__init__.py`, one trivial passing test
-- [ ] 0.4 `.gitignore` (venv, node_modules, `__pycache__`, `.env`, exports/tmp)
-- [ ] 0.5 `.env.example` with `OPENROUTER_API_KEY=`, `OPENROUTER_MODEL=`, `BATFISH_HOST=`
-- [ ] 0.6 `README.md` stub: setup + run commands
+- [x] 0.1 Create layout: `backend/`, `frontend/`, `docs/`, `exports/`
+- [x] 0.2 `backend/pyproject.toml` (or `requirements.txt`) with pinned: pydantic, jinja2, fastapi, uvicorn, typer, textual, httpx, pytest, hypothesis
+- [x] 0.3 `pytest.ini`, empty `backend/engine/__init__.py`, one trivial passing test
+- [x] 0.4 `.gitignore` (venv, node_modules, `__pycache__`, `.env`, exports/tmp)
+- [x] 0.5 `.env.example` with `OPENROUTER_API_KEY=`, `OPENROUTER_MODEL=`, `BATFISH_HOST=`
+- [x] 0.6 `README.md` stub: setup + run commands
 
 **Exit check:** `pytest -q` passes on a fresh venv.
 
 ## Phase 1 — Domain models & errors
-- [ ] 1.1 `engine/errors.py`: `NetArchError` base; `PhysicalDistanceViolationError`, `AddressSpaceExhaustedError`, `InvalidPrefixError`, `InvalidParameterError`, `TopologyError`
-- [ ] 1.2 `engine/models.py` input models: `Site`, `Building`, `Link` (distance_m, required_gbps, media_preference), `Segment` (name, vlan, hosts, role: user/voice/guest/server/mgmt/iot), `DesignInput` (profile, root_prefix, sites, links, segments, resiliency, policies)
-- [ ] 1.3 Output models: `Rationale`, `MediaDecision`, `Subnet`, `RoutingDecision`, `Device`, `Interface`, `DesignResult`
-- [ ] 1.4 Pydantic validators: positive hosts, VLAN 1–4094 (reject 1 for user data), unique VLAN ids, valid CIDR root
-- [ ] 1.5 Tests for validation failures
+- [x] 1.1 `engine/errors.py`: `NetArchError` base; `PhysicalDistanceViolationError`, `AddressSpaceExhaustedError`, `InvalidPrefixError`, `InvalidParameterError`, `TopologyError`
+- [x] 1.2 `engine/models.py` input models: `Site`, `Building`, `Link` (distance_m, required_gbps, media_preference), `Segment` (name, vlan, hosts, role: user/voice/guest/server/mgmt/iot), `DesignInput` (profile, root_prefix, sites, links, segments, resiliency, policies)
+- [x] 1.3 Output models: `Rationale`, `MediaDecision`, `Subnet`, `RoutingDecision`, `Device`, `Interface`, `DesignResult`
+- [x] 1.4 Pydantic validators: positive hosts, VLAN 1–4094 (reject 1 for user data), unique VLAN ids, valid CIDR root
+- [x] 1.5 Tests for validation failures
 
 **Exit check:** invalid inputs raise typed errors with clear messages.
 
@@ -61,7 +61,7 @@ Each phase ends with an **Exit check** that must hold before moving on.
 - [ ] 5.3 Port assignment: access ports per VLAN, uplinks, P2P links
 - [ ] 5.4 Access switch count from host density (ports per switch constant) + PoE budget per switch
 - [ ] 5.5 Redundancy: dual-homed uplinks when `resiliency=high`
-- [ ] 5.6 Topology as graph (`networkx`-free adjacency dict) with coordinates for UI
+- [ ] 5.6 Topology as graph (plain adjacency dict, no networkx) with coordinates for UI
 - [ ] 5.7 Tests: device counts per preset, no orphan ports
 
 **Exit check:** each preset yields a connected graph.
