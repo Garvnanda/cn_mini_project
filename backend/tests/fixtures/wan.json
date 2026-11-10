@@ -1,0 +1,24 @@
+{
+  "profile": "global_wan",
+  "root_prefix": "10.0.0.0/14",
+  "sites": [
+    {"name": "Delhi", "kind": "hq"},
+    {"name": "Mumbai", "kind": "branch"},
+    {"name": "Bengaluru", "kind": "branch"},
+    {"name": "Singapore", "kind": "branch"},
+    {"name": "CloudVPC", "kind": "cloud"}
+  ],
+  "links": [
+    {"a": "Delhi", "b": "Mumbai", "distance_m": 1150000, "transport": "carrier"},
+    {"a": "Delhi", "b": "Bengaluru", "distance_m": 1740000, "transport": "carrier"},
+    {"a": "Delhi", "b": "Singapore", "distance_m": 4150000, "transport": "internet"},
+    {"a": "Delhi", "b": "CloudVPC", "distance_m": 1000, "transport": "internet"}
+  ],
+  "segments": [
+    {"name": "Delhi-IoT", "vlan": 10, "hosts": 600, "role": "iot", "location": "Delhi"},
+    {"name": "Mumbai-IoT", "vlan": 20, "hosts": 500, "role": "iot", "location": "Mumbai"},
+    {"name": "Blr-IoT", "vlan": 30, "hosts": 500, "role": "iot", "location": "Bengaluru"},
+    {"name": "Sg-IoT", "vlan": 40, "hosts": 400, "role": "iot", "location": "Singapore"},
+    {"name": "VPC-Apps", "vlan": 100, "hosts": 200, "role": "server", "location": "CloudVPC"}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "profile": "metro_man",
+  "root_prefix": "10.20.0.0/16",
+  "resiliency": "high",
+  "sites": [
+    {"name": "HQ", "kind": "hq"},
+    {"name": "Branch1", "kind": "branch"},
+    {"name": "Branch2", "kind": "branch"}
+  ],
+  "links": [
+    {"a": "HQ", "b": "Branch1", "distance_m": 22000},
+    {"a": "HQ", "b": "Branch2", "distance_m": 35000, "transport": "carrier"}
+  ],
+  "segments": [
+    {"name": "HQ-Users", "vlan": 10, "hosts": 200, "role": "user", "location": "HQ"},
+    {"name": "HQ-Trading", "vlan": 20, "hosts": 50, "role": "server", "location": "HQ"},
+    {"name": "B1-Users", "vlan": 110, "hosts": 120, "role": "user", "location": "Branch1"},
+    {"name": "B2-Users", "vlan": 210, "hosts": 80, "role": "user", "location": "Branch2"}
+  ],
+  "policies": [
+    {"src": "B2-Users", "dst": "HQ-Trading", "action": "allow", "proto": "tcp", "port": 443},
+    {"src": "B2-Users", "dst": "HQ-Trading", "action": "deny"}
+  ]
+}

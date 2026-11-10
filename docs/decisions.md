@@ -39,3 +39,18 @@ Do not change a decision without adding a new entry that supersedes it.
 
 ### D-011 — Git owned by user (2026-11-10)
 - Decision: AI never commits or pushes.
+
+### D-012 — Optical budget rule (2026-11-10, supersedes D-009)
+- Context: D-009 (3 dB margin required) made 10GBASE-LR fail at ~2 km and ER fail for the Metro MAN 35 km links, because the IEEE channel insertion loss figures already include allowances.
+- Decision: pass when total loss ≤ max channel insertion loss of the transceiver. Margin < 3 dB passes with a warning in the rationale (recommend OTDR test). If LR fails its budget, upgrade to ER with an explanation; if ER fails, raise `PhysicalDistanceViolationError`.
+- Values for OS2 loss and channel insertion loss are marked [verify] in standards.md.
+
+### D-013 — Gateway reserved in host sizing (2026-11-10)
+- Decision: LAN subnet must hold requested hosts + 1 gateway (first usable address). Utilization = (hosts + 1) / usable.
+- P2P links use /31 (no gateway, no broadcast); loopbacks use /32.
+
+### D-014 — Only 10G transceivers modelled (2026-11-10)
+- Decision: `required_gbps > 10` raises `InvalidParameterError`. Keeps scope inside the assignment's 10GBASE rules.
+
+### D-015 — Rationale templates central (2026-11-10)
+- Decision: all justification text lives in `engine/rationale.py` `RULES`; engine code calls `explain(rule_id, **inputs)`. `Rationale` model stays in `models.py` and is re-exported.

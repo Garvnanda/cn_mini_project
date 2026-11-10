@@ -1,0 +1,28 @@
+{
+  "profile": "campus_lan",
+  "root_prefix": "10.10.0.0/16",
+  "resiliency": "high",
+  "sites": [{"name": "Campus", "kind": "campus"}],
+  "buildings": [
+    {"name": "BldgA", "site": "Campus"},
+    {"name": "BldgB", "site": "Campus"},
+    {"name": "BldgC", "site": "Campus"}
+  ],
+  "links": [
+    {"a": "BldgA", "b": "BldgB", "distance_m": 250},
+    {"a": "BldgA", "b": "BldgC", "distance_m": 380}
+  ],
+  "segments": [
+    {"name": "Staff-A", "vlan": 10, "hosts": 500, "role": "user", "location": "BldgA"},
+    {"name": "APs-A", "vlan": 40, "hosts": 30, "role": "iot", "location": "BldgA", "poe": true},
+    {"name": "Staff-B", "vlan": 11, "hosts": 450, "role": "user", "location": "BldgB"},
+    {"name": "APs-B", "vlan": 41, "hosts": 30, "role": "iot", "location": "BldgB", "poe": true},
+    {"name": "Staff-C", "vlan": 12, "hosts": 400, "role": "user", "location": "BldgC"},
+    {"name": "Guest-C", "vlan": 30, "hosts": 150, "role": "guest", "location": "BldgC"},
+    {"name": "Servers", "vlan": 50, "hosts": 40, "role": "server", "location": "BldgA"}
+  ],
+  "policies": [
+    {"src": "Guest-C", "dst": "Servers", "action": "deny"},
+    {"src": "Guest-C", "dst": "Staff-A", "action": "deny"}
+  ]
+}

@@ -2,7 +2,7 @@
 
 from enum import Enum
 from ipaddress import IPv4Network
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
@@ -52,6 +52,12 @@ class PolicyAction(str, Enum):
     DENY = "deny"
 
 
+class Transport(str, Enum):
+    FIBER = "fiber"        # owned/dark fiber: L1 media engine designs the cable
+    CARRIER = "carrier"    # provider L2/L3 service (EVPL, MPLS): provider owns L1
+    INTERNET = "internet"  # public internet: carried inside an IPsec tunnel
+
+
 # ---------------------------------------------------------------- input
 
 
@@ -76,6 +82,7 @@ class Link(_Input):
     distance_m: float = Field(gt=0)
     required_gbps: float = Field(default=10, gt=0)
     media_preference: MediaPreference = MediaPreference.AUTO
+    transport: Transport = Transport.FIBER
 
     @model_validator(mode="after")
     def _distinct_ends(self) -> "Link":
@@ -101,8 +108,16 @@ class Policy(_Input):
     src: str
     dst: str
     action: PolicyAction
-    proto: str = "ip"
+    proto: Literal["ip", "tcp", "udp", "icmp"] = "ip"
     port: int | None = Field(default=None, ge=1, le=65535)
+
+    @model_validator(mode="after")
+    def _check(self) -> "Policy":
+        if self.src == self.dst:
+            raise ValueError(f"policy src and dst are the same segment '{self.src}'")
+        if self.port is not None and self.proto not in ("tcp", "udp"):
+            raise ValueError(f"port given but proto is '{self.proto}'; ports need tcp or udp")
+        return self
 
 
 class DesignInput(_Input):
@@ -182,7 +197,7 @@ def parse_design_input(data: dict[str, Any]) -> DesignInput:
 
 class Rationale(BaseModel):
     rule_id: str
-    domain: str  # e.g. "L1", "VLSM", "L2", "L3", "topology"
+    domain: str  # e.g. "L1", "VLSM", "L2", "ROUTE", "TOPO", "ACL"
     inputs: dict[str, Any] = {}
     threshold: str | None = None
     standard_ref: str
@@ -206,37 +221,113 @@ class Subnet(BaseModel):
     mask: str
     wildcard: str
     gateway: str | None
-    broadcast: str | None  # None for /31 and /32
+    broadcast: str | None  # None for /31, /32 and container blocks
     first_usable: str
     last_usable: str
     usable_hosts: int
     utilization_pct: float
+    unit: str | None = None  # addressing unit (OSPF area / cloud) it was carved from
 
 
 class RoutingDecision(BaseModel):
     protocol: str
-    areas: dict[str, int] = {}
-    asn: dict[str, int] = {}
+    areas: dict[str, int] = {}   # unit name -> OSPF area
+    asn: dict[str, int] = {}     # hostname -> BGP ASN
     rationale: list[Rationale]
 
 
 class Interface(BaseModel):
     name: str
+    mode: str  # access | trunk | routed | underlay | svi | loopback | tunnel | unused
     description: str = ""
-    mode: str  # access | trunk | routed | svi | loopback
+    range: bool = False          # rendered as `interface range <name>`
     vlan: int | None = None
     allowed_vlans: list[int] = []
     native_vlan: int | None = None
     ip: str | None = None
     mask: str | None = None
-    peer: str | None = None
+    peer: str | None = None      # "HOST IFNAME"
+    segment: str | None = None   # LAN segment this L3 interface is gateway for
+    hsrp_group: int | None = None
+    hsrp_vip: str | None = None
+    hsrp_priority: int | None = None
+    area: int | None = None      # OSPF area; None = not in OSPF
+    acl_in: str | None = None
+    tunnel_source: str | None = None
+    tunnel_destination: str | None = None
+    media: str | None = None
+    transceiver: str | None = None
+
+
+class OspfConfig(BaseModel):
+    pid: int
+    router_id: str
+    ref_bw: int
+    networks: list[tuple[str, str, int]] = []   # (ip, wildcard, area)
+    passive: list[str] = []
+    summaries: list[tuple[int, str, str]] = []  # (area, network, mask)
+    redistribute_bgp: int | None = None
+
+
+class BgpConfig(BaseModel):
+    asn: int
+    router_id: str
+    neighbors: list[tuple[str, int]] = []       # (ip, remote-as)
+    networks: list[tuple[str, str]] = []        # (network, mask)
+
+
+class AclEntry(BaseModel):
+    action: str  # permit | deny
+    proto: str
+    src: str
+    src_wc: str
+    dst: str
+    dst_wc: str
+    port: int | None = None
+
+
+class Acl(BaseModel):
+    name: str
+    entries: list[AclEntry]
+
+
+class StaticRoute(BaseModel):
+    network: str
+    mask: str
+    next_hop: str  # IP or interface (e.g. Null0)
 
 
 class Device(BaseModel):
     hostname: str
-    role: str  # core | distribution | access | router | edge | cloud
+    role: str  # core | distribution | access | router | cloud
     site: str
+    location: str
+    l3: bool = False
+    members: int = 1  # stack members (access switches)
     interfaces: list[Interface] = []
+    vlans: dict[int, str] = {}
+    stp_primary: list[int] = []
+    stp_secondary: list[int] = []
+    ospf: OspfConfig | None = None
+    bgp: BgpConfig | None = None
+    acls: list[Acl] = []
+    static_routes: list[StaticRoute] = []
+    ipsec_peers: list[str] = []
+    poe_watts: float = 0
+
+    def iface(self, name: str) -> Interface:
+        return next(i for i in self.interfaces if i.name == name)
+
+
+class Cable(BaseModel):
+    a: str
+    a_if: str
+    b: str
+    b_if: str
+    kind: str  # trunk | routed | underlay
+    link: str | None = None  # input Link.key; None = in-building patch
+    media: str = ""
+    transceiver: str = ""
 
 
 class DesignResult(BaseModel):
@@ -245,4 +336,9 @@ class DesignResult(BaseModel):
     subnets: list[Subnet] = []
     routing: RoutingDecision | None = None
     devices: list[Device] = []
+    cables: list[Cable] = []
+    tiers: dict[str, str] = {}
     rationale: list[Rationale] = []
+
+    def device(self, hostname: str) -> Device:
+        return next(d for d in self.devices if d.hostname == hostname)

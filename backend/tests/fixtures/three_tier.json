@@ -1,0 +1,20 @@
+{
+  "profile": "custom",
+  "root_prefix": "10.30.0.0/16",
+  "sites": [{"name": "Uni", "kind": "campus"}],
+  "buildings": [
+    {"name": "Admin", "site": "Uni"}, {"name": "Lib", "site": "Uni"},
+    {"name": "Eng", "site": "Uni"}, {"name": "Sci", "site": "Uni"}
+  ],
+  "links": [
+    {"a": "Admin", "b": "Lib", "distance_m": 90},
+    {"a": "Admin", "b": "Eng", "distance_m": 300},
+    {"a": "Admin", "b": "Sci", "distance_m": 900}
+  ],
+  "segments": [
+    {"name": "Admin-Users", "vlan": 10, "hosts": 100, "role": "user", "location": "Admin"},
+    {"name": "Lib-Users", "vlan": 20, "hosts": 100, "role": "user", "location": "Lib"},
+    {"name": "Eng-Users", "vlan": 30, "hosts": 100, "role": "user", "location": "Eng"},
+    {"name": "Sci-Users", "vlan": 40, "hosts": 100, "role": "user", "location": "Sci"}
+  ]
+}

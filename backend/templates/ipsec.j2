@@ -1,0 +1,19 @@
+{% if d.ipsec_peers %}
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+ lifetime 86400
+!
+{% for p in d.ipsec_peers %}
+crypto isakmp key {{ psk }} address {{ p }}
+{% endfor %}
+!
+crypto ipsec transform-set TS-AES256 esp-aes 256 esp-sha256-hmac
+ mode tunnel
+!
+crypto ipsec profile {{ ipsec_profile }}
+ set transform-set TS-AES256
+!
+{% endif %}

@@ -1,0 +1,7 @@
+{% for a in d.acls %}
+ip access-list extended {{ a.name }}
+{% for e in a.entries %}
+ {{ e.action }} {{ e.proto }} {{ e.src }}{{ (' ' ~ e.src_wc) if e.src_wc }} {{ e.dst }}{{ (' ' ~ e.dst_wc) if e.dst_wc }}{{ (' eq ' ~ e.port) if e.port }}
+{% endfor %}
+!
+{% endfor %}

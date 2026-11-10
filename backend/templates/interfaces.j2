@@ -1,0 +1,46 @@
+{% for i in d.interfaces %}
+interface {{ 'range ' if i.range }}{{ i.name }}
+{% if i.description %}
+ description {{ i.description }}
+{% endif %}
+{% if i.mode == 'access' %}
+ switchport mode access
+ switchport access vlan {{ i.vlan }}
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+{% elif i.mode == 'unused' %}
+ switchport mode access
+ switchport access vlan {{ i.vlan }}
+ shutdown
+{% elif i.mode == 'trunk' %}
+ switchport mode trunk
+ switchport trunk native vlan {{ i.native_vlan }}
+ switchport trunk allowed vlan {{ i.allowed_vlans|join(',') }}
+ no shutdown
+{% else %}
+{% if i.mode in ('routed', 'underlay') and is_switch %}
+ no switchport
+{% endif %}
+ ip address {{ i.ip }} {{ i.mask }}
+{% if i.hsrp_group is not none %}
+ standby version 2
+ standby {{ i.hsrp_group }} ip {{ i.hsrp_vip }}
+ standby {{ i.hsrp_group }} priority {{ i.hsrp_priority }}
+ standby {{ i.hsrp_group }} preempt
+{% endif %}
+{% if i.acl_in %}
+ ip access-group {{ i.acl_in }} in
+{% endif %}
+{% if i.mode == 'tunnel' %}
+ tunnel source {{ i.tunnel_source }}
+ tunnel destination {{ i.tunnel_destination }}
+ tunnel mode ipsec ipv4
+ tunnel protection ipsec profile {{ ipsec_profile }}
+{% endif %}
+{% if i.mode != 'loopback' %}
+ no shutdown
+{% endif %}
+{% endif %}
+!
+{% endfor %}

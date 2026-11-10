@@ -1,0 +1,13 @@
+{% for v, n in d.vlans|dictsort %}
+vlan {{ v }}
+ name {{ n|ios_name }}
+{% endfor %}
+!
+spanning-tree mode rapid-pvst
+{% if d.stp_primary %}
+spanning-tree vlan {{ d.stp_primary|join(',') }} root primary
+{% endif %}
+{% if d.stp_secondary %}
+spanning-tree vlan {{ d.stp_secondary|join(',') }} root secondary
+{% endif %}
+!

@@ -18,12 +18,16 @@ Rule: code constants and rationale text must use values from this file. Values m
 |---|---|---|
 | MMF attenuation @850 nm (max) | 3.5 dB/km | TIA-568 |
 | OS2 attenuation @1310 nm (typical) | 0.4 dB/km [verify] | vendor typical |
-| OS2 attenuation @1550 nm (typical) | 0.3 dB/km [verify] | vendor typical |
+| OS2 attenuation @1550 nm (typical) | 0.25 dB/km [verify] | vendor typical (changed from 0.3, see D-012) |
 | Mated connector pair loss (max) | 0.75 dB | TIA-568 |
 | Fusion splice loss (max) | 0.3 dB | TIA-568 |
-| Design safety margin | 3 dB | project choice (docs/decisions.md) |
-| SFP+ LR power budget | [verify from datasheet] | vendor datasheet |
-| SFP+ ER power budget | [verify from datasheet] | vendor datasheet |
+| Low-margin warning threshold | 3 dB | project choice (D-012): warns, does not fail |
+| 10GBASE-SR max channel insertion loss (OM4, 400 m) | 2.9 dB [verify] | IEEE 802.3ae / vendor |
+| 10GBASE-LR max channel insertion loss | 6.2 dB [verify] | IEEE 802.3ae |
+| 10GBASE-ER max channel insertion loss | 11.0 dB [verify] | IEEE 802.3ae |
+
+Budget rule: total loss (fiber + connectors + splices) must be ≤ channel insertion loss.
+Consequence with current values: ER passes up to 38 km with 2 connectors; 40 km fails (11.5 dB). Revisit after verifying.
 
 ## PoE
 | Standard | Power at PSE port | Source |

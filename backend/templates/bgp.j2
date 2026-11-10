@@ -1,0 +1,17 @@
+{% for r in d.static_routes %}
+ip route {{ r.network }} {{ r.mask }} {{ r.next_hop }}
+{% endfor %}
+{% if d.static_routes %}
+!
+{% endif %}
+{% if d.bgp %}
+router bgp {{ d.bgp.asn }}
+ bgp router-id {{ d.bgp.router_id }}
+{% for ip, asn in d.bgp.neighbors %}
+ neighbor {{ ip }} remote-as {{ asn }}
+{% endfor %}
+{% for net, mask in d.bgp.networks %}
+ network {{ net }} mask {{ mask }}
+{% endfor %}
+!
+{% endif %}

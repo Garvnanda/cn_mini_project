@@ -26,32 +26,32 @@ Each phase ends with an **Exit check** that must hold before moving on.
 **Exit check:** invalid inputs raise typed errors with clear messages.
 
 ## Phase 2 — Rationale engine (explainability core)
-- [ ] 2.1 `engine/rationale.py`: `Rationale(rule_id, domain, inputs, threshold, standard_ref, text)`
-- [ ] 2.2 `RationaleLog` collector (append, by_domain, to_markdown, to_json)
-- [ ] 2.3 Sentence templates per rule id (no free-form strings scattered in code)
-- [ ] 2.4 Tests: each rule id renders; missing fields raise
+- [x] 2.1 `engine/rationale.py`: `Rationale(rule_id, domain, inputs, threshold, standard_ref, text)`
+- [x] 2.2 `RationaleLog` collector (append, by_domain, to_markdown, to_json)
+- [x] 2.3 Sentence templates per rule id (no free-form strings scattered in code)
+- [x] 2.4 Tests: each rule id renders; missing fields raise
 
 **Exit check:** a dummy decision renders a full sentence with a standard citation.
 
 ## Phase 3 — L1 media engine
-- [ ] 3.1 `engine/constants.py`: load thresholds from `docs/standards.md` values (copper 100 m, OM4 400 m, LR 10 km, ER 40 km, loss figures)
-- [ ] 3.2 `select_media(link)`: ≤100 m Cat6a, 101–400 m OM4 SR, >400 m OS2 LR/ER
-- [ ] 3.3 Copper preference > 100 m → `PhysicalDistanceViolationError` with attenuation message
-- [ ] 3.4 Optical power budget calc: fiber loss/km × km + connectors + splices + margin vs transceiver budget → pass/fail + rationale
-- [ ] 3.5 Distance > ER limit → error (no silent fallback)
-- [ ] 3.6 Tests at 100/101, 400/401, 10000/10001, 40000/40001 m; copper 101 m error; budget fail case
+- [x] 3.1 `engine/constants.py`: load thresholds from `docs/standards.md` values (copper 100 m, OM4 400 m, LR 10 km, ER 40 km, loss figures)
+- [x] 3.2 `select_media(link)`: ≤100 m Cat6a, 101–400 m OM4 SR, >400 m OS2 LR/ER
+- [x] 3.3 Copper preference > 100 m → `PhysicalDistanceViolationError` with attenuation message
+- [x] 3.4 Optical power budget calc: fiber loss/km × km + connectors + splices + margin vs transceiver budget → pass/fail + rationale
+- [x] 3.5 Distance > ER limit → error (no silent fallback)
+- [x] 3.6 Tests at 100/101, 400/401, 10000/10001, 40000/40001 m; copper 101 m error; budget fail case
 
 **Exit check:** every link gets a media decision + rationale, or a typed error.
 
 ## Phase 4 — Bitwise VLSM allocator
-- [ ] 4.1 `engine/bitmath.py`: ip↔int, prefix↔mask, wildcard (`~mask & 0xFFFFFFFF`), network, broadcast, block size, alignment
-- [ ] 4.2 `hosts_to_prefix(n)`: smallest prefix with `2^(32-p) - 2 ≥ n` (+1 for gateway policy as documented)
-- [ ] 4.3 `/31` for P2P links (RFC 3021), `/32` loopbacks
-- [ ] 4.4 `allocate(root, requests)`: sort desc, aligned first-fit, no overlap
-- [ ] 4.5 Per-subnet: network, mask, wildcard, gateway (first usable), broadcast, usable range, utilization %
-- [ ] 4.6 Overall efficiency rationale (allocated vs requested vs root)
-- [ ] 4.7 Exhaustion → `AddressSpaceExhaustedError` with needed vs available
-- [ ] 4.8 Tests: wildcard for all /0–/32, oracle vs `ipaddress`, Hypothesis no-overlap/inside-root, exhaustion, /31, /32
+- [x] 4.1 `engine/bitmath.py`: ip↔int, prefix↔mask, wildcard (`~mask & 0xFFFFFFFF`), network, broadcast, block size, alignment
+- [x] 4.2 `hosts_to_prefix(n)`: smallest prefix with `2^(32-p) - 2 ≥ n` (+1 for gateway policy as documented)
+- [x] 4.3 `/31` for P2P links (RFC 3021), `/32` loopbacks
+- [x] 4.4 `allocate(root, requests)`: sort desc, aligned first-fit, no overlap
+- [x] 4.5 Per-subnet: network, mask, wildcard, gateway (first usable), broadcast, usable range, utilization %
+- [x] 4.6 Overall efficiency rationale (allocated vs requested vs root)
+- [x] 4.7 Exhaustion → `AddressSpaceExhaustedError` with needed vs available
+- [x] 4.8 Tests: wildcard for all /0–/32, oracle vs `ipaddress`, Hypothesis no-overlap/inside-root, exhaustion, /31, /32
 
 **Exit check:** Hypothesis 500 random cases, zero overlap.
 
