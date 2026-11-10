@@ -160,56 +160,56 @@ Each phase ends with an **Exit check** that must hold before moving on.
 ## Phase 19 — CLI (Typer)
 - [x] 19.1 `netarch design <preset|file> --export DIR`
 - [x] 19.2 `netarch explain`, `netarch verify`, `netarch trace SRC DST`, `netarch fail LINK`
-- [ ] 19.3 `netarch lint FILE`, `netarch bom`, `netarch diff A B` done; `netarch nl "text"` waits for Phase 21
+- [x] 19.3 `netarch lint FILE`, `netarch bom`, `netarch diff A B`, `netarch nl "text" [--out FILE]`
 - [x] 19.4 Exit codes per error type; tests with `CliRunner`
 
 ## Phase 20 — FastAPI backend
-- [ ] 20.1 Endpoints: `/presets`, `/design`, `/verify`, `/trace`, `/whatif`, `/lint`, `/bom`, `/diff`, `/nl`, `/export/{fmt}`, `/health`
-- [ ] 20.2 Error → HTTP mapping (422 with typed error body)
-- [ ] 20.3 CORS for Vercel domain only
-- [ ] 20.4 Rate limit on `/nl`
-- [ ] 20.5 Tests with `TestClient`
+- [x] 20.1 Endpoints: `/presets`, `/design`, `/verify`, `/trace`, `/whatif`, `/lint`, `/bom`, `/diff`, `/nl`, `/export/{fmt}`, `/health`
+- [x] 20.2 Error → HTTP mapping (422 with typed error body)
+- [x] 20.3 CORS for Vercel domain only
+- [x] 20.4 Rate limit on `/nl`
+- [x] 20.5 Tests with `TestClient`
 
 ## Phase 21 — Natural-language input (OpenRouter)
-- [ ] 21.1 JSON schema for `DesignInput` sent to model (structured output)
-- [ ] 21.2 httpx client, timeout, retries, model from env
-- [ ] 21.3 Validate response with Pydantic; on failure return field errors, never auto-fill decisions
-- [ ] 21.4 Offline regex/keyword fallback parser
-- [ ] 21.5 Tests with mocked HTTP (no real key in tests)
+- [x] 21.1 JSON schema for `DesignInput` sent to model (structured output)
+- [x] 21.2 httpx client, timeout, retries, model from env
+- [x] 21.3 Validate response with Pydantic; on failure return field errors, never auto-fill decisions
+- [x] 21.4 Offline regex/keyword fallback parser
+- [x] 21.5 Tests with mocked HTTP (no real key in tests)
 
 ## Phase 22 — TUI (Textual)
-- [ ] 22.1 Preset picker + run
-- [ ] 22.2 Tabs: Decisions, IP Plan, Configs, Verify, What-if, BOM, Lint
-- [ ] 22.3 Link toggle for failure sim
-- [ ] 22.4 Smoke test with Textual pilot
+- [x] 22.1 Preset picker + run
+- [x] 22.2 Tabs: Decisions, IP Plan, Configs, Verify, What-if, BOM, Lint
+- [x] 22.3 Link toggle for failure sim
+- [x] 22.4 Smoke test with Textual pilot
 
 ## Phase 23 — Frontend setup
-- [ ] 23.1 Vite + React + TS, ESLint, Vitest
-- [ ] 23.2 API client (typed from backend OpenAPI), env `VITE_API_URL`
-- [ ] 23.3 Layout, routing, theme (light/dark), "server waking" state
+- [x] 23.1 Vite + React + TS, ESLint, Vitest
+- [x] 23.2 API client (hand-written types mirroring the Pydantic models instead of OpenAPI generation, D-033), env `VITE_API_URL`
+- [x] 23.3 Layout, routing, theme (light/dark), "server waking" state
 
 ## Phase 24 — Frontend features
-- [ ] 24.1 Input: preset picker, JSON editor, NL box with confirm-extracted-params step
-- [ ] 24.2 Topology view (React Flow), media colored per link
-- [ ] 24.3 Decisions panel (rationale cards grouped by domain)
-- [ ] 24.4 IP plan table with utilization bars
-- [ ] 24.5 Config viewer (Monaco) + download
-- [ ] 24.6 Packet trace tool: pick src/dst, animate path
-- [ ] 24.7 What-if: click link/node to fail, show reroute + SPOFs
-- [ ] 24.8 Security score panel + paste-your-config linter
-- [ ] 24.9 BOM table + totals
-- [ ] 24.10 Versions (localStorage) + diff view
-- [ ] 24.11 Print-stylesheet PDF report
-- [ ] 24.12 Vitest smoke tests
+- [x] 24.1 Input: preset picker, JSON editor, NL box with confirm-extracted-params step
+- [x] 24.2 Topology view (plain SVG instead of React Flow, D-033), media colored per link
+- [x] 24.3 Decisions panel (rationale cards grouped by domain)
+- [x] 24.4 IP plan table with utilization bars
+- [x] 24.5 Config viewer (<pre> instead of Monaco, D-033) + download
+- [x] 24.6 Packet trace tool: pick src/dst, animate path
+- [x] 24.7 What-if: click link/node to fail, show reroute + SPOFs
+- [x] 24.8 Security score panel + paste-your-config linter
+- [x] 24.9 BOM table + totals
+- [x] 24.10 Versions (localStorage) + diff view
+- [x] 24.11 Print-stylesheet PDF report
+- [x] 24.12 Vitest smoke tests
 
 ## Phase 25 — Deployment
-- [ ] 25.1 `render.yaml` (backend, free plan, health check)
-- [ ] 25.2 Vercel config for frontend
-- [ ] 25.3 Env vars set (owner)
-- [ ] 25.4 Measure backend RAM idle/peak; must stay < 400 MB
+- [x] 25.1 `render.yaml` (backend, free plan, health check)
+- [x] 25.2 Vercel config for frontend
+- [ ] 25.3 Env vars set (owner: CORS_ORIGINS on Render, VITE_API_URL on Vercel)
+- [x] 25.4 Measure backend RAM idle/peak; must stay < 400 MB
 
 ## Phase 26 — AI audit log & final docs
-- [ ] 26.1 ≥2 real entries in `ai_audit_log.md`, each with simulator packet trace proof + regression test
-- [ ] 26.2 README final: features, screenshots, run, deploy, test
-- [ ] 26.3 Load 3 preset exports into Packet Tracer/GNS3, screenshot proof in `docs/proof/`
-- [ ] 26.4 Rubric self-check against PDF (each row mapped to file/test)
+- [x] 26.1 ≥2 real entries in `ai_audit_log.md`, each with simulator packet trace proof + regression test
+- [x] 26.2 README final: features, screenshots, run, deploy, test
+- [ ] 26.3 (owner) Load 3 preset exports into Packet Tracer/GNS3, screenshot proof in `docs/proof/`
+- [x] 26.4 Rubric self-check against PDF (each row mapped to file/test)

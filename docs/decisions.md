@@ -104,3 +104,16 @@ Do not change a decision without adding a new entry that supersedes it.
 
 ### D-030 — GNS3 export deferred (2026-11-10)
 - Decision: no `.gns3project` is generated until its schema can be checked against a real GNS3 export (task 18.2). Exports are .cfg files, design.json, design_report.md and cabling_guide.md.
+
+### D-031 — OSPF MD5 authentication (2026-11-10, owner approved "complete whatever is left")
+- Decision: every OSPF area uses `area N authentication message-digest`; every non-passive OSPF interface gets `ip ospf message-digest-key 1 md5 <key>` (placeholder `CHANGE_ME_OSPF`). The simulator only forms an adjacency when both ends agree on auth and key.
+
+### D-032 — QoS on latency-budget links (2026-11-10)
+- Decision: router interfaces on links with `max_latency_ms` get `service-policy output WAN-EDGE`: class REALTIME (DSCP EF) in a strict priority queue capped at 30 %, class-default fair-queue. Endpoints are assumed to mark EF. PT support of MQC is unverified.
+
+### D-033 — Frontend kept dependency-light (2026-11-10, supersedes the React Flow / Monaco / OpenAPI-codegen plan)
+- Decision: topology is plain SVG using the backend `graph()` coordinates; configs shown in `<pre>`; API types hand-written in `frontend/src/types.ts`. Runtime deps are only react + react-dom (bundle ~76 kB gzip).
+- Why: same features, far less weight on the free Vercel build, fewer moving parts.
+
+### D-034 — One-round-trip API (2026-11-10)
+- Decision: `POST /design` returns design + graph + configs + verification + lint + BOM + SPOF together, because the free Render instance is slow to wake; the other endpoints stay for tools/what-if/trace.

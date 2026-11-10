@@ -258,6 +258,8 @@ class Interface(BaseModel):
     tunnel_destination: str | None = None
     media: str | None = None
     transceiver: str | None = None
+    ospf_key: str | None = None       # MD5 key when the adjacency is authenticated
+    service_policy: str | None = None  # QoS policy applied outbound
 
 
 class OspfConfig(BaseModel):
@@ -268,6 +270,7 @@ class OspfConfig(BaseModel):
     passive: list[str] = []
     summaries: list[tuple[int, str, str]] = []  # (area, network, mask)
     redistribute_bgp: int | None = None
+    auth_areas: list[int] = []                  # area N authentication message-digest
 
 
 class BgpConfig(BaseModel):
@@ -316,6 +319,7 @@ class Device(BaseModel):
     static_routes: list[StaticRoute] = []
     ipsec_peers: list[str] = []
     poe_watts: float = 0
+    qos: bool = False  # renders the WAN-EDGE class-map / policy-map
 
     def iface(self, name: str) -> Interface:
         return next(i for i in self.interfaces if i.name == name)

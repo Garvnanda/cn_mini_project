@@ -696,6 +696,14 @@
           "text": "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable."
         },
         {
+          "rule_id": "ROUTE.ospf_auth",
+          "domain": "ROUTE",
+          "inputs": {},
+          "threshold": null,
+          "standard_ref": "RFC 2328 Appendix D",
+          "text": "Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment."
+        },
+        {
           "rule_id": "ROUTE.ref_bw",
           "domain": "ROUTE",
           "inputs": {
@@ -753,7 +761,7 @@
             "ad": 254,
             "count": 4
           },
-          "threshold": "AD {ad} > OSPF 110",
+          "threshold": "AD 254 > OSPF 110",
           "standard_ref": "RFC 4271; Cisco IOS administrative distance",
           "text": "DELHI-R1 anchors its 4 BGP-advertised area block(s) with Null0 static routes at administrative distance 254 (floating). BGP `network` needs an exact route in the RIB, but an AD-1 static would beat the OSPF summary for the same prefix and blackhole remote areas; at AD 254 the static is used only when OSPF has no route."
         },
@@ -801,7 +809,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/1",
@@ -825,7 +835,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/2",
@@ -849,7 +861,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/3",
@@ -871,7 +885,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "Vlan10",
@@ -893,7 +909,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -930,13 +948,17 @@
             "Vlan10"
           ],
           "summaries": [],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            0
+          ]
         },
         "bgp": null,
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "DELHI-ACC1",
@@ -966,7 +988,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -988,7 +1012,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -1010,7 +1036,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -1032,7 +1060,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -1054,7 +1084,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 48",
@@ -1076,7 +1108,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet7/0/1 - 48",
@@ -1098,7 +1132,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -1122,7 +1158,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -1136,7 +1174,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "DELHI-ACC2",
@@ -1166,7 +1205,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -1188,7 +1229,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -1210,7 +1253,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -1232,7 +1277,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -1254,7 +1301,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 24",
@@ -1276,7 +1325,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/25 - 48",
@@ -1298,7 +1349,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -1322,7 +1375,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -1336,7 +1391,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "DELHI-R1",
@@ -1366,7 +1422,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/0",
@@ -1388,7 +1446,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/1",
@@ -1410,7 +1470,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "carrier handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/2",
@@ -1432,7 +1494,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "carrier handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/3",
@@ -1454,7 +1518,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "internet handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Tunnel1",
@@ -1476,7 +1542,9 @@
             "tunnel_source": "TenGigabitEthernet0/0/3",
             "tunnel_destination": "203.0.113.3",
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/4",
@@ -1498,7 +1566,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "internet handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Tunnel2",
@@ -1520,7 +1590,9 @@
             "tunnel_source": "TenGigabitEthernet0/0/4",
             "tunnel_destination": "203.0.113.1",
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {},
@@ -1561,7 +1633,10 @@
             "Loopback0"
           ],
           "summaries": [],
-          "redistribute_bgp": 65000
+          "redistribute_bgp": 65000,
+          "auth_areas": [
+            0
+          ]
         },
         "bgp": {
           "asn": 65000,
@@ -1622,7 +1697,8 @@
           "203.0.113.3",
           "203.0.113.1"
         ],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "MUMBAI-CORE1",
@@ -1652,7 +1728,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/1",
@@ -1676,7 +1754,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/2",
@@ -1700,7 +1780,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/3",
@@ -1722,7 +1804,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "Vlan20",
@@ -1744,7 +1828,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -1781,13 +1867,17 @@
             "Vlan20"
           ],
           "summaries": [],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            1
+          ]
         },
         "bgp": null,
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "MUMBAI-ACC1",
@@ -1817,7 +1907,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -1839,7 +1931,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -1861,7 +1955,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -1883,7 +1979,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -1905,7 +2003,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 48",
@@ -1927,7 +2027,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -1951,7 +2053,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -1965,7 +2069,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "MUMBAI-ACC2",
@@ -1995,7 +2100,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2017,7 +2124,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -2039,7 +2148,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2061,7 +2172,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 20",
@@ -2083,7 +2196,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/21 - 48",
@@ -2105,7 +2220,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2129,7 +2246,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2143,7 +2262,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "MUMBAI-R1",
@@ -2173,7 +2293,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/0",
@@ -2195,7 +2317,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/1",
@@ -2217,7 +2341,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "carrier handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           }
         ],
         "vlans": {},
@@ -2254,13 +2380,18 @@
               "255.255.252.0"
             ]
           ],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            0,
+            1
+          ]
         },
         "bgp": null,
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BENGALURU-CORE1",
@@ -2290,7 +2421,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/1",
@@ -2314,7 +2447,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/2",
@@ -2338,7 +2473,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/3",
@@ -2360,7 +2497,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "Vlan30",
@@ -2382,7 +2521,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2419,13 +2560,17 @@
             "Vlan30"
           ],
           "summaries": [],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            2
+          ]
         },
         "bgp": null,
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BENGALURU-ACC1",
@@ -2455,7 +2600,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2477,7 +2624,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -2499,7 +2648,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2521,7 +2672,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -2543,7 +2696,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 48",
@@ -2565,7 +2720,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2589,7 +2746,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2603,7 +2762,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BENGALURU-ACC2",
@@ -2633,7 +2793,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2655,7 +2817,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -2677,7 +2841,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2699,7 +2865,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 20",
@@ -2721,7 +2889,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/21 - 48",
@@ -2743,7 +2913,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2767,7 +2939,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2781,7 +2955,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BENGALURU-R1",
@@ -2811,7 +2986,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/0",
@@ -2833,7 +3010,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/1",
@@ -2855,7 +3034,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "carrier handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           }
         ],
         "vlans": {},
@@ -2892,13 +3073,18 @@
               "255.255.252.0"
             ]
           ],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            0,
+            2
+          ]
         },
         "bgp": null,
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "SINGAPORE-CORE1",
@@ -2928,7 +3114,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/1",
@@ -2952,7 +3140,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/2",
@@ -2976,7 +3166,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/3",
@@ -2998,7 +3190,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "Vlan40",
@@ -3020,7 +3214,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -3057,7 +3253,10 @@
             "Vlan40"
           ],
           "summaries": [],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            3
+          ]
         },
         "bgp": null,
         "acls": [
@@ -3096,7 +3295,8 @@
         ],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "SINGAPORE-ACC1",
@@ -3126,7 +3326,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -3148,7 +3350,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -3170,7 +3374,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -3192,7 +3398,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -3214,7 +3422,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -3238,7 +3448,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -3252,7 +3464,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "SINGAPORE-ACC2",
@@ -3282,7 +3495,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -3304,7 +3519,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -3326,7 +3543,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 16",
@@ -3348,7 +3567,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/17 - 48",
@@ -3370,7 +3591,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -3394,7 +3617,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -3408,7 +3633,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "SINGAPORE-R1",
@@ -3438,7 +3664,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/0",
@@ -3460,7 +3688,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/1",
@@ -3482,7 +3712,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "internet handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Tunnel1",
@@ -3504,7 +3736,9 @@
             "tunnel_source": "TenGigabitEthernet0/0/1",
             "tunnel_destination": "203.0.113.2",
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           }
         ],
         "vlans": {},
@@ -3541,7 +3775,11 @@
               "255.255.252.0"
             ]
           ],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            0,
+            3
+          ]
         },
         "bgp": null,
         "acls": [],
@@ -3549,7 +3787,8 @@
         "ipsec_peers": [
           "203.0.113.2"
         ],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "CLOUDVPC-VGW",
@@ -3579,7 +3818,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/0",
@@ -3601,7 +3842,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet0/0/1",
@@ -3623,7 +3866,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "internet handoff (Cat6a UTP)",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Tunnel1",
@@ -3645,7 +3890,9 @@
             "tunnel_source": "TenGigabitEthernet0/0/1",
             "tunnel_destination": "203.0.113.0",
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {},
@@ -3677,7 +3924,8 @@
         "ipsec_peers": [
           "203.0.113.0"
         ],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       }
     ],
     "cables": [
@@ -4756,6 +5004,14 @@
         "text": "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable."
       },
       {
+        "rule_id": "ROUTE.ospf_auth",
+        "domain": "ROUTE",
+        "inputs": {},
+        "threshold": null,
+        "standard_ref": "RFC 2328 Appendix D",
+        "text": "Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment."
+      },
+      {
         "rule_id": "ROUTE.ref_bw",
         "domain": "ROUTE",
         "inputs": {
@@ -4813,7 +5069,7 @@
           "ad": 254,
           "count": 4
         },
-        "threshold": "AD {ad} > OSPF 110",
+        "threshold": "AD 254 > OSPF 110",
         "standard_ref": "RFC 4271; Cisco IOS administrative distance",
         "text": "DELHI-R1 anchors its 4 BGP-advertised area block(s) with Null0 static routes at administrative distance 254 (floating). BGP `network` needs an exact route in the RIB, but an AD-1 static would beat the OSPF summary for the same prefix and blackhole remote areas; at AD 254 the static is used only when OSPF has no route."
       },

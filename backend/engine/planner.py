@@ -5,6 +5,7 @@ from typing import Any
 from engine.acl import build_acls
 from engine.l2 import apply_l2
 from engine.media import CAT6A, check_latency, select_media
+from engine.qos import apply_qos
 from engine.models import DesignInput, DesignResult, MediaDecision, Transport, parse_design_input
 from engine.rationale import RationaleLog, explain
 from engine.routing import plan_routing
@@ -33,6 +34,7 @@ def design(data: dict[str, Any] | DesignInput) -> DesignResult:
     routing, subnets = plan_routing(inp, topo, log)
     devices = list(topo.devices.values())
     build_acls(inp, devices, subnets, log)
+    apply_qos(inp, topo.devices, topo.cables, log)
 
     by_link = {m.link: m for m in media}
     in_building = 0

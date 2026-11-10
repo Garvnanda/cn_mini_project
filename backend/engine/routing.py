@@ -181,6 +181,7 @@ def plan_routing(inp: DesignInput, t: Topology, log: RationaleLog) -> tuple[Rout
         blk = f"{blocks[k].network}/{blocks[k].prefix}" if k in blocks else inp.root_prefix
         log.add("ROUTE.area", unit=unit_name(k), area=k, block=blk)
     log.add("ROUTE.rid")
+    log.add("ROUTE.ospf_auth")
     log.add("ROUTE.ref_bw", ref=C.OSPF_REF_BW_MBPS, default=C.OSPF_DEFAULT_REF_BW_MBPS)
 
     for d in devs.values():
@@ -193,6 +194,9 @@ def plan_routing(inp: DesignInput, t: Topology, log: RationaleLog) -> tuple[Rout
                 o.networks.append((i.ip, "0.0.0.0", i.area))
                 if i.mode in ("svi", "loopback"):
                     o.passive.append(i.name)
+                else:
+                    i.ospf_key = C.OSPF_MD5_KEY
+        o.auth_areas = sorted({a for _, _, a in o.networks})
         my_areas = {a for _, _, a in o.networks}
         if 0 in my_areas and len(my_areas) > 1:
             for a in sorted(my_areas - {0}):

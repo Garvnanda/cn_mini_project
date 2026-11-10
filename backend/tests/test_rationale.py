@@ -8,9 +8,10 @@ from engine.rationale import RULES, RationaleError, RationaleLog, _fields, expla
 
 @pytest.mark.parametrize("rule_id", sorted(RULES))
 def test_every_rule_renders(rule_id):
-    fields = {f: "X" for f in _fields(RULES[rule_id][3])}
+    fields = {f: "X" for f in _fields(RULES[rule_id][3]) | _fields(RULES[rule_id][2] or "")}
     r = explain(rule_id, **fields)
     assert r.text and "{" not in r.text
+    assert r.threshold is None or "{" not in r.threshold
     assert r.standard_ref and r.domain == rule_id.split(".")[0]
 
 

@@ -6,6 +6,10 @@ from pathlib import Path
 
 import typer
 
+from engine.env import load_env
+
+load_env()
+
 from analysis.bom import build_bom
 from analysis.diff import diff as design_diff
 from analysis.lint import lint_configs, lint_text
@@ -182,6 +186,27 @@ def diff(a: str, b: str):
     for h in d.devices_removed:
         typer.echo(f"[device removed] {h}")
     typer.echo(f"{len(d.configs)} config(s) changed: {', '.join(d.configs)}")
+
+
+@app.command()
+def nl(text: str, out: Path = typer.Option(None, "--out", "-o", help="Save the extracted input JSON here")):
+    """Plain English -> design input JSON (extraction only; review it, then run `design` on the file)."""
+    from nl import extract
+    r = extract(text)
+    typer.echo(f"Source: {r.source}. {r.note}")
+    for a in r.assumptions:
+        typer.echo(f"  assumption: {a}")
+    for m in r.missing:
+        typer.echo(f"  missing:    {m}")
+    for e in r.errors:
+        typer.echo(f"  invalid:    {e.get('loc')}: {e.get('msg')}")
+    body = json.dumps(r.input, indent=2)
+    if out:
+        out.write_text(body, encoding="utf-8")
+        typer.echo(f"Saved to {out}. Review it, then: python cli.py design {out}")
+    else:
+        typer.echo(body)
+    raise typer.Exit(0 if r.valid else 1)
 
 
 if __name__ == "__main__":

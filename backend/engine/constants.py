@@ -60,6 +60,9 @@ ENTERPRISE_ASN = 65000             # RFC 6996 private range
 CLOUD_ASN_BASE = 65100
 INTERNET_UNDERLAY = "203.0.113.0/24"  # RFC 5737 TEST-NET-3, stands in for public IPs
 IPSEC_PSK = "CHANGE_ME_PSK"           # placeholder, must be replaced before deployment
+OSPF_MD5_KEY = "CHANGE_ME_OSPF"       # placeholder, must be replaced before deployment
+QOS_PRIORITY_PCT = 30                 # LLQ cap (project choice, docs/standards.md)
+QOS_POLICY = "WAN-EDGE"
 
 # --- Timers (protocol defaults, docs/standards.md)
 OSPF_HELLO_S = 10

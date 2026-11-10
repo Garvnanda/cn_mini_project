@@ -29,6 +29,7 @@ _env.filters["ios_name"] = hostname  # VLAN names: no spaces, IOS-safe
 def render_device(d: Device) -> str:
     return _env.get_template(TEMPLATE_BY_ROLE[d.role]).render(
         d=d, domain=DOMAIN, ipsec_profile=IPSEC_PROFILE, psk=C.IPSEC_PSK,
+        qos_policy=C.QOS_POLICY, qos_pct=C.QOS_PRIORITY_PCT,
         is_switch=d.role in ("access", "core", "distribution"),
     )
 

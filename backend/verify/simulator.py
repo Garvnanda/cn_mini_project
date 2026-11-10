@@ -185,6 +185,14 @@ class Simulator:
                 return area
         return None
 
+    @staticmethod
+    def _auth_ok(d: PDevice, i: PIface, pd: PDevice, pi: PIface, area: int) -> bool:
+        """Adjacency forms only if both ends agree on authentication and keys (RFC 2328 Appendix D)."""
+        auth_a, auth_b = area in d.ospf.area_auth, area in pd.ospf.area_auth
+        if auth_a != auth_b:
+            return False
+        return not auth_a or (i.ospf_key is not None and i.ospf_key == pi.ospf_key)
+
     def _passive(self, d: PDevice, ifname: str) -> bool:
         return d.ospf.passive_default or ifname in d.ospf.passive
 
@@ -217,7 +225,7 @@ class Simulator:
                     pd = self.devices[ph]
                     pi = pd.interfaces[pif]
                     if self._ospf_if_area(pd, pi) == a and pd.ospf and not self._passive(pd, pif) \
-                            and _net(pi.ip, pi.mask) == (n, p):
+                            and _net(pi.ip, pi.mask) == (n, p) and self._auth_ok(d, i, pd, pi, a):
                         graph[h].append((ph, ospf_cost(i.name, d.ospf.ref_bw), i.name, pi.ip))
 
         def spf(src: str):

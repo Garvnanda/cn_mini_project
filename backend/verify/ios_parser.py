@@ -52,6 +52,8 @@ class PIface(BaseModel):
     tunnel_mode: str | None = None
     tunnel_profile: str | None = None
     ospf_auth: bool = False
+    ospf_key: str | None = None
+    service_policy: str | None = None
 
 
 class POspf(BaseModel):
@@ -93,6 +95,7 @@ class PDevice(BaseModel):
     statics: list[PStatic] = []
     acls: dict[str, list[PAclEntry]] = {}
     isakmp_peers: list[str] = []
+    qos: dict[str, list[str]] = {}  # class-map / policy-map name -> body lines
     services: list[str] = []
     ssh_v2: bool = False
     enable_secret: bool = False
@@ -205,6 +208,9 @@ def _top(d: PDevice, line: str, t: list[str]):
     elif line.startswith("ip access-list extended"):
         d.acls[t[3]] = []
         return ("acl", t[3])
+    elif t[0] in ("class-map", "policy-map"):
+        d.qos[t[-1]] = []
+        return ("qos", t[-1])
     elif line.startswith("crypto isakmp key"):
         d.isakmp_peers.append(t[-1])
     elif line.startswith(("crypto isakmp policy", "crypto ipsec", "line ")):
@@ -259,6 +265,8 @@ def _sub(d: PDevice, ctx, line: str, t: list[str]) -> None:
             d.unparsed.append(line)
     elif kind == "acl":
         d.acls[key].append(parse_acl_entry(line))
+    elif kind == "qos":
+        d.qos[key].append(line)
     elif kind == "vty":
         if line.startswith("transport input"):
             d.vty_transport = t[2:]
@@ -321,7 +329,11 @@ def _iface(i: PIface, line: str, t: list[str]) -> None:
         i.tunnel_mode = " ".join(t[2:])
     elif line.startswith("tunnel protection ipsec profile"):
         i.tunnel_profile = t[4]
-    elif line.startswith(("ip ospf authentication", "ip ospf message-digest-key")):
+    elif line.startswith("ip ospf message-digest-key"):
+        i.ospf_auth, i.ospf_key = True, t[-1]
+    elif line.startswith("ip ospf authentication"):
         i.ospf_auth = True
+    elif line.startswith("service-policy output"):
+        i.service_policy = t[2]
     else:
         raise ValueError("unknown interface command")

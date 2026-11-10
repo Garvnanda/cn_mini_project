@@ -9,7 +9,7 @@
 - Routing: OSPF multi-area
 - Devices: 14, cables: 22, subnets: 29
 - Verification: **PASS**
-- Security score: **86/100**
+- Security score: **92/100**
 - Resilience score: **97/100**
 - Estimated capex: INR 20,658,800 (placeholder prices), monthly WAN: INR 0
 
@@ -104,6 +104,7 @@
 - **[ROUTE.area]** Area 1 (Branch) is OSPF area 1 with address block 10.20.2.0/24. _(ref: RFC 2328)_
 - **[ROUTE.area]** Area 2 (Colo) is OSPF area 2 with address block 10.20.3.0/24. _(ref: RFC 2328)_
 - **[ROUTE.rid]** Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable. _(ref: RFC 2328)_
+- **[ROUTE.ospf_auth]** Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment. _(ref: RFC 2328 Appendix D)_
 - **[ROUTE.ref_bw]** OSPF reference bandwidth is 100000 Mbps. With the default 100 Mbps every link of 100 Mb/s or more gets cost 1, so 10G and 1G paths would look equal. _(ref: RFC 2328 (interface cost))_
 - **[ROUTE.summary]** ABR BRANCH-R1 summarizes area 1 as 10.20.2.0/24 (1 route instead of 7), which works because the area's subnets were allocated from one contiguous block. _(ref: RFC 2328; RFC 4632)_
 - **[ROUTE.summary]** ABR COLO-R1 summarizes area 2 as 10.20.3.0/24 (1 route instead of 9), which works because the area's subnets were allocated from one contiguous block. _(ref: RFC 2328; RFC 4632)_
@@ -152,6 +153,16 @@
 - **[ACL.policy]** Branch-Users → Colo-Trading: deny ip via ACL-BRANCH-USERS-IN, applied inbound on the Branch-Users gateway so the decision is made at the first layer-3 hop. _(ref: Cisco IOS extended ACL (first match))_
 - **[ACL.default]** ACL-BRANCH-USERS-IN ends with 'permit ip any any' so traffic not covered by a policy is allowed; otherwise the IOS implicit deny would drop all other traffic from Branch-Users. _(ref: Cisco IOS extended ACL (implicit deny))_
 
+### QOS
+- **[QOS.llq]** HQ-R1 TenGigabitEthernet0/0/1 toward HQ--Branch: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** BRANCH-R1 TenGigabitEthernet0/0/2 toward HQ--Branch: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** HQ-R2 TenGigabitEthernet0/0/1 toward HQ--Branch: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** BRANCH-R1 TenGigabitEthernet0/0/3 toward HQ--Branch: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** HQ-R1 TenGigabitEthernet0/0/2 toward HQ--Colo: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** COLO-R1 TenGigabitEthernet0/0/1 toward HQ--Colo: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** HQ-R2 TenGigabitEthernet0/0/2 toward HQ--Colo: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+- **[QOS.llq]** COLO-R2 TenGigabitEthernet0/0/1 toward HQ--Colo: low-latency queuing puts DSCP EF traffic (voice, latency-critical flows) in a strict priority queue capped at 30% of the link, everything else in fair-queue, so queuing delay under congestion does not eat the 5.0 ms budget. Endpoints (e.g. IP phones) are assumed to mark EF. _(ref: RFC 3246 (EF PHB); RFC 2474 (DSCP))_
+
 ## Verification
 
 ```
@@ -168,33 +179,22 @@ Verification: PASS
 
 | Device | Score | Rule | Severity | Where | Fix |
 |---|---|---|---|---|---|
-| HQ-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| HQ-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| HQ-CORE2 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| HQ-CORE2 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| HQ-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| HQ-CORE2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | HQ-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| HQ-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| HQ-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| HQ-R2 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| HQ-R2 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| BRANCH-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| BRANCH-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| BRANCH-CORE1 | 84 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-BRANCH-USERS-IN | intended for default-allow policies (D-020) |
-| BRANCH-CORE2 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| BRANCH-CORE2 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| BRANCH-CORE2 | 84 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-BRANCH-USERS-IN | intended for default-allow policies (D-020) |
+| HQ-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| HQ-R2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| BRANCH-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| BRANCH-CORE1 | 92 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-BRANCH-USERS-IN | intended for default-allow policies (D-020) |
+| BRANCH-CORE2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| BRANCH-CORE2 | 92 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-BRANCH-USERS-IN | intended for default-allow policies (D-020) |
 | BRANCH-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| BRANCH-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| BRANCH-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| COLO-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| COLO-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| COLO-CORE2 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| COLO-CORE2 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| BRANCH-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| COLO-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| COLO-CORE2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | COLO-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| COLO-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| COLO-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| COLO-R2 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| COLO-R2 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| COLO-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| COLO-R2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 
 ## Single points of failure
 

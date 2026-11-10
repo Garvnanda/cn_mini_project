@@ -56,6 +56,15 @@ PT = Cisco Packet Tracer support; "?" = not yet checked.
 | global | `ip route <net> <mask> <next-hop\|Null0> [<distance>]` | static / discard route; distance makes it floating | yes | |
 | global | `ip access-list extended <NAME>` | named ACL | yes | |
 | acl | `permit\|deny <proto> <src> <wc> <dst> <wc> [eq <port>]` | ACE (`any` allowed for src/dst) | yes | |
+| ospf | `area <n> authentication message-digest` | MD5 auth for the area (owner approved 2026-11-10) | yes | |
+| interface | `ip ospf message-digest-key <id> md5 <key>` | per-interface MD5 key | yes | |
+| global | `class-map match-any <NAME>` | QoS class (owner approved 2026-11-10) | ? | |
+| class-map | `match dscp ef` | classify EF | ? | |
+| global | `policy-map <NAME>` | QoS policy | ? | |
+| policy-map | `class <NAME>` | policy class (also `class class-default`) | ? | |
+| policy class | `priority percent <n>` | LLQ strict priority, capped | ? | |
+| policy class | `fair-queue` | flow-based fair queuing (class-default) | ? | |
+| interface | `service-policy output <NAME>` | attach QoS policy | ? | |
 | global | `crypto isakmp policy <n>` | IKEv1 phase 1 policy | yes | |
 | isakmp | `encryption aes 256` | phase 1 cipher | yes | |
 | isakmp | `hash sha256` | phase 1 integrity | ? | |

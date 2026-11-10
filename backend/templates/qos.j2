@@ -1,0 +1,11 @@
+{% if d.qos %}
+class-map match-any REALTIME
+ match dscp ef
+!
+policy-map {{ qos_policy }}
+ class REALTIME
+  priority percent {{ qos_pct }}
+ class class-default
+  fair-queue
+!
+{% endif %}

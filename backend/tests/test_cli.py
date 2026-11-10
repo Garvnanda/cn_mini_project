@@ -88,3 +88,13 @@ def test_diff(tmp_path):
     r = run("diff", "campus_lan", str(p))
     assert r.exit_code == 0 and "L1.media" in r.output
     assert "No differences" in run("diff", "campus_lan", "campus_lan").output
+
+
+def test_nl_to_file_then_design(tmp_path, monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    out = tmp_path / "nl.json"
+    r = run("nl", "HQ plus 2 branches at 22 km and 35 km, 450 users", "--out", str(out))
+    assert r.exit_code == 0 and "fallback" in r.output and out.exists()
+    assert run("design", str(out)).exit_code == 0
+    r = run("nl", "2 buildings with 100 users")
+    assert r.exit_code == 0 and "missing" in r.output

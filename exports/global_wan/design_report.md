@@ -9,7 +9,7 @@
 - Routing: OSPF multi-area + eBGP
 - Devices: 17, cables: 16, subnets: 24
 - Verification: **PASS**
-- Security score: **88/100**
+- Security score: **92/100**
 - Resilience score: **4/100**
 - Estimated capex: INR 15,287,200 (placeholder prices), monthly WAN: INR 150,000
 
@@ -99,6 +99,7 @@
 - **[ROUTE.area]** Area 2 (Bengaluru) is OSPF area 2 with address block 10.100.12.0/22. _(ref: RFC 2328)_
 - **[ROUTE.area]** Area 3 (Singapore) is OSPF area 3 with address block 10.100.16.0/22. _(ref: RFC 2328)_
 - **[ROUTE.rid]** Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable. _(ref: RFC 2328)_
+- **[ROUTE.ospf_auth]** Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment. _(ref: RFC 2328 Appendix D)_
 - **[ROUTE.ref_bw]** OSPF reference bandwidth is 100000 Mbps. With the default 100 Mbps every link of 100 Mb/s or more gets cost 1, so 10G and 1G paths would look equal. _(ref: RFC 2328 (interface cost))_
 - **[ROUTE.summary]** ABR MUMBAI-R1 summarizes area 1 as 10.100.8.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block. _(ref: RFC 2328; RFC 4632)_
 - **[ROUTE.summary]** ABR BENGALURU-R1 summarizes area 2 as 10.100.12.0/22 (1 route instead of 4), which works because the area's subnets were allocated from one contiguous block. _(ref: RFC 2328; RFC 4632)_
@@ -165,31 +166,23 @@ Verification: PASS
 
 | Device | Score | Rule | Severity | Where | Fix |
 |---|---|---|---|---|---|
-| DELHI-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| DELHI-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| DELHI-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | DELHI-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | DELHI-ACC2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| DELHI-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| DELHI-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| MUMBAI-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| MUMBAI-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| DELHI-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| MUMBAI-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | MUMBAI-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | MUMBAI-ACC2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| MUMBAI-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| MUMBAI-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| BENGALURU-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| BENGALURU-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| MUMBAI-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| BENGALURU-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | BENGALURU-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | BENGALURU-ACC2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| BENGALURU-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| BENGALURU-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| SINGAPORE-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| SINGAPORE-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| SINGAPORE-CORE1 | 84 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-SG-IOT-IN | intended for default-allow policies (D-020) |
+| BENGALURU-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| SINGAPORE-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| SINGAPORE-CORE1 | 92 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-SG-IOT-IN | intended for default-allow policies (D-020) |
 | SINGAPORE-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | SINGAPORE-ACC2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| SINGAPORE-R1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| SINGAPORE-R1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| SINGAPORE-R1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | CLOUDVPC-VGW | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 
 ## Single points of failure

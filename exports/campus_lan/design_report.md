@@ -9,7 +9,7 @@
 - Routing: OSPF single-area
 - Devices: 8, cables: 14, subnets: 13
 - Verification: **PASS**
-- Security score: **90/100**
+- Security score: **92/100**
 - Resilience score: **100/100**
 - Estimated capex: INR 12,010,230 (placeholder prices), monthly WAN: INR 0
 
@@ -83,6 +83,7 @@
 - **[ROUTE.ospf_single]** Single-area OSPF (area 0) because the design is one site with 13 subnets, below the 50-subnet threshold. One link-state database converges fast and needs no ABRs. _(ref: RFC 2328; Assignment §3)_
 - **[ROUTE.area]** Area 0 is OSPF area 0 with address block 10.10.0.0/16. _(ref: RFC 2328)_
 - **[ROUTE.rid]** Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable. _(ref: RFC 2328)_
+- **[ROUTE.ospf_auth]** Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment. _(ref: RFC 2328 Appendix D)_
 - **[ROUTE.ref_bw]** OSPF reference bandwidth is 100000 Mbps. With the default 100 Mbps every link of 100 Mb/s or more gets cost 1, so 10G and 1G paths would look equal. _(ref: RFC 2328 (interface cost))_
 
 ### VLSM
@@ -124,12 +125,10 @@ Verification: PASS
 
 | Device | Score | Rule | Severity | Where | Fix |
 |---|---|---|---|---|---|
-| CAMPUS-CORE1 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| CAMPUS-CORE1 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| CAMPUS-CORE1 | 84 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-GUEST-C-IN | intended for default-allow policies (D-020) |
-| CAMPUS-CORE2 | 84 | SEC-09 OSPF runs without authentication | medium | router ospf 1 | area <n> authentication message-digest + keys |
-| CAMPUS-CORE2 | 84 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
-| CAMPUS-CORE2 | 84 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-GUEST-C-IN | intended for default-allow policies (D-020) |
+| CAMPUS-CORE1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| CAMPUS-CORE1 | 92 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-GUEST-C-IN | intended for default-allow policies (D-020) |
+| CAMPUS-CORE2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
+| CAMPUS-CORE2 | 92 | SEC-12 ACL ends with 'permit ip any any' | info | ip access-list ACL-GUEST-C-IN | intended for default-allow policies (D-020) |
 | BLDGA-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | BLDGA-ACC2 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |
 | BLDGB-ACC1 | 92 | SEC-11 Placeholder secrets (CHANGE_ME) present | medium | global | replace every CHANGE_ME value |

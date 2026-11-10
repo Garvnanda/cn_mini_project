@@ -2,6 +2,9 @@
 router ospf {{ d.ospf.pid }}
  router-id {{ d.ospf.router_id }}
  auto-cost reference-bandwidth {{ d.ospf.ref_bw }}
+{% for a in d.ospf.auth_areas %}
+ area {{ a }} authentication message-digest
+{% endfor %}
 {% for p in d.ospf.passive %}
  passive-interface {{ p }}
 {% endfor %}

@@ -8,3 +8,7 @@ node_modules/
 dist/
 .env
 exports/tmp/
+
+# frontend
+frontend/dist/
+frontend/.env

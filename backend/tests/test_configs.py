@@ -96,3 +96,20 @@ def test_ipsec_rendered(designs):
     for s in ["crypto isakmp policy 10", "tunnel mode ipsec ipv4", "tunnel protection ipsec profile VTI-PROFILE",
               "router bgp 65000", "redistribute bgp 65000 subnets", "Null0"]:
         assert s in cfg
+
+
+def test_qos_only_on_latency_links(designs):
+    metro = render_all(designs["metro_man"])
+    assert "policy-map WAN-EDGE" in metro["HQ-R1"] and " service-policy output WAN-EDGE" in metro["BRANCH-R1"]
+    assert "priority percent 30" in metro["HQ-R1"]
+    assert not any("policy-map" in t for t in render_all(designs["global_wan"]).values())
+    assert any(r.rule_id == "QOS.llq" for r in designs["metro_man"].rationale)
+
+
+def test_ospf_md5_on_every_adjacency(designs):
+    for d in designs["global_wan"].devices:
+        if d.ospf:
+            assert d.ospf.auth_areas == sorted({a for _, _, a in d.ospf.networks})
+            for i in d.interfaces:
+                if i.area is not None and i.mode not in ("svi", "loopback"):
+                    assert i.ospf_key

@@ -90,6 +90,9 @@ Consequence with current values: ER passes up to 38 km with 2 connectors; 40 km 
 | Documentation address ranges (203.0.113.0/24 used as stand-in public IPs) | RFC 5737 |
 | IKEv1 policy used: AES-256, SHA-256, DH group 14, PSK | Cisco IOS crypto docs [verify per platform] |
 | OSPF area summarization on ABR | RFC 2328 |
+| OSPF cryptographic (MD5) authentication | RFC 2328 Appendix D |
+| DSCP field / EF per-hop behavior | RFC 2474 / RFC 3246 |
+| LLQ priority cap | 30 % of link (project choice, D-032) |
 
 ## Project thresholds (from assignment, not standards)
 | Rule | Value | Source |

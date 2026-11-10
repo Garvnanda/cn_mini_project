@@ -138,3 +138,29 @@ interface Te1
     pruned = Simulator({"S1": parse_config(sw.format(h="S1", allowed="10")),
                         "S2": parse_config(sw.format(h="S2", allowed="20"))}, cab)
     assert pruned.domain("S1", 10) != pruned.domain("S2", 10)
+
+
+AUTH_R1 = R2_OSPF.replace("router ospf 1\n", "router ospf 1\n area 0 authentication message-digest\n")
+
+
+def _auth_sim(k1, k2, r2_auth=True):
+    r1 = R1.format(acl_in=f" ip ospf message-digest-key 1 md5 {k1}", extra="", extra_if="").replace(
+        "router ospf 1\n", "router ospf 1\n area 0 authentication message-digest\n")
+    # move the key line onto Gi0/0 (R1 template puts acl_in under Gi0/1)
+    r1 = r1.replace(f"interface Gi0/1\n ip address 192.168.1.1 255.255.255.0\n ip ospf message-digest-key 1 md5 {k1}",
+                    "interface Gi0/1\n ip address 192.168.1.1 255.255.255.0").replace(
+        "interface Gi0/0\n ip address 10.0.12.0 255.255.255.254",
+        f"interface Gi0/0\n ip address 10.0.12.0 255.255.255.254\n ip ospf message-digest-key 1 md5 {k1}")
+    r2 = R2.format(r2_ospf=AUTH_R1 if r2_auth else R2_OSPF, extra="").replace(
+        "interface Gi0/0\n ip address 10.0.12.1 255.255.255.254",
+        f"interface Gi0/0\n ip address 10.0.12.1 255.255.255.254\n ip ospf message-digest-key 1 md5 {k2}")
+    return Simulator({"R1": parse_config(r1), "R2": parse_config(r2)}, CABLES, hosts=list(HOSTS))
+
+
+@pytest.mark.parametrize("k1, k2, r2_auth, outcome", [
+    ("KEY", "KEY", True, "delivered"),
+    ("KEY", "OTHER", True, "no-route"),     # key mismatch: no adjacency
+    ("KEY", "KEY", False, "no-route"),      # auth on one side only
+])
+def test_ospf_md5_adjacency(k1, k2, r2_auth, outcome):
+    assert _auth_sim(k1, k2, r2_auth).trace("192.168.1.10", "192.168.2.10").outcome == outcome

@@ -33,8 +33,14 @@ Only list items whose tests were actually run and passed.
 | 16 BOM | done (placeholder prices) |
 | 17 Diff & versioning | done |
 | 18 Exporters | done except 18.2 GNS3 (deferred, D-030) |
-| 19 CLI | done except `nl` (Phase 21) |
-| 20–26 | not started |
+| 19 CLI | done |
+| 20 FastAPI | done |
+| 21 NL input | done (OpenRouter path UNVERIFIED without a real key; offline parser tested) |
+| 22 TUI | done |
+| 23 Frontend setup | done |
+| 24 Frontend features | done |
+| 25 Deployment | config + DEPLOY.md done, RAM measured; owner deploys (DEPLOY.md) |
+| 26 Audit & docs | done except 26.3 Packet Tracer screenshots (owner) |
 
 ## Done
 ### Docs bootstrap  (2026-11-10)
@@ -125,3 +131,22 @@ Only list items whose tests were actually run and passed.
 - Tests: `test_whatif.py`, `test_lint.py`, `test_bom.py`, `test_diff.py`, `test_export.py`, `test_cli.py`, latency tests in `test_media.py`.
 - Run: `cd backend && .venv/Scripts/python -m pytest` -> 391 passed, 1 skipped (live Batfish)
 - Not done: 18.2 GNS3 project (D-030), `nl` command (Phase 21).
+
+### Phases 20-26 + loose ends — API, NL, TUI, frontend, deployment, docs  (2026-11-10)
+- Loose ends: OSPF MD5 authentication (D-031) and LLQ QoS on latency-budget links (D-032): models, routing, `engine/qos.py`, templates (`qos.j2`, ospf/interface lines), parser (class-map/policy-map, service-policy, OSPF key), simulator auth check, `docs/ios_reference.md` rows. Generated configs now score 92/100 (only CHANGE_ME placeholders and the info-level default-allow ACL remain).
+- Bug fixed: rule thresholds containing `{field}` were returned unformatted; `explain()` now formats them and the test checks it.
+- `backend/api.py` (FastAPI): `/health`, `/presets`, `/presets/{name}`, `/design` (bundle), `/verify`, `/trace`, `/whatif`, `/spof`, `/lint` (text or input), `/bom`, `/diff`, `/nl` (per-IP limit, env `NL_RATE_PER_MIN`, 4000-char cap), `/export/{zip|json|report|cabling}`. NetArchError -> 422 `{type, message, details}`. CORS from env `CORS_ORIGINS` (default http://localhost:5173).
+- `backend/nl/`: `extract(text)` -> `NLResult` (source, input, valid, errors, assumptions, missing, note). OpenRouter client (`json_object` response, schema in system prompt, 30 s timeout, 2 retries on 5xx/429/transport errors, model from `OPENROUTER_MODEL`); invalid LLM output is reported, never auto-corrected. Offline parser copies only stated facts and lists missing ones (never invents distances).
+- `backend/tui.py` (Textual): preset picker, tabs Decisions / IP Plan / Configs / Verify / What-if (fail any link or non-access device) / BOM / Lint.
+- `backend/cli.py`: added `nl "text" [--out FILE]`.
+- `frontend/` (Vite 8, React 19, TS 5.9, ESLint, Vitest + jsdom 29): input panel (preset, editable JSON, plain-English extraction with confirm step), Network tab (SVG topology coloured by media, animated packet trace, click-to-fail what-if, SPOF highlight), Decisions, IP Plan (utilization bars), Configs (download/copy), Verify, Security (+ paste-your-config linter), BOM, Versions (localStorage + diff), Report (print-to-PDF stylesheet + zip/md/json/cabling downloads), light/dark/auto theme, "waking server" state. `npm run lint`, `npm test` (4 tests), `npm run build` (248 kB JS, 76 kB gzip) all pass.
+- Deployment: `render.yaml` (free web service, `uvicorn api:app`, health check, env vars), `frontend/vercel.json`. Measured locally with uvicorn: 56 MB idle, 60 MB after designing all 3 presets; `/design` 0.24-0.31 s.
+- Docs: `README.md` final, `docs/rubric_check.md`, `docs/proof/README.md` (what screenshots to take), decisions D-031..D-034.
+- Exports for the 3 presets regenerated (`exports/`).
+- Tests: `cd backend && pytest` -> 420 passed, 1 skipped (live Batfish); `cd frontend && npm test` -> 4 passed.
+- Open (owner): 13.2/13.3 live Batfish run, 18.2 GNS3 export (D-030), 25.3 env vars + deploy, 26.3 Packet Tracer screenshots. Verify `[verify]`/`?` items in standards.md / ios_reference.md.
+
+### Owner hand-off support  (2026-11-10)
+- `backend/engine/env.py`: stdlib `.env` loader (real env vars win), called at start of `api.py`, `cli.py`, `tui.py`; `backend/.env.example` lists every setting; `backend/.env` is git-ignored (checked with `git check-ignore`). Test: `tests/test_env.py`.
+- `DEPLOY.md`: step-by-step Render (blueprint) + Vercel + CORS + live checks.
+- Run: `cd backend && pytest` -> 422 passed, 1 skipped.

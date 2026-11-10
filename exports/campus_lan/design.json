@@ -544,6 +544,14 @@
           "text": "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable."
         },
         {
+          "rule_id": "ROUTE.ospf_auth",
+          "domain": "ROUTE",
+          "inputs": {},
+          "threshold": null,
+          "standard_ref": "RFC 2328 Appendix D",
+          "text": "Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment."
+        },
+        {
           "rule_id": "ROUTE.ref_bw",
           "domain": "ROUTE",
           "inputs": {
@@ -585,7 +593,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/1",
@@ -607,7 +617,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/2",
@@ -640,7 +652,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/3",
@@ -664,7 +678,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/4",
@@ -691,7 +707,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/5",
@@ -715,7 +733,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/6",
@@ -741,7 +761,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/7",
@@ -765,7 +787,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/8",
@@ -791,7 +815,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan10",
@@ -813,7 +839,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan11",
@@ -835,7 +863,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan12",
@@ -857,7 +887,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan20",
@@ -879,7 +911,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan21",
@@ -901,7 +935,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan30",
@@ -923,7 +959,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan40",
@@ -945,7 +983,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan41",
@@ -967,7 +1007,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan42",
@@ -989,7 +1031,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan50",
@@ -1011,7 +1055,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -1120,7 +1166,10 @@
             "Vlan50"
           ],
           "summaries": [],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            0
+          ]
         },
         "bgp": null,
         "acls": [
@@ -1177,7 +1226,8 @@
         ],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "CAMPUS-CORE2",
@@ -1207,7 +1257,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/1",
@@ -1229,7 +1281,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": "CHANGE_ME_OSPF",
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/2",
@@ -1262,7 +1316,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/3",
@@ -1286,7 +1342,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/4",
@@ -1313,7 +1371,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/5",
@@ -1337,7 +1397,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/6",
@@ -1363,7 +1425,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/7",
@@ -1387,7 +1451,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/0/8",
@@ -1413,7 +1479,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan10",
@@ -1435,7 +1503,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan11",
@@ -1457,7 +1527,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan12",
@@ -1479,7 +1551,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan20",
@@ -1501,7 +1575,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan21",
@@ -1523,7 +1599,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan30",
@@ -1545,7 +1623,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan40",
@@ -1567,7 +1647,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan41",
@@ -1589,7 +1671,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan42",
@@ -1611,7 +1695,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "Vlan50",
@@ -1633,7 +1719,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -1742,7 +1830,10 @@
             "Vlan50"
           ],
           "summaries": [],
-          "redistribute_bgp": null
+          "redistribute_bgp": null,
+          "auth_areas": [
+            0
+          ]
         },
         "bgp": null,
         "acls": [
@@ -1799,7 +1890,8 @@
         ],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BLDGA-ACC1",
@@ -1829,7 +1921,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -1851,7 +1945,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -1873,7 +1969,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -1895,7 +1993,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -1917,7 +2017,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 48",
@@ -1939,7 +2041,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet7/0/1 - 48",
@@ -1961,7 +2065,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -1985,7 +2091,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/2",
@@ -2009,7 +2117,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2023,7 +2133,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BLDGA-ACC2",
@@ -2053,7 +2164,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2075,7 +2188,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 18",
@@ -2097,7 +2212,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/19 - 48",
@@ -2119,7 +2236,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2141,7 +2260,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 22",
@@ -2163,7 +2284,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/23 - 48",
@@ -2185,7 +2308,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 14",
@@ -2207,7 +2332,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/15 - 48",
@@ -2229,7 +2356,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet7/0/1 - 26",
@@ -2251,7 +2380,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet7/0/27 - 48",
@@ -2273,7 +2404,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2300,7 +2433,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/2",
@@ -2327,7 +2462,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "Cat6a UTP",
-            "transceiver": "10GBASE-T"
+            "transceiver": "10GBASE-T",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2344,7 +2481,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 4200.0
+        "poe_watts": 4200.0,
+        "qos": false
       },
       {
         "hostname": "BLDGB-ACC1",
@@ -2374,7 +2512,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2396,7 +2536,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -2418,7 +2560,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2440,7 +2584,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -2462,7 +2608,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet6/0/1 - 48",
@@ -2484,7 +2632,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2508,7 +2658,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/2",
@@ -2532,7 +2684,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2546,7 +2700,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BLDGB-ACC2",
@@ -2576,7 +2731,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2598,7 +2755,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 16",
@@ -2620,7 +2779,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/17 - 48",
@@ -2642,7 +2803,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2664,7 +2827,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 30",
@@ -2686,7 +2851,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/31 - 48",
@@ -2708,7 +2875,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2734,7 +2903,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/2",
@@ -2760,7 +2931,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2776,7 +2949,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 3300.0
+        "poe_watts": 3300.0,
+        "qos": false
       },
       {
         "hostname": "BLDGC-ACC1",
@@ -2806,7 +2980,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 48",
@@ -2828,7 +3004,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -2850,7 +3028,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 48",
@@ -2872,7 +3052,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 48",
@@ -2894,7 +3076,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -2918,7 +3102,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/2",
@@ -2942,7 +3128,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -2956,7 +3144,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 0.0
+        "poe_watts": 0.0,
+        "qos": false
       },
       {
         "hostname": "BLDGC-ACC2",
@@ -2986,7 +3175,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/1 - 12",
@@ -3008,7 +3199,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet2/0/13 - 48",
@@ -3030,7 +3223,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet3/0/1 - 48",
@@ -3052,7 +3247,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/1 - 16",
@@ -3074,7 +3271,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet4/0/17 - 48",
@@ -3096,7 +3295,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/1 - 8",
@@ -3118,7 +3319,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "GigabitEthernet5/0/9 - 48",
@@ -3140,7 +3343,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": null,
-            "transceiver": null
+            "transceiver": null,
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/1",
@@ -3166,7 +3371,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           },
           {
             "name": "TenGigabitEthernet1/1/2",
@@ -3192,7 +3399,9 @@
             "tunnel_source": null,
             "tunnel_destination": null,
             "media": "OM4 multimode fiber",
-            "transceiver": "10GBASE-SR"
+            "transceiver": "10GBASE-SR",
+            "ospf_key": null,
+            "service_policy": null
           }
         ],
         "vlans": {
@@ -3208,7 +3417,8 @@
         "acls": [],
         "static_routes": [],
         "ipsec_peers": [],
-        "poe_watts": 1200.0
+        "poe_watts": 1200.0,
+        "qos": false
       }
     ],
     "cables": [
@@ -4005,6 +4215,14 @@
         "threshold": null,
         "standard_ref": "RFC 2328",
         "text": "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical interface, so OSPF and BGP identities stay stable."
+      },
+      {
+        "rule_id": "ROUTE.ospf_auth",
+        "domain": "ROUTE",
+        "inputs": {},
+        "threshold": null,
+        "standard_ref": "RFC 2328 Appendix D",
+        "text": "Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries the key, so a device plugged into a routed link cannot form an adjacency and inject routes. The key in the configs is a placeholder to replace before deployment."
       },
       {
         "rule_id": "ROUTE.ref_bw",

@@ -215,6 +215,19 @@ RULES: dict[str, tuple[str, str, str | None, str]] = {
         "ABR {abr} summarizes area {area} as {block} (1 route instead of {count}), which works because "
         "the area's subnets were allocated from one contiguous block.",
     ),
+    "ROUTE.ospf_auth": (
+        "ROUTE", "RFC 2328 Appendix D", None,
+        "Every OSPF area uses message-digest (MD5) authentication and every adjacency interface carries "
+        "the key, so a device plugged into a routed link cannot form an adjacency and inject routes. "
+        "The key in the configs is a placeholder to replace before deployment.",
+    ),
+    "QOS.llq": (
+        "QOS", "RFC 3246 (EF PHB); RFC 2474 (DSCP)", "priority ≤ {pct}%",
+        "{device} {iface} toward {link}: low-latency queuing puts DSCP EF traffic (voice, latency-critical "
+        "flows) in a strict priority queue capped at {pct}% of the link, everything else in fair-queue, so "
+        "queuing delay under congestion does not eat the {budget_ms} ms budget. Endpoints (e.g. IP phones) "
+        "are assumed to mark EF.",
+    ),
     "ROUTE.rid": (
         "ROUTE", "RFC 2328", None,
         "Router IDs come from Loopback0 /32 addresses. A loopback never goes down with a physical "
@@ -301,13 +314,14 @@ def explain(rule_id: str, **inputs) -> Rationale:
     if rule_id not in RULES:
         raise RationaleError(f"unknown rule id '{rule_id}'", rule_id=rule_id)
     domain, ref, threshold, template = RULES[rule_id]
-    missing = _fields(template) - inputs.keys()
+    missing = (_fields(template) | _fields(threshold or "")) - inputs.keys()
     if missing:
         raise RationaleError(
             f"rule '{rule_id}' missing field(s): {sorted(missing)}", rule_id=rule_id, missing=sorted(missing)
         )
     return Rationale(
-        rule_id=rule_id, domain=domain, inputs=inputs, threshold=threshold,
+        rule_id=rule_id, domain=domain, inputs=inputs,
+        threshold=threshold.format(**inputs) if threshold else None,
         standard_ref=ref, text=template.format(**inputs),
     )
 

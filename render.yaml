@@ -1,0 +1,21 @@
+# Render blueprint for the NetArchitect API (free plan). UNVERIFIED until the owner deploys it once.
+services:
+  - type: web
+    name: netarchitect-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.7
+      - key: CORS_ORIGINS          # e.g. https://netarchitect.vercel.app (comma-separated)
+        sync: false
+      - key: OPENROUTER_API_KEY    # optional; without it /nl uses the offline parser
+        sync: false
+      - key: OPENROUTER_MODEL      # optional
+        sync: false
+      - key: NL_RATE_PER_MIN
+        value: "10"
