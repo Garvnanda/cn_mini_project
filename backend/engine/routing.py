@@ -225,9 +225,12 @@ def plan_routing(inp: DesignInput, t: Topology, log: RationaleLog) -> tuple[Rout
                 for k, b in sorted(blocks.items(), key=lambda kv: str(kv[0])):
                     if isinstance(k, int):
                         ent.bgp.networks.append((b.network, b.mask))
-                        ent.static_routes.append(StaticRoute(network=b.network, mask=b.mask, next_hop="Null0"))
+                        ent.static_routes.append(StaticRoute(network=b.network, mask=b.mask, next_hop="Null0",
+                                                              distance=C.FLOATING_STATIC_AD))
                 if ent.ospf:
                     ent.ospf.redistribute_bgp = C.ENTERPRISE_ASN
+                log.add("ROUTE.bgp_anchor", router=ent.hostname, ad=C.FLOATING_STATIC_AD,
+                        count=len(ent.static_routes))
             ent.bgp.neighbors.append((i.ip, cloud_asn))
             asn[ent.hostname] = C.ENTERPRISE_ASN
             log.add("ROUTE.ebgp", ent=ent.hostname, ent_asn=C.ENTERPRISE_ASN, cloud=vgw.hostname, cloud_asn=cloud_asn)

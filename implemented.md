@@ -23,8 +23,12 @@ Only list items whose tests were actually run and passed.
 | 6 L2 decisions | done |
 | 7 Routing selector | done |
 | 8 Config generator | done (PT compatibility unchecked) |
-| 9 Presets | 9.5 planner done; presets/examples not started |
-| 10–26 | not started |
+| 9 Presets | done |
+| 10 IOS parser | done |
+| 11 Simulator | done |
+| 12 Verifier | done |
+| 13 Batfish adapter | code written; live run UNVERIFIED (13.2, 13.3 open) |
+| 14–26 | not started |
 
 ## Done
 ### Docs bootstrap  (2026-11-10)
@@ -84,3 +88,17 @@ Only list items whose tests were actually run and passed.
   - No QoS for the Metro MAN sub-5 ms requirement yet.
   - Passwords and the IPsec PSK are `CHANGE_ME_*` placeholders.
   - Golden files are regenerated with `UPDATE_GOLDEN=1 pytest tests/test_configs.py` (only on purpose).
+
+### Phases 9-13 — Presets, IOS parser, simulator, verifier, Batfish adapter  (2026-11-10)
+- Presets (`backend/presets/`): `campus_lan.json` (3 buildings, links 180/280/350 m, 1600 endpoints, PoE voice + APs, guest isolation), `metro_man.json` (HQ + Branch 22 km + Colo datacenter 35 km, single-mode fiber, 450 users, resiliency high, Branch -> Colo-Trading allow tcp 443 then deny), `global_wan.json` (Delhi HQ, Mumbai/Bengaluru via carrier, Singapore + CloudVPC via internet IPsec, 2000 IoT, eBGP to cloud).
+- Examples (`backend/examples/`): `invalid_copper_150m.json` -> PhysicalDistanceViolationError, `invalid_exhausted.json` -> AddressSpaceExhaustedError, `invalid_bad_vlan.json` -> InvalidParameterError, `custom_small_office.json` (valid).
+- `verify/ios_parser.py`: parses IOS text into `PDevice` (hostname, ip routing, VLANs, STP roots, interfaces incl. ranges/switchport/trunk lists/HSRP/ACL bindings/tunnels, OSPF, BGP, statics with optional distance, extended ACLs with any/host/wildcard and eq port, isakmp peers). Unknown top-level lines go to `unparsed`; malformed interface lines raise `ParseError` with line number.
+- `verify/simulator.py`: built only from parsed configs + physical cabling. Per-VLAN L2 domains (trunk must allow the VLAN on both ends and the VLAN must exist), links over routed cables / shared L2 domain / IPsec tunnels, RIB from connected, static (floating distance honored), OSPF (Dijkstra, ABR summaries hide component routes outside their area, ABR Null0 summary route, BGP redistribution as external), eBGP (session needs matching neighbor/remote-as both ways; `network` needs exact RIB match). LPM then AD then metric. ACLs first-match with implicit deny. HSRP active = highest priority. `trace(src, dst, proto, port)` -> hop list, outcome delivered / dropped / no-route / loop.
+- `verify/verifier.py`: `verify(design, configs=None)` -> `VerificationReport` with checks config_parse, gateway_reachability, reachability_and_policy (every segment pair by ICMP + each policy's own proto/port, compared with intent from the policies), no_routing_loops, no_overlapping_subnets, access_trunk_scope (access stacks are leaves).
+- `verify/batfish_adapter.py`: skipped unless `BATFISH_HOST` set and pybatfish installed (`backend/requirements-batfish.txt`, dev/local only); uploads snapshot, asks undefinedReferences + traceroute per probe, compares with own verdicts. UNVERIFIED against a live server.
+- Fix during this phase: eBGP Null0 anchor statics are now floating (AD 254). See ai_audit_log.md entry 2.
+- Simulator fix: static routes with an IP next hop resolve the egress interface recursively.
+- Tests: `test_presets.py`, `test_parser.py` (round trip of every device of all 7 designs), `test_simulator.py` (hand-built 2-router and 2-switch topologies), `test_verifier.py` (all designs pass; injected wrong mask, unpruned trunk, ACL order swap, AD-1 Null0, shutdown gateway, overlapping subnet are each caught), `test_batfish.py`.
+- Golden files regenerated on purpose: new presets added; `wan` fixture changed by the AD 254 fix.
+- Run: `cd backend && .venv/Scripts/python -m pytest` -> 330 passed, 1 skipped (live Batfish)
+- Known gaps / UNVERIFIED: interface bandwidths used for OSPF cost (TenGig 10000, Gig/Vlan 1000, Tunnel 0.1 Mb/s) are [verify]; sim ignores STP blocking (L2 domains only), ARP/return-path is not traced separately (each ordered pair is probed one way, both directions are covered by the matrix); hosts are modelled one per segment (last usable address).

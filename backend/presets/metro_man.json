@@ -1,0 +1,25 @@
+{
+  "profile": "metro_man",
+  "root_prefix": "10.20.0.0/16",
+  "resiliency": "high",
+  "sites": [
+    {"name": "HQ", "kind": "hq"},
+    {"name": "Branch", "kind": "branch"},
+    {"name": "Colo", "kind": "datacenter"}
+  ],
+  "links": [
+    {"a": "HQ", "b": "Branch", "distance_m": 22000, "media_preference": "singlemode"},
+    {"a": "HQ", "b": "Colo", "distance_m": 35000, "media_preference": "singlemode"}
+  ],
+  "segments": [
+    {"name": "HQ-Users", "vlan": 10, "hosts": 250, "role": "user", "location": "HQ"},
+    {"name": "HQ-Voice", "vlan": 20, "hosts": 60, "role": "voice", "location": "HQ", "poe": true},
+    {"name": "Branch-Users", "vlan": 110, "hosts": 120, "role": "user", "location": "Branch"},
+    {"name": "Colo-Ops", "vlan": 210, "hosts": 80, "role": "user", "location": "Colo"},
+    {"name": "Colo-Trading", "vlan": 220, "hosts": 40, "role": "server", "location": "Colo"}
+  ],
+  "policies": [
+    {"src": "Branch-Users", "dst": "Colo-Trading", "action": "allow", "proto": "tcp", "port": 443},
+    {"src": "Branch-Users", "dst": "Colo-Trading", "action": "deny"}
+  ]
+}

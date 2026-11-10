@@ -54,6 +54,7 @@ OSPF_PID = 1
 OSPF_SINGLE_AREA_MAX_SUBNETS = 50  # assignment rule: single area when < 50 subnets
 OSPF_DEFAULT_REF_BW_MBPS = 100     # Cisco default
 OSPF_REF_BW_MBPS = 100_000         # 100 Gb/s so 10G links get cost 10, 1G cost 100
+FLOATING_STATIC_AD = 254           # BGP anchor routes lose to any OSPF route for the same prefix
 ENTERPRISE_ASN = 65000             # RFC 6996 private range
 CLOUD_ASN_BASE = 65100
 INTERNET_UNDERLAY = "203.0.113.0/24"  # RFC 5737 TEST-NET-3, stands in for public IPs

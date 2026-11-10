@@ -1,0 +1,11 @@
+{
+  "profile": "custom",
+  "root_prefix": "192.168.0.0/22",
+  "sites": [{"name": "Office", "kind": "campus"}],
+  "segments": [
+    {"name": "Users", "vlan": 10, "hosts": 60, "role": "user", "location": "Office"},
+    {"name": "Guests", "vlan": 30, "hosts": 20, "role": "guest", "location": "Office"},
+    {"name": "Printers", "vlan": 40, "hosts": 5, "role": "iot", "location": "Office"}
+  ],
+  "policies": [{"src": "Guests", "dst": "Users", "action": "deny"}]
+}

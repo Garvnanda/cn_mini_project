@@ -1,0 +1,6 @@
+{
+  "profile": "custom",
+  "root_prefix": "192.168.0.0/22",
+  "sites": [{"name": "Office", "kind": "campus"}],
+  "segments": [{"name": "Users", "vlan": 1, "hosts": 40, "role": "user", "location": "Office"}]
+}

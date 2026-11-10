@@ -295,6 +295,7 @@ class StaticRoute(BaseModel):
     network: str
     mask: str
     next_hop: str  # IP or interface (e.g. Null0)
+    distance: int | None = None  # AD override (floating static)
 
 
 class Device(BaseModel):

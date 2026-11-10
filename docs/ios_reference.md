@@ -53,7 +53,7 @@ PT = Cisco Packet Tracer support; "?" = not yet checked.
 | bgp | `bgp router-id <a.b.c.d>` | BGP RID | yes | |
 | bgp | `neighbor <ip> remote-as <asn>` | peer | yes | |
 | bgp | `network <net> mask <mask>` | advertise (needs exact RIB route) | yes | |
-| global | `ip route <net> <mask> <next-hop\|Null0>` | static / discard route | yes | |
+| global | `ip route <net> <mask> <next-hop\|Null0> [<distance>]` | static / discard route; distance makes it floating | yes | |
 | global | `ip access-list extended <NAME>` | named ACL | yes | |
 | acl | `permit\|deny <proto> <src> <wc> <dst> <wc> [eq <port>]` | ACE (`any` allowed for src/dst) | yes | |
 | global | `crypto isakmp policy <n>` | IKEv1 phase 1 policy | yes | |

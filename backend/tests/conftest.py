@@ -7,11 +7,17 @@ import pytest
 from engine.planner import design
 
 FIXTURES = Path(__file__).parent / "fixtures"
-NAMES = ["campus", "metro", "wan", "three_tier"]
+PRESETS = Path(__file__).parent.parent / "presets"
+EXAMPLES = Path(__file__).parent.parent / "examples"
+PRESET_NAMES = ["campus_lan", "metro_man", "global_wan"]
+NAMES = ["campus", "metro", "wan", "three_tier", *PRESET_NAMES]
 
 
 def load(name: str) -> dict:
-    return json.loads((FIXTURES / f"{name}.json").read_text())
+    for d in (FIXTURES, PRESETS, EXAMPLES):
+        if (d / f"{name}.json").exists():
+            return json.loads((d / f"{name}.json").read_text())
+    raise FileNotFoundError(name)
 
 
 @pytest.fixture(scope="session")

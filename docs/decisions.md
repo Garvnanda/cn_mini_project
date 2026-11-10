@@ -73,3 +73,16 @@ Do not change a decision without adding a new entry that supersedes it.
 
 ### D-020 — Default-allow ACLs (2026-11-10)
 - Policies are exceptions: each source ACL ends with `permit ip any any`; applied inbound on the source gateway.
+
+### D-021 — Floating Null0 anchors for BGP (2026-11-10)
+- Context: AD-1 Null0 statics used to satisfy BGP `network` blackholed remote OSPF areas (found by the verifier, ai_audit_log.md entry 2).
+- Decision: anchor statics use distance 254, so any OSPF route for the same prefix wins and the static only fills in when OSPF has none.
+
+### D-022 — Verifier inputs (2026-11-10)
+- Decision: the verifier reads only the rendered config text plus the physical cabling list (cabling is not in configs) and one representative host per segment (last usable address, gateway from the design). Intent comes from input policies with default-allow (D-020).
+
+### D-023 — Access stacks are leaves (2026-11-10)
+- Decision: trunks touching an access stack may only carry VLANs that have access ports on that stack; anything more is reported by `access_trunk_scope`.
+
+### D-024 — Batfish optional dependency (2026-11-10)
+- Decision: pybatfish lives in `requirements-batfish.txt` (local only, pulls pandas); never in the Render build. Adapter imports it lazily.

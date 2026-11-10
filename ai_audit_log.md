@@ -52,3 +52,46 @@ total = _r(fiber + connectors * C.CONNECTOR_DB + splices * C.SPLICE_DB)  # round
 margin = _r(allowed - total)
 ```
 - **Regression test:** `tests/test_media.py::test_auto_thresholds[400-OM4 multimode fiber-10GBASE-SR]`
+
+### Entry 2 — eBGP Null0 anchor static blackholes every remote OSPF area
+- **Date / phase:** 2026-11-10, written in Phase 7, caught in Phase 12 by the built-in verifier
+- **AI tool & model:** Claude Code (Claude Opus 5.5)
+- **Prompt given:** "continue with phase 5, 6, 7 and 8" (task 7.5: BGP ASN plan, neighbor list). The AI chose to advertise each OSPF area block to the cloud with `network ... mask ...` and to anchor it with a Null0 static.
+- **AI-generated code (buggy):** `backend/engine/routing.py`
+```python
+for k, b in sorted(blocks.items(), key=lambda kv: str(kv[0])):
+    if isinstance(k, int):
+        ent.bgp.networks.append((b.network, b.mask))
+        ent.static_routes.append(StaticRoute(network=b.network, mask=b.mask, next_hop="Null0"))
+```
+  rendered on DELHI-R1 (global_wan preset) as:
+```
+ip route 10.100.8.0 255.255.252.0 Null0
+ip route 10.100.12.0 255.255.252.0 Null0
+ip route 10.100.16.0 255.255.252.0 Null0
+```
+- **Symptom:** `verify(design("global_wan"))` failed `reachability_and_policy`: every flow from Delhi (and every branch-to-branch flow, which transits Delhi) to another site was dropped. All Phase 5-8 unit tests had passed because they checked config text, not forwarding.
+- **Packet-flow analysis (before fix):** `sim.trace("10.100.3.254", <Mumbai-IoT host>)`
+```
+host 10.100.3.254 -> VLAN 10 : forward to default gateway 10.100.0.1 on DELHI-CORE1
+DELHI-CORE1 Vlan10 -> TenGigabitEthernet1/0/3 : forward route 10.100.8.0/22 [ospf 110/20] via 10.100.4.6
+DELHI-R1 TenGigabitEthernet0/0/0 : drop discard route 10.100.8.0/22 [static 1/0] via Null0
+outcome: dropped | DELHI-R1 discards via 10.100.8.0/22 [static 1/0] via Null0
+```
+- **Root cause:** the Mumbai ABR advertises its area as the inter-area summary 10.100.8.0/22 (OSPF, AD 110). DELHI-R1 also has a static 10.100.8.0/22 → Null0 with the default AD 1. Same prefix length, so longest-prefix match ties and the lower administrative distance wins: the discard route is installed and the OSPF summary is never used. The static was only needed so BGP `network` finds an exact route in the RIB (RFC 4271 origination; Cisco AD table in docs/standards.md).
+- **Fix:** make the anchor a floating static (AD 254), so it is installed only when OSPF has no route for that block (D-021).
+```python
+ent.static_routes.append(StaticRoute(network=b.network, mask=b.mask, next_hop="Null0",
+                                     distance=C.FLOATING_STATIC_AD))  # 254
+```
+  rendered as `ip route 10.100.8.0 255.255.252.0 Null0 254`.
+- **Packet-flow after fix:**
+```
+host 10.100.3.254 -> VLAN 10 : forward to default gateway 10.100.0.1 on DELHI-CORE1
+DELHI-CORE1 Vlan10 -> TenGigabitEthernet1/0/3 : forward route 10.100.8.0/22 [ospf 110/20] via 10.100.4.6
+DELHI-R1 TenGigabitEthernet0/0/0 -> TenGigabitEthernet0/0/1 : forward route 10.100.8.0/22 [ospf 110/10] via 10.100.4.9
+MUMBAI-R1 TenGigabitEthernet0/0/1 -> TenGigabitEthernet0/0/0 : forward route 10.100.8.0/23 [ospf 110/10] via 10.100.10.1
+MUMBAI-CORE1 TenGigabitEthernet1/0/3 -> Vlan20 : deliver connected 10.100.8.0/23 [connected 0/0] via connected; delivered to host
+outcome: delivered
+```
+- **Regression tests:** `tests/test_verifier.py::test_detects_ad1_null0_blackhole`, `tests/test_simulator.py::test_null0_discard_and_floating_static`

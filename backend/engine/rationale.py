@@ -226,6 +226,13 @@ RULES: dict[str, tuple[str, str, str | None, str]] = {
         "IPsec tunnel (VTI, AES-256 / SHA-256, DH group 14). Underlay addresses come from {underlay} "
         "(RFC 5737 documentation range): replace them with the real public IPs.",
     ),
+    "ROUTE.bgp_anchor": (
+        "ROUTE", "RFC 4271; Cisco IOS administrative distance", "AD {ad} > OSPF 110",
+        "{router} anchors its {count} BGP-advertised area block(s) with Null0 static routes at administrative "
+        "distance {ad} (floating). BGP `network` needs an exact route in the RIB, but an AD-1 static would beat "
+        "the OSPF summary for the same prefix and blackhole remote areas; at AD {ad} the static is used only "
+        "when OSPF has no route.",
+    ),
     # ---- ACL
     "ACL.policy": (
         "ACL", "Cisco IOS extended ACL (first match)", None,

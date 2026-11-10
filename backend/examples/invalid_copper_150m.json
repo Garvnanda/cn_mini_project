@@ -1,0 +1,8 @@
+{
+  "profile": "custom",
+  "root_prefix": "192.168.0.0/22",
+  "sites": [{"name": "Office", "kind": "campus"}],
+  "buildings": [{"name": "Main", "site": "Office"}, {"name": "Annex", "site": "Office"}],
+  "links": [{"a": "Main", "b": "Annex", "distance_m": 150, "media_preference": "copper"}],
+  "segments": [{"name": "Users", "vlan": 10, "hosts": 40, "role": "user", "location": "Annex"}]
+}

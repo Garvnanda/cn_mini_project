@@ -93,37 +93,37 @@ Each phase ends with an **Exit check** that must hold before moving on.
 **Exit check:** 3 preset configs export cleanly.
 
 ## Phase 9 — Presets & custom input
-- [ ] 9.1 `presets/campus_lan.json` (3 buildings, <400 m, 1600 endpoints, PoE APs)
-- [ ] 9.2 `presets/metro_man.json` (HQ + 2 remotes 15–35 km, 450 users, colo, dual-homed, QoS)
-- [ ] 9.3 `presets/global_wan.json` (4 cities + cloud VPC, 2000 IoT, IPsec, multi-area/BGP)
-- [ ] 9.4 `examples/` invalid inputs (copper 150 m, exhausted root, bad VLAN)
+- [x] 9.1 `presets/campus_lan.json` (3 buildings, <400 m, 1600 endpoints, PoE APs)
+- [x] 9.2 `presets/metro_man.json` (HQ + 2 remotes 15–35 km, 450 users, colo, dual-homed, QoS)
+- [x] 9.3 `presets/global_wan.json` (4 cities + cloud VPC, 2000 IoT, IPsec, multi-area/BGP)
+- [x] 9.4 `examples/` invalid inputs (copper 150 m, exhausted root, bad VLAN)
 - [x] 9.5 `engine/planner.py` orchestrator: input → full `DesignResult`
-- [ ] 9.6 Tests: each preset end-to-end; each invalid example raises the right error
+- [x] 9.6 Tests: each preset end-to-end; each invalid example raises the right error
 
 ## Phase 10 — IOS parser (verification input)
-- [ ] 10.1 Parse generated `.cfg` back: hostname, interfaces, IP/mask, switchport mode/VLANs, SVIs, static routes, OSPF networks/areas, BGP neighbors, ACLs, ACL bindings
-- [ ] 10.2 Round-trip test: generate → parse → matches model
+- [x] 10.1 Parse generated `.cfg` back: hostname, interfaces, IP/mask, switchport mode/VLANs, SVIs, static routes, OSPF networks/areas, BGP neighbors, ACLs, ACL bindings
+- [x] 10.2 Round-trip test: generate → parse → matches model
 
 ## Phase 11 — Simulator & packet tracer
-- [ ] 11.1 Build L2 domains from parsed trunks/access ports
-- [ ] 11.2 SPF (Dijkstra) per OSPF area + inter-area routes; BGP simplified best-path
-- [ ] 11.3 RIB per device with AD; FIB longest-prefix match
-- [ ] 11.4 ACL evaluator (first match, implicit deny)
-- [ ] 11.5 `trace(src, dst, proto, port)` → hop list with reason per hop; outcomes: delivered/dropped/loop/no-route
-- [ ] 11.6 Tests: hand-built mini topologies with known answers
+- [x] 11.1 Build L2 domains from parsed trunks/access ports
+- [x] 11.2 SPF (Dijkstra) per OSPF area + inter-area routes; BGP simplified best-path
+- [x] 11.3 RIB per device with AD; FIB longest-prefix match
+- [x] 11.4 ACL evaluator (first match, implicit deny)
+- [x] 11.5 `trace(src, dst, proto, port)` → hop list with reason per hop; outcomes: delivered/dropped/loop/no-route
+- [x] 11.6 Tests: hand-built mini topologies with known answers
 
 ## Phase 12 — Automated verifier
-- [ ] 12.1 Reachability matrix between all segments
-- [ ] 12.2 Policy intent checks (expected allow/deny pairs from input policies)
-- [ ] 12.3 Gateway reachability, no overlap, no loop
-- [ ] 12.4 `VerificationReport` with pass/fail + traces
-- [ ] 12.5 Bug-injection tests: wrong mask, unpruned trunk, ACL order swapped → verifier catches each
+- [x] 12.1 Reachability matrix between all segments
+- [x] 12.2 Policy intent checks (expected allow/deny pairs from input policies)
+- [x] 12.3 Gateway reachability, no overlap, no loop
+- [x] 12.4 `VerificationReport` with pass/fail + traces
+- [x] 12.5 Bug-injection tests: wrong mask, unpruned trunk, ACL order swapped → verifier catches each
 
 ## Phase 13 — Batfish adapter (optional, local)
-- [ ] 13.1 Detect `BATFISH_HOST`; skip cleanly if absent
-- [ ] 13.2 Upload snapshot, run reachability + undefined-references questions
-- [ ] 13.3 Compare with own verifier, report differences
-- [ ] 13.4 Test marked `@pytest.mark.batfish` (skipped by default)
+- [x] 13.1 Detect `BATFISH_HOST`; skip cleanly if absent
+- [ ] 13.2 Upload snapshot, run reachability + undefined-references questions (code written, UNVERIFIED: no live Batfish run yet)
+- [ ] 13.3 Compare with own verifier, report differences (code written, UNVERIFIED: no live Batfish run yet)
+- [x] 13.4 Test marked `@pytest.mark.batfish` (skipped by default)
 
 ## Phase 14 — What-if failure engine
 - [ ] 14.1 Fail link / node → rebuild graph → rerun SPF → new paths

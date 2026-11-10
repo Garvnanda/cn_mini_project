@@ -71,6 +71,15 @@ Consequence with current values: ER passes up to 38 km with 2 connectors; 40 km 
 | IKEv2 | RFC 7296 |
 | ESP | RFC 4303 |
 
+## Simulator assumptions (Phase 11)
+| Item | Value | Source |
+|---|---|---|
+| Interface bandwidth for OSPF cost: TenGigabitEthernet | 10000 Mb/s | interface speed |
+| GigabitEthernet / Vlan SVI | 1000 Mb/s [verify SVI default per platform] | Cisco default |
+| Tunnel interface | 0.1 Mb/s (100 kb/s) [verify per IOS version] | Cisco default |
+| OSPF cost | ref_bw / bw, min 1, max 65535; loopback 1 | RFC 2328 / Cisco |
+| Floating static AD for BGP anchors | 254 | project choice (D-021) |
+
 ## Other references used (Phases 5-8)
 | Item | Ref |
 |---|---|
