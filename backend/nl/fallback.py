@@ -32,6 +32,8 @@ def parse(text: str) -> tuple[dict, list[str], list[str]]:
     iot = sum(_int(n) for n in re.findall(r"(\d[\d,]*)\s*(?:iot|sensors|scanners|devices)", t))
     buildings = re.search(r"(\d+)[\s-]*buildings?", t)
     sites_n = re.search(rf"(\d+)[\s-]*{SITE_WORDS}", t)
+    # "a branch", "a FinTech colo", "one data center": remote sites named one by one
+    named = re.findall(r"\b(?:a|an|one)\s+(?:[a-z]+\s+)?(branch|colo(?:cation)?|data ?cent(?:er|re)|remote office)\b", t)
     cloud = any(w in t for w in CLOUD_WORDS)
     dists = _distances_m(t)
     latency = re.search(r"(\d+(?:\.\d+)?)\s*ms\b", t)
@@ -42,7 +44,7 @@ def parse(text: str) -> tuple[dict, list[str], list[str]]:
 
     if cloud or (sites_n and int(sites_n.group(1)) >= 3 and "cit" in t):
         profile = "global_wan"
-    elif sites_n or re.search(r"\bhq\b|headquarters|branch|metro", t) or any(d > 400 for d in dists):
+    elif sites_n or named or re.search(r"\bhq\b|headquarters|branch|metro", t) or any(d > 400 for d in dists):
         profile = "metro_man"
     elif buildings or "campus" in t:
         profile = "campus_lan"
@@ -85,8 +87,14 @@ def parse(text: str) -> tuple[dict, list[str], list[str]]:
         cities = profile == "global_wan" and "cit" in t
         if cities:
             remotes -= 1  # "4 cities" = HQ + 3 others
-        names = ["HQ"] + [f"Site{i}" for i in range(1, max(remotes, 0) + 1)]
-        d["sites"] = [{"name": names[0], "kind": "hq"}] + [{"name": s, "kind": "branch"} for s in names[1:]]
+        if not remotes and named:
+            kinds = ["branch" if n in ("branch", "remote office") else "datacenter" for n in named]
+            names = ["HQ"] + [("Colo" if k == "datacenter" else "Branch") + (str(i) if len(named) > 1 else "")
+                              for i, k in enumerate(kinds, start=1)]
+        else:
+            kinds = ["branch"] * max(remotes, 0)
+            names = ["HQ"] + [f"Site{i}" for i in range(1, max(remotes, 0) + 1)]
+        d["sites"] = [{"name": names[0], "kind": "hq"}] + [{"name": s, "kind": k} for s, k in zip(names[1:], kinds)]
         for i, s in enumerate(names[1:]):
             link = {"a": "HQ", "b": s, "distance_m": dists[i]} if i < len(dists) else None
             if link is None:

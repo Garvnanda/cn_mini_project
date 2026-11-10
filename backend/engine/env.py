@@ -3,11 +3,14 @@
 import os
 from pathlib import Path
 
-DEFAULT = Path(__file__).resolve().parent.parent / ".env"
+_BACKEND = Path(__file__).resolve().parent.parent
+DEFAULT = (_BACKEND / ".env", _BACKEND.parent / ".env")  # backend/.env first, then repo-root .env
 
 
-def load_env(path: Path = DEFAULT) -> list[str]:
+def load_env(path: Path | tuple[Path, ...] = DEFAULT) -> list[str]:
     """Read KEY=VALUE lines; skip blanks/comments; strip optional quotes. Returns keys it set."""
+    if isinstance(path, tuple):
+        return [k for p in path for k in load_env(p)]
     if not path.exists():
         return []
     loaded = []

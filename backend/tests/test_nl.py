@@ -7,6 +7,11 @@ from nl import extract, fallback, openrouter
 from tests.conftest import load
 
 
+@pytest.fixture(autouse=True)
+def no_backoff(monkeypatch):
+    monkeypatch.setattr(openrouter, "BACKOFF_S", 0)
+
+
 def mock_client(handler):
     return httpx.Client(base_url=openrouter.BASE_URL, transport=httpx.MockTransport(handler))
 
@@ -92,3 +97,10 @@ def test_fallback_metro_latency_and_wan():
     assert d["profile"] == "global_wan" and len(d["sites"]) == 5
     assert {ln["transport"] for ln in d["links"]} == {"internet"}
     assert any("cloud" in m for m in missing)
+
+
+def test_fallback_named_sites():
+    d, _, _ = fallback.parse("HQ plus a branch 22 km away and a FinTech colo 35 km away, 450 users, under 5 ms latency")
+    assert [(s["name"], s["kind"]) for s in d["sites"]] == [("HQ", "hq"), ("Branch1", "branch"), ("Colo2", "datacenter")]
+    assert [ln["distance_m"] for ln in d["links"]] == [22000, 35000]
+    assert sum(s["hosts"] for s in d["segments"]) == 450

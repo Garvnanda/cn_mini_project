@@ -44,7 +44,7 @@ export const api = {
   whatif: (input: DesignInput, links: string[], nodes: string[]) => call<WhatIf>("/whatif", { input, links, nodes }),
   lintText: (text: string) => call<DeviceLint>("/lint", { text }),
   diff: (a: DesignInput, b: DesignInput) => call<DiffResult>("/diff", { a, b }),
-  nl: (text: string) => call<NLResult>("/nl", { text }),
+  nl: (text: string) => call<NLResult>("/nl", { text }, 180_000),  // free LLMs can take ~2 min
   exportUrl: (fmt: string) => `${API_URL}/export/${fmt}`,
 };
 

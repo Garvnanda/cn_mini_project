@@ -1,20 +1,23 @@
 """OpenRouter client: asks an LLM to fill the DesignInput JSON. It extracts facts only (D-004).
 
-UNVERIFIED: written against the OpenRouter chat-completions API (OpenAI-compatible
-`/api/v1/chat/completions`, `response_format: {"type": "json_object"}`); not yet run with a real key.
+Verified live 2026-11-10 against `/api/v1/chat/completions` with model `openrouter/free`
+(free models only; the owner's account has no paid credit, `openrouter/auto` returned HTTP 402).
+Free models can be slow (~2 min) or rate-limited (429); failures fall back to the offline parser.
 """
 
 import json
 import os
+import time
 
 import httpx
 
 from engine.models import DesignInput
 
 BASE_URL = "https://openrouter.ai/api/v1"
-DEFAULT_MODEL = "openrouter/auto"  # UNVERIFIED default; set OPENROUTER_MODEL to pin one
+DEFAULT_MODEL = "openrouter/free"  # routes to an available free model; set OPENROUTER_MODEL to pin one
 TIMEOUT_S = 30
 RETRIES = 2
+BACKOFF_S = 2.0  # wait 2 s, then 4 s between attempts (429 / 5xx / network)
 
 SYSTEM = """You convert a network description into JSON for a deterministic design engine.
 Rules:
@@ -53,7 +56,9 @@ def complete(text: str, client: httpx.Client | None = None) -> dict:
     client = client or httpx.Client(base_url=BASE_URL, timeout=TIMEOUT_S)
     try:
         last: Exception | None = None
-        for _ in range(RETRIES + 1):
+        for attempt in range(RETRIES + 1):
+            if attempt:
+                time.sleep(BACKOFF_S * 2 ** (attempt - 1))
             try:
                 r = client.post("/chat/completions", json=body, headers=headers)
             except httpx.HTTPError as e:
