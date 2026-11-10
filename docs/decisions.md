@@ -54,3 +54,22 @@ Do not change a decision without adding a new entry that supersedes it.
 
 ### D-015 — Rationale templates central (2026-11-10)
 - Decision: all justification text lives in `engine/rationale.py` `RULES`; engine code calls `explain(rule_id, **inputs)`. `Rationale` model stays in `models.py` and is re-exported.
+
+### D-016 — Hierarchical addressing per area (2026-11-10)
+- Decision: when the design has more than one OSPF area or a cloud site, each area/cloud gets one power-of-two block from the root, then VLSM runs inside it. Single-area designs allocate straight from the root.
+- Why: makes `area N range` summaries exact (no over-summarization); costs some padding.
+
+### D-017 — Topology shape (2026-11-10)
+- Collapsed core when a site has < 4 buildings, three-tier at >= 4 (project threshold). Gateways (SVIs) on cores (collapsed) or distribution (three-tier).
+- Access = stacks of 48-port members, max 8 per stack. Every building needs a direct input link to its gateway building.
+- resiliency=high pairs cores, distribution switches and HQ/DC routers; branches keep one router, dual-homed to both HQ routers.
+
+### D-018 — HSRP sizing (2026-11-10)
+- Decision: paired gateways use HSRPv2 (group = VLAN id, needs v2 for ids > 255). VIP = first usable; the two physical SVIs take the next two addresses, so each paired LAN requests hosts + 2 extra (on top of D-013).
+
+### D-019 — WAN transports (2026-11-10)
+- `Link.transport`: fiber (L1 engine designs it), carrier (EVPL/MPLS, provider owns L1, routed /31), internet (underlay /31 from RFC 5737 203.0.113.0/24 + route-based IPsec VTI, IKEv1 AES-256/SHA-256/DH14).
+- Cloud sites: single VGW, eBGP with private ASNs (enterprise 65000, cloud 65100+), enterprise advertises area blocks via Null0 statics and redistributes BGP into OSPF.
+
+### D-020 — Default-allow ACLs (2026-11-10)
+- Policies are exceptions: each source ACL ends with `permit ip any any`; applied inbound on the source gateway.

@@ -13,7 +13,7 @@ from tests.conftest import NAMES
     "name, counts",
     [
         ("campus", {"core": 2, "access": 6}),
-        ("metro", {"core": 4, "router": 4, "access": 5}),
+        ("metro", {"core": 6, "router": 4, "access": 3}),
         ("wan", {"core": 4, "router": 4, "access": 8, "cloud": 1}),
         ("three_tier", {"core": 1, "distribution": 4, "access": 4}),
     ],

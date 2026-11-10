@@ -56,39 +56,39 @@ Each phase ends with an **Exit check** that must hold before moving on.
 **Exit check:** Hypothesis 500 random cases, zero overlap.
 
 ## Phase 5 — Topology builder
-- [ ] 5.1 Tier selection: collapsed core vs three-tier, based on size/buildings (rationale)
-- [ ] 5.2 Device generation: core/distribution/access switches, routers, edge/VPN gateways, cloud VPC edge
-- [ ] 5.3 Port assignment: access ports per VLAN, uplinks, P2P links
-- [ ] 5.4 Access switch count from host density (ports per switch constant) + PoE budget per switch
-- [ ] 5.5 Redundancy: dual-homed uplinks when `resiliency=high`
-- [ ] 5.6 Topology as graph (plain adjacency dict, no networkx) with coordinates for UI
-- [ ] 5.7 Tests: device counts per preset, no orphan ports
+- [x] 5.1 Tier selection: collapsed core vs three-tier, based on size/buildings (rationale)
+- [x] 5.2 Device generation: core/distribution/access switches, routers, edge/VPN gateways, cloud VPC edge
+- [x] 5.3 Port assignment: access ports per VLAN, uplinks, P2P links
+- [x] 5.4 Access switch count from host density (ports per switch constant) + PoE budget per switch
+- [x] 5.5 Redundancy: dual-homed uplinks when `resiliency=high`
+- [x] 5.6 Topology as graph (plain adjacency dict, no networkx) with coordinates for UI
+- [x] 5.7 Tests: device counts per preset, no orphan ports
 
 **Exit check:** each preset yields a connected graph.
 
 ## Phase 6 — L2 decisions
-- [ ] 6.1 VLAN plan from segments, 802.1Q trunks with explicit allowed-VLAN lists (never "all")
-- [ ] 6.2 Native VLAN = unused dedicated VLAN (not 1)
-- [ ] 6.3 RSTP root primary/secondary on core pair
-- [ ] 6.4 Access port hardening flags (PortFast, BPDU guard)
-- [ ] 6.5 Rationale for each
-- [ ] 6.6 Tests: no trunk carries a VLAN with no member on far side
+- [x] 6.1 VLAN plan from segments, 802.1Q trunks with explicit allowed-VLAN lists (never "all")
+- [x] 6.2 Native VLAN = unused dedicated VLAN (not 1)
+- [x] 6.3 RSTP root primary/secondary on core pair
+- [x] 6.4 Access port hardening flags (PortFast, BPDU guard)
+- [x] 6.5 Rationale for each
+- [x] 6.6 Tests: no trunk carries a VLAN with no member on far side
 
 ## Phase 7 — L3 routing selector
-- [ ] 7.1 Rules: single site & <50 subnets → OSPF area 0; multi-site → multi-area OSPF; multi-AS/cloud → eBGP at boundary
-- [ ] 7.2 Area assignment per site, ABR selection
-- [ ] 7.3 Route summarization per area (compute aggregates bitwise; verify no over-summarization)
-- [ ] 7.4 Router-IDs from loopbacks, OSPF reference bandwidth
-- [ ] 7.5 BGP ASN plan (private ASNs), neighbor list
-- [ ] 7.6 IPsec tunnel plan for WAN/cloud (peers, protected subnets)
-- [ ] 7.7 Tests: rule boundaries (49/50 subnets), summary covers exactly the area's subnets
+- [x] 7.1 Rules: single site & <50 subnets → OSPF area 0; multi-site → multi-area OSPF; multi-AS/cloud → eBGP at boundary
+- [x] 7.2 Area assignment per site, ABR selection
+- [x] 7.3 Route summarization per area (compute aggregates bitwise; verify no over-summarization)
+- [x] 7.4 Router-IDs from loopbacks, OSPF reference bandwidth
+- [x] 7.5 BGP ASN plan (private ASNs), neighbor list
+- [x] 7.6 IPsec tunnel plan for WAN/cloud (peers, protected subnets)
+- [x] 7.7 Tests: rule boundaries (49/50 subnets), summary covers exactly the area's subnets
 
 ## Phase 8 — Config generator (Cisco IOS)
-- [ ] 8.1 `docs/ios_reference.md` filled for every command used
-- [ ] 8.2 Jinja2 templates: base (hostname, banner, services, SSH), access switch, core switch (SVIs, HSRP when redundant), router, OSPF, BGP, ACL, IPsec
-- [ ] 8.3 ACLs from policies (e.g. guest → deny internal, permit internet)
-- [ ] 8.4 Render per device to `.cfg`
-- [ ] 8.5 Golden-file tests for 3 presets; config uses no command missing from `ios_reference.md` (test enforced)
+- [x] 8.1 `docs/ios_reference.md` filled for every command used
+- [x] 8.2 Jinja2 templates: base (hostname, banner, services, SSH), access switch, core switch (SVIs, HSRP when redundant), router, OSPF, BGP, ACL, IPsec
+- [x] 8.3 ACLs from policies (e.g. guest → deny internal, permit internet)
+- [x] 8.4 Render per device to `.cfg`
+- [x] 8.5 Golden-file tests for 3 presets; config uses no command missing from `ios_reference.md` (test enforced)
 
 **Exit check:** 3 preset configs export cleanly.
 
@@ -97,7 +97,7 @@ Each phase ends with an **Exit check** that must hold before moving on.
 - [ ] 9.2 `presets/metro_man.json` (HQ + 2 remotes 15–35 km, 450 users, colo, dual-homed, QoS)
 - [ ] 9.3 `presets/global_wan.json` (4 cities + cloud VPC, 2000 IoT, IPsec, multi-area/BGP)
 - [ ] 9.4 `examples/` invalid inputs (copper 150 m, exhausted root, bad VLAN)
-- [ ] 9.5 `engine/planner.py` orchestrator: input → full `DesignResult`
+- [x] 9.5 `engine/planner.py` orchestrator: input → full `DesignResult`
 - [ ] 9.6 Tests: each preset end-to-end; each invalid example raises the right error
 
 ## Phase 10 — IOS parser (verification input)

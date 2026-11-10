@@ -17,7 +17,7 @@ def allowed_prefixes() -> list[str]:
         if not line.startswith("| ") or line.startswith("| Context"):
             continue
         for cmd in re.findall(r"`([^`]+)`", line):
-            prefix = re.split(r"[<\[]", cmd)[0].strip()
+            prefix = re.split(r"[<\[]", cmd)[0].strip().rstrip("^").strip()
             words = prefix.split()
             alts = words[0].split("\\|") if words else []
             for a in alts:

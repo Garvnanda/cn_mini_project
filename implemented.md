@@ -19,7 +19,12 @@ Only list items whose tests were actually run and passed.
 | 2 Rationale engine | done |
 | 3 L1 media engine | done (loss constants UNVERIFIED) |
 | 4 Bitwise VLSM | done |
-| 5–26 | not started |
+| 5 Topology builder | done |
+| 6 L2 decisions | done |
+| 7 Routing selector | done |
+| 8 Config generator | done (PT compatibility unchecked) |
+| 9 Presets | 9.5 planner done; presets/examples not started |
+| 10–26 | not started |
 
 ## Done
 ### Docs bootstrap  (2026-11-10)
@@ -63,3 +68,19 @@ Only list items whose tests were actually run and passed.
 - `allocate(root, [AllocRequest])`: kinds lan / p2p (/31) / loopback (/32); largest-first with one aligned cursor (alignment asserted); per-subnet network, mask, wildcard, gateway, broadcast, usable range, utilization; efficiency rationale; `AddressSpaceExhaustedError` with needed/available and minimum root prefix
 - Tests: masks/wildcards for all /0-/32 vs `ipaddress`; oracle check of allocations; /31, /32; exact fit; exhaustion; Hypothesis 500 random cases, no overlap, inside root
 - Run: `cd backend && .venv/Scripts/python -m pytest` -> 145 passed
+
+### Phases 5-8 + 9.5 — Topology, L2, routing, configs, planner  (2026-11-10)
+- Files: `backend/engine/topology.py`, `l2.py`, `routing.py`, `acl.py`, `configgen.py`, `planner.py`; `backend/templates/*.j2` (base, l2, interfaces, acl, ospf, bgp, ipsec, lines, access_switch, core_switch, router); tests `test_topology.py`, `test_l2.py`, `test_routing.py`, `test_configs.py`, `conftest.py`; fixtures `tests/fixtures/{campus,metro,wan,three_tier}.json`; golden configs `tests/golden/<fixture>/*.cfg`
+- Model changes: `Link.transport` (fiber / carrier / internet); `Policy.proto` limited to ip/tcp/udp/icmp, port only with tcp/udp, src != dst; new output models `Cable`, `OspfConfig`, `BgpConfig`, `Acl`, `AclEntry`, `StaticRoute`; `Interface` and `Device` extended; `DesignResult` gains `cables`, `tiers`. VLSM gained `kind="block"` (power-of-two container).
+- Topology: per site collapsed core (< 4 buildings) or three-tier (≥ 4); core pair, distribution pair and HQ/DC router pair when resiliency=high; access stacks of 48-port members (≤ 8 per stack) sized from host counts, ports assigned per segment as `interface range`, spare ports shut; PoE watts per stack; access stacks dual-homed to both gateways; inter-site links between routers (dual-homed when one side has 2 routers); internet links become underlay + IPsec VTI tunnel; cloud site = one VGW with routed VPC subnets. TopologyError for a building with no link to its gateway building and for sites not connected to the backbone. `graph()` gives nodes/edges with a layered layout for the UI.
+- L2: native/parking VLAN 999 (or highest free), trunks pruned to VLANs present behind them, Rapid PVST+ root primary/secondary on the gateway pair, PortFast + BPDU Guard on access ports, SVIs on gateways with HSRPv2 (VIP = first usable, physical SVIs = next two) when paired.
+- Routing: `select_protocol` (multi-site -> multi-area; < 50 subnets -> area 0; >= 50 -> multi-area if three-tier else flat with warning). Areas per site (backbone = first HQ/DC) or per building block. Hierarchical addressing: one power-of-two block per area / cloud, then VLSM inside, so each ABR summarizes its area with `area N range`. Loopback0 /32 router IDs, reference bandwidth 100000. eBGP to cloud VGW (AS 65000 <-> 65100+) with Null0 discard statics, `network` statements and `redistribute bgp`. IPsec underlay from 203.0.113.0/24 (RFC 5737). Area 0 contiguity check (each site needs a direct link to the backbone site).
+- ACLs: one extended ACL per policy source segment, policy order kept, ends `permit ip any any`, applied inbound on the source gateway SVI(s).
+- Configs: role templates; StrictUndefined; test fails on any IOS line whose prefix is not in `docs/ios_reference.md`.
+- Tests: `cd backend && .venv/Scripts/python -m pytest` -> 246 passed
+- Known gaps / UNVERIFIED:
+  - Packet Tracer compatibility not checked (interface names are Catalyst 9300/9500/ISR style; PT 3560 may need `switchport trunk encapsulation dot1q`; HSRPv2 and IPsec VTI in PT unverified).
+  - Access switches have no management IP yet.
+  - No QoS for the Metro MAN sub-5 ms requirement yet.
+  - Passwords and the IPsec PSK are `CHANGE_ME_*` placeholders.
+  - Golden files are regenerated with `UPDATE_GOLDEN=1 pytest tests/test_configs.py` (only on purpose).

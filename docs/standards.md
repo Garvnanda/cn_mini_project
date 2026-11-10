@@ -71,8 +71,24 @@ Consequence with current values: ER passes up to 38 km with 2 connectors; 40 km 
 | IKEv2 | RFC 7296 |
 | ESP | RFC 4303 |
 
-## Project thresholds (from assignment, not standards)
-| Rule | Value |
+## Other references used (Phases 5-8)
+| Item | Ref |
 |---|---|
-| Single-area OSPF limit | < 50 subnets in one AS |
-| Multi-site / multi-cloud | Multi-area OSPF or eBGP |
+| HSRP (Cisco Hot Standby Router Protocol) | RFC 2281 |
+| Documentation address ranges (203.0.113.0/24 used as stand-in public IPs) | RFC 5737 |
+| IKEv1 policy used: AES-256, SHA-256, DH group 14, PSK | Cisco IOS crypto docs [verify per platform] |
+| OSPF area summarization on ABR | RFC 2328 |
+
+## Project thresholds (from assignment, not standards)
+| Rule | Value | Source |
+|---|---|---|
+| Single-area OSPF limit | < 50 subnets in one AS | Assignment §3 |
+| Multi-site / multi-cloud | Multi-area OSPF or eBGP | Assignment §3 |
+| Three-tier when a site has | ≥ 4 buildings | project choice (D-017) |
+| Access switch ports | 48 per member | project choice |
+| Stack members | ≤ 8 per stack | project choice [verify per platform] |
+| PoE per AP port assumed | 30 W (802.3at) | project choice using IEEE value |
+| OSPF reference bandwidth | 100000 Mbps | project choice (D-016 context) |
+| Native / parking VLAN | 999 (or highest free) | project choice |
+| HSRP priorities | 110 active / 100 standby (IOS default) | project choice |
+| Enterprise / cloud ASN | 65000 / 65100+ | RFC 6996 range |
