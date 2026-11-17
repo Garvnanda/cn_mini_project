@@ -45,7 +45,7 @@ export function Topology({ nodes, edges, path = [], failed = [], spof = [], onNo
 
   return (
     <figure className="topology">
-      <svg viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`} role="img" aria-label="Network topology">
+      <div className="map-scroll" tabIndex={0} role="region" aria-label="Scrollable network map"><svg viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`} role={onEdge || onNode ? "group" : "img"} aria-label="Network topology">
         {edges.map((e) => {
           const a = pos.get(e.a);
           const b = pos.get(e.b);
@@ -62,7 +62,7 @@ export function Topology({ nodes, edges, path = [], failed = [], spof = [], onNo
             spof.includes(id) ? "spof" : "",
           ].join(" ");
           return (
-            <line key={id} className={cls} x1={a.x + off} y1={a.y} x2={b.x + off} y2={b.y} onClick={() => onEdge?.(e)}>
+            <line key={id} className={cls} x1={a.x + off} y1={a.y} x2={b.x + off} y2={b.y} role={onEdge ? "button" : undefined} tabIndex={onEdge ? 0 : undefined} aria-label={onEdge ? `Fail link ${e.a} to ${e.b}` : undefined} onKeyDown={ev => { if (onEdge && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); onEdge(e); } }} onClick={() => onEdge?.(e)}>
               <title>{`${e.a} ${e.a_if} ↔ ${e.b} ${e.b_if}\n${e.kind}, ${e.media}`}</title>
             </line>
           );
@@ -75,7 +75,7 @@ export function Topology({ nodes, edges, path = [], failed = [], spof = [], onNo
             spof.includes(n.id) ? "spof" : "",
           ].join(" ");
           return (
-            <g key={n.id} className={cls} transform={`translate(${n.x},${n.y})`} onClick={() => onNode?.(n.id)}>
+            <g key={n.id} className={cls} transform={`translate(${n.x},${n.y})`} role={onNode && n.role !== "access" ? "button" : undefined} tabIndex={onNode && n.role !== "access" ? 0 : undefined} aria-label={onNode && n.role !== "access" ? `Fail device ${n.id}` : undefined} onKeyDown={ev => { if (onNode && n.role !== "access" && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); onNode(n.id); } }} onClick={() => onNode?.(n.id)}>
               <rect x={-62} y={-16} width={124} height={32} rx={6} />
               <text textAnchor="middle" dy="0.35em">{n.id.length > 18 ? n.id.slice(0, 17) + "…" : n.id}</text>
               <title>{`${n.id} (${n.role}, ${n.site})`}</title>
@@ -83,6 +83,7 @@ export function Topology({ nodes, edges, path = [], failed = [], spof = [], onNo
           );
         })}
       </svg>
+      </div>
       <figcaption className="legend">
         <span className="sw m-cu" /> Cat6a <span className="sw m-om4" /> OM4 <span className="sw m-os2" /> OS2
         <span className="sw m-wan" /> carrier / internet <span className="dash" /> trunk

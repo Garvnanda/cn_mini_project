@@ -15,7 +15,9 @@ def test_skips_cleanly_without_host(designs, monkeypatch):
 
 @pytest.mark.batfish
 @pytest.mark.skipif(not os.environ.get("BATFISH_HOST"), reason="needs a running Batfish container")
-def test_live_batfish_agrees(designs):
-    rep = run_batfish(designs["campus_lan"])
+@pytest.mark.parametrize("preset", ["campus_lan", "metro_man"])
+def test_live_batfish_agrees(designs, preset):
+    rep = run_batfish(designs[preset])
     assert rep.status == "ok", rep.message
+    assert rep.comparisons
     assert not rep.disagreements

@@ -22,8 +22,8 @@ Rule: code constants and rationale text must use values from this file. Values m
 | Mated connector pair loss (max) | 0.75 dB | TIA-568 |
 | Fusion splice loss (max) | 0.3 dB | TIA-568 |
 | Low-margin warning threshold | 3 dB | project choice (D-012): warns, does not fail |
-| 10GBASE-SR max channel insertion loss (OM4, 400 m) | 2.9 dB [verify] | IEEE 802.3ae / vendor |
-| 10GBASE-LR max channel insertion loss | 6.2 dB [verify] | IEEE 802.3ae |
+| 10GBASE-SR max channel insertion loss (OM4, 400 m) | 2.9 dB | [TIA Fiber Optics Tech Consortium application table](https://www.tiafotc.org/ieee-802-3-ethernet-standards-update/multimode-standards-update/10gbase-sr/), checked 2026-11-18 |
+| 10GBASE-LR max channel insertion loss | 6.2 dB | [Cisco 10G SFP+ datasheet](https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/data_sheet_c78-455693.html), checked 2026-11-18 |
 | 10GBASE-ER max channel insertion loss | 11.0 dB [verify] | IEEE 802.3ae |
 
 Budget rule: total loss (fiber + connectors + splices) must be ≤ channel insertion loss.

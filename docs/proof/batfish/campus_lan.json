@@ -1,0 +1,828 @@
+{
+  "status": "ok",
+  "message": "Batfish: 90 flows compared, 0 disagreement(s)",
+  "undefined_references": [],
+  "comparisons": [
+    {
+      "src": "Staff-A",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-A",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-A",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-A",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Servers",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-B",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Voice-B",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-B",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Staff-C",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "dropped",
+      "batfish": "dropped",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "dropped",
+      "batfish": "dropped",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "dropped",
+      "batfish": "dropped",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "dropped",
+      "batfish": "dropped",
+      "agree": true
+    },
+    {
+      "src": "Guest-C",
+      "dst": "APs-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Staff-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Voice-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "APs-A",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Servers",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Staff-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Voice-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "APs-B",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Staff-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "APs-C",
+      "dst": "Guest-C",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    }
+  ],
+  "parse_warnings": [
+    "configs/BLDGA-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BLDGA-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BLDGB-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BLDGB-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BLDGC-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BLDGC-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/CAMPUS-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/CAMPUS-CORE2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)"
+  ],
+  "ipsec_sessions": []
+}

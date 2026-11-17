@@ -21,6 +21,7 @@ from engine.planner import design as run_design
 from engine.rationale import RationaleLog
 from export.exporter import export_design
 from verify.verifier import build_simulator, verify
+from verify.batfish_adapter import run_batfish
 
 for _stream in (sys.stdout, sys.stderr):  # Windows pipes default to cp1252; rationale text uses ≤, µ, →
     if hasattr(_stream, "reconfigure"):
@@ -77,6 +78,14 @@ def design(target: str, export: Path = typer.Option(None, "--export", "-o", help
     if export:
         paths = export_design(r, export)
         typer.echo(f"Exported {len(paths)} files to {export}")
+
+
+@app.command()
+def crosscheck(target: str):
+    """Compare with a local Batfish server (set BATFISH_HOST first)."""
+    report = run_batfish(load_design(target))
+    typer.echo(report.model_dump_json(indent=2))
+    raise typer.Exit(0 if report.status == "ok" else 1)
 
 
 @app.command()

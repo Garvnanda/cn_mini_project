@@ -51,6 +51,10 @@ def test_openrouter_invalid_fields_reported_not_fixed(monkeypatch):
     lambda req: httpx.Response(500),
     lambda req: ok_response("not json"),
     lambda req: httpx.Response(401, text="bad key"),
+    lambda req: httpx.Response(200, json={"choices": []}),
+    lambda req: httpx.Response(200, text="bad response"),
+    lambda req: ok_response("[]"),
+    lambda req: ok_response("null"),
 ])
 def test_openrouter_failure_falls_back(monkeypatch, handler):
     monkeypatch.setenv("OPENROUTER_API_KEY", "k")

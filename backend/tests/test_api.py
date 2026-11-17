@@ -48,6 +48,12 @@ def test_trace_whatif_spof():
     assert client.post("/spof", json=inp).json()["score"] == 100
 
 
+@pytest.mark.parametrize("extra", [{"proto": "invalid"}, {"proto": "tcp", "port": 0}, {"proto": "udp", "port": 65536}, {"proto": "icmp", "port": 80}])
+def test_trace_rejects_invalid_protocol_or_port(extra):
+    response = client.post("/trace", json={"input": load("campus_lan"), "src": "Guest-C", "dst": "Servers", **extra})
+    assert response.status_code == 422
+
+
 def test_lint_bom_diff_verify():
     assert "SEC-06" in {f["rule"] for f in client.post("/lint", json={"text": "hostname X\nline vty 0 4\n transport input telnet\n"}).json()["findings"]}
     assert client.post("/lint", json={"input": load("campus_lan")}).json()["score"] >= 80

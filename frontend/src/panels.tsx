@@ -16,8 +16,8 @@ export function Decisions({ rationale }: { rationale: Rationale[] }) {
         const shown = items.filter((r) => !filter || (r.text + r.rule_id).toLowerCase().includes(filter.toLowerCase()));
         if (!shown.length) return null;
         return (
-          <section key={domain} className="decision-group">
-            <h3>{domain} <span className="muted">({shown.length})</span></h3>
+          <details key={domain} className="decision-group" open={filter ? true : undefined}>
+            <summary>{({ L1: "Cables & signal limits", L2: "Local traffic & VLANs", VLSM: "Address allocation", ROUTE: "Routes between networks", TOPO: "Network structure", ACL: "Who can connect", QOS: "Traffic priority" } as Record<string,string>)[domain] ?? domain} <span className="muted">({shown.length} decisions)</span></summary>
             {shown.map((r, i) => (
               <article key={r.rule_id + i} className="card">
                 <header><code>{r.rule_id}</code>{r.threshold && <span className="pill">{r.threshold}</span>}</header>
@@ -25,7 +25,7 @@ export function Decisions({ rationale }: { rationale: Rationale[] }) {
                 <footer className="muted">Ref: {r.standard_ref}</footer>
               </article>
             ))}
-          </section>
+          </details>
         );
       })}
     </div>
@@ -33,18 +33,21 @@ export function Decisions({ rationale }: { rationale: Rationale[] }) {
 }
 
 export function IpPlan({ subnets }: { subnets: Subnet[] }) {
+  const [technical, setTechnical] = useState(false);
   return (
     <div className="table-wrap">
+      <p>A gateway is the way out of an address group. Utilization shows how much of each address block is allocated.</p>
+      <label><input type="checkbox" checked={technical} onChange={e => setTechnical(e.target.checked)} /> Show masks, VLANs and broadcast addresses</label>
       <table>
         <thead>
-          <tr><th>Subnet</th><th>Unit</th><th>VLAN</th><th>Network</th><th>Mask</th><th>Wildcard</th><th>Gateway</th><th>Broadcast</th><th>Usable</th><th>Utilization</th></tr>
+          <tr><th>Group</th>{technical && <><th>Unit</th><th>VLAN</th></>}<th>Address block</th>{technical && <><th>Mask</th><th>Wildcard</th></>}<th>Gateway</th>{technical && <th>Broadcast</th>}<th>Available addresses</th><th>Utilization</th></tr>
         </thead>
         <tbody>
           {subnets.map((s) => (
             <tr key={s.name}>
-              <td>{s.name}</td><td>{s.unit}</td><td>{s.vlan ?? ""}</td>
-              <td className="mono">{s.network}/{s.prefix}</td><td className="mono">{s.mask}</td><td className="mono">{s.wildcard}</td>
-              <td className="mono">{s.gateway ?? "–"}</td><td className="mono">{s.broadcast ?? "–"}</td><td>{s.usable_hosts}</td>
+              <td>{s.name}</td>{technical && <><td>{s.unit}</td><td>{s.vlan ?? ""}</td></>}
+              <td className="mono">{s.network}/{s.prefix}</td>{technical && <><td className="mono">{s.mask}</td><td className="mono">{s.wildcard}</td></>}
+              <td className="mono">{s.gateway ?? "–"}</td>{technical && <td className="mono">{s.broadcast ?? "–"}</td>}<td>{s.usable_hosts}</td>
               <td><div className="bar" title={`${s.utilization_pct}%`}><span style={{ width: `${Math.min(100, s.utilization_pct)}%` }} /></div>{s.utilization_pct}%</td>
             </tr>
           ))}
@@ -79,7 +82,7 @@ export function VerifyView({ v }: { v: Verification }) {
       <ul className="checks">
         {v.checks.map((c) => (
           <li key={c.name} className={c.passed ? "ok" : "error"}>
-            {c.passed ? "✔" : "✘"} {c.name}
+            {c.passed ? "Passed: " : "Failed: "} {({config_parse:"Device instructions can be read",gateway_reachability:"Each group can reach its gateway",reachability_and_policy:"Connections follow the allow/block rules",no_routing_loops:"Packets do not get stuck in routing loops",no_overlapping_subnets:"Address blocks do not overlap",access_trunk_scope:"Switch links carry only the intended groups"} as Record<string,string>)[c.name] ?? c.name}
             {!c.passed && <ul>{c.details.slice(0, 10).map((d) => <li key={d}>{d}</li>)}</ul>}
           </li>
         ))}
@@ -120,7 +123,7 @@ export function Security({ lint }: { lint: Bundle["lint"] }) {
           </tbody>
         </table>
       </div>
-      <h3>Lint your own config</h3>
+      <details><summary>Check your own device instructions</summary><p>Paste Cisco IOS configuration text to scan it for common issues. This is called linting.</p>
       <textarea className="mono" rows={8} placeholder="Paste a Cisco IOS running-config…" value={text} onChange={(e) => setText(e.target.value)} aria-label="IOS config to lint" />
       <button
         disabled={!text.trim()}
@@ -136,6 +139,7 @@ export function Security({ lint }: { lint: Bundle["lint"] }) {
           <ul>{own.findings.map((f, i) => <li key={i} className={`sev-${f.severity}`}>[{f.severity}] {f.where}: {f.rule} {f.title} → <code>{f.fix}</code></li>)}</ul>
         </div>
       )}
+      </details>
     </div>
   );
 }

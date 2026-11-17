@@ -38,6 +38,10 @@ export function Report({ bundle }: { bundle: Bundle }) {
       <h2>Bill of materials</h2>
       <table><thead><tr><th>Item</th><th>Qty</th><th>Total</th><th>Because of</th></tr></thead>
         <tbody>{bundle.bom.lines.map((x) => <tr key={x.item}><td>{x.item}</td><td>{x.qty}</td><td>{fmt(x.total)}</td><td>{x.rule_id}</td></tr>)}</tbody></table>
+      <h2>Security findings</h2>
+      <p>The score summarizes configuration checks. Placeholder credentials must be replaced before using these instructions on equipment.</p>
+      <table><thead><tr><th>Device</th><th>Finding</th><th>Severity</th><th>Suggested fix</th></tr></thead><tbody>{bundle.lint.devices.flatMap(device => device.findings.map((f, i) => <tr key={`${device.hostname}-${i}`}><td>{device.hostname}</td><td>{f.title}</td><td>{f.severity}</td><td>{f.fix}</td></tr>))}</tbody></table>
+      <h2>Validation scope</h2><p>Results come from the built-in model. They do not certify real device compatibility, measured latency, optical performance or encryption. Equipment prices are placeholders.</p>
       <h2>Configurations</h2>
       {Object.entries(bundle.configs).map(([h, c]) => <section key={h} className="cfg-print"><h3>{h}</h3><pre className="config">{c}</pre></section>)}
     </div>

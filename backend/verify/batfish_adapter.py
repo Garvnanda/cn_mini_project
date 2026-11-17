@@ -3,13 +3,14 @@
 Runs only when BATFISH_HOST is set and pybatfish is installed (requirements-batfish.txt).
 Otherwise returns status "skipped"; the built-in verifier stays the source of truth.
 
-UNVERIFIED: written against pybatfish 2026.9.17 signatures (Session, init_snapshot, HeaderConstraints),
-but not yet run against a live Batfish server. The question names (`undefinedReferences`,
-`traceroute`) and disposition strings follow the Batfish docs.
+Live checked 2026-11-18: Campus and Metro agree; WAN reports IPsec-related
+disagreements. See docs/proof/batfish. Parse warnings and IPsec status are preserved
+so an unsupported external model cannot silently be presented as validation.
 """
 
 import os
 import tempfile
+from uuid import uuid4
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -25,16 +26,19 @@ class Comparison(BaseModel):
     src: str
     dst: str
     proto: str
+    port: int | None = None
     ours: str
     batfish: str
     agree: bool
 
 
 class BatfishReport(BaseModel):
-    status: str  # skipped | ok | error
+    status: str  # skipped | ok | disagreement | error
     message: str
     undefined_references: list[str] = []
     comparisons: list[Comparison] = []
+    parse_warnings: list[str] = []
+    ipsec_sessions: list[str] = []
 
     @property
     def disagreements(self) -> list[Comparison]:
@@ -70,10 +74,14 @@ def run_batfish(result: DesignResult, configs: dict[str, str] | None = None) -> 
             cfg_dir.mkdir()
             for host, text in configs.items():
                 (cfg_dir / f"{host}.cfg").write_text(text, encoding="utf-8")
-            bf.init_snapshot(tmp, name="design", overwrite=True)
+            bf.init_snapshot(tmp, name=f"design-{uuid4().hex}", overwrite=False)
 
         undef = bf.q.undefinedReferences().answer().frame()
         refs = [f"{r['File_Name']}: {r['Struct_Type']} {r['Ref_Name']}" for _, r in undef.iterrows()]
+        warnings = bf.q.parseWarning().answer().frame()
+        parse_warnings = [f"{r['Filename']}:{r['Line']}: {r['Text']} ({r['Comment']})" for _, r in warnings.iterrows()]
+        sessions = bf.q.ipsecSessionStatus().answer().frame()
+        ipsec_sessions = [f"{r['Node']} -> {r['Remote_Node']}: {r['Status']}" for _, r in sessions.iterrows()]
 
         hosts = {h.segment: h for h in sim.hosts}
         comps = []
@@ -87,10 +95,11 @@ def run_batfish(result: DesignResult, configs: dict[str, str] | None = None) -> 
             frame = bf.q.traceroute(startLocation=f"@enter({gw[0].lower()}[{gw[1]}])", headers=hc).answer().frame()
             disp = {t.disposition for t in frame.iloc[0]["Traces"]} if len(frame) else {"NO_RESULT"}
             theirs = "delivered" if disp & SUCCESS else "dropped"
-            comps.append(Comparison(src=p.src, dst=p.dst, proto=p.proto, ours=p.actual,
+            comps.append(Comparison(src=p.src, dst=p.dst, proto=p.proto, port=p.port, ours=p.actual,
                                     batfish=theirs, agree=theirs == p.actual))
     except Exception as e:  # network / server errors must not break the design flow
         return BatfishReport(status="error", message=f"Batfish error: {type(e).__name__}: {e}")
     bad = sum(not c.agree for c in comps)
-    return BatfishReport(status="ok", message=f"Batfish: {len(comps)} flows compared, {bad} disagreement(s)",
-                         undefined_references=refs, comparisons=comps)
+    return BatfishReport(status="disagreement" if bad else "ok", message=f"Batfish: {len(comps)} flows compared, {bad} disagreement(s)",
+                         undefined_references=refs, comparisons=comps, parse_warnings=parse_warnings,
+                         ipsec_sessions=ipsec_sessions)

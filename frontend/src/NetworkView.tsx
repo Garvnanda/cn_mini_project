@@ -16,6 +16,7 @@ export function NetworkView({ bundle }: { bundle: Bundle }) {
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
   const [step, setStep] = useState(0);
+  const [failureMode, setFailureMode] = useState(false);
 
   async function runTrace() {
     setErr("");
@@ -57,11 +58,12 @@ export function NetworkView({ bundle }: { bundle: Bundle }) {
       <div className="toolbar">
         <label>From <select value={src} onChange={(e) => setSrc(e.target.value)}>{segs.map((s) => <option key={s}>{s}</option>)}</select></label>
         <label>To <select value={dst} onChange={(e) => setDst(e.target.value)}>{segs.map((s) => <option key={s}>{s}</option>)}</select></label>
-        <label>Proto <select value={proto} onChange={(e) => setProto(e.target.value)}>{["icmp", "tcp", "udp"].map((p) => <option key={p}>{p}</option>)}</select></label>
+        <label>Connection type <select value={proto} onChange={(e) => setProto(e.target.value)}><option value="icmp">Reachability (ICMP)</option><option value="tcp">Reliable traffic (TCP)</option><option value="udp">Datagrams (UDP)</option></select></label>
         {proto !== "icmp" && <label>Port <input type="number" min={1} max={65535} value={port} onChange={(e) => setPort(e.target.value)} /></label>}
         <button className="primary" onClick={runTrace} disabled={busy}>Trace packet</button>
-        <span className="muted">Click a link or a non-access device to fail it.</span>
       </div>
+      <div className="map-tools"><p className="muted">A packet is a small piece of data. Trace it to see which devices it passes through.</p><label><input type="checkbox" checked={failureMode} onChange={e => setFailureMode(e.target.checked)} /> Enable failure testing</label></div>
+      {failureMode && <p className="hint">Select a connection or a non-access device to simulate its failure. This only changes the simulation.</p>}
       {err && <p className="error">{err}</p>}
       <Topology
         nodes={bundle.graph.nodes}
@@ -69,12 +71,14 @@ export function NetworkView({ bundle }: { bundle: Bundle }) {
         path={path}
         failed={failed}
         spof={[...bundle.spof.spof_devices, ...bundle.spof.spof_cables]}
-        onEdge={(e: GraphEdge) => fail([edgeId(e)], [])}
-        onNode={(id) => roleOf.get(id) !== "access" && fail([], [id])}
+        onEdge={failureMode && !busy ? (e: GraphEdge) => fail([edgeId(e)], []) : undefined}
+        onNode={failureMode && !busy ? (id) => roleOf.get(id) !== "access" && fail([], [id]) : undefined}
       />
       {trace && (
         <div className={`result ${trace.outcome === "delivered" ? "ok" : "error"}`}>
-          <h3>{trace.outcome.toUpperCase()}: {trace.reason}</h3>
+          <h3>{trace.outcome === "delivered" ? "Connection delivered" : trace.outcome === "dropped" ? "Connection blocked" : "Connection could not reach its destination"}</h3>
+          <p>{trace.outcome === "delivered" ? "The simulated packet reached the destination." : "The simulator stopped this packet. Check the details to see whether a security rule or an unavailable path caused it."}</p>
+          <details><summary>Technical trace · {trace.hops.length} steps</summary><p>{trace.outcome.toUpperCase()}: {trace.reason}</p>
           <ol>
             {trace.hops.map((h, i) => (
               <li key={i} className={i < step ? "" : "dim"}>
@@ -82,6 +86,7 @@ export function NetworkView({ bundle }: { bundle: Bundle }) {
               </li>
             ))}
           </ol>
+          </details>
         </div>
       )}
       {whatif && (
@@ -94,8 +99,9 @@ export function NetworkView({ bundle }: { bundle: Bundle }) {
           <button onClick={() => { setWhatif(null); setFailed([]); }}>Clear</button>
         </div>
       )}
-      <details open={!trace && !whatif}>
-        <summary>Resilience score {bundle.spof.score}/100</summary>
+      <details>
+        <summary>Backup paths & single points of failure · {bundle.spof.score}/100</summary>
+        <p>A single point of failure is a device or link whose loss disconnects part of the modeled network. This score measures the modeled topology, not real uptime.</p>
         <ul>{bundle.spof.rationale.map((r) => <li key={r.text}>{r.text}</li>)}</ul>
       </details>
     </div>

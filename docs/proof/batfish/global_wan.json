@@ -1,0 +1,224 @@
+{
+  "status": "disagreement",
+  "message": "Batfish: 21 flows compared, 14 disagreement(s)",
+  "undefined_references": [],
+  "comparisons": [
+    {
+      "src": "Delhi-IoT",
+      "dst": "Mumbai-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Delhi-IoT",
+      "dst": "Blr-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Delhi-IoT",
+      "dst": "Sg-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Delhi-IoT",
+      "dst": "VPC-Apps",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Mumbai-IoT",
+      "dst": "Delhi-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Mumbai-IoT",
+      "dst": "Blr-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Mumbai-IoT",
+      "dst": "Sg-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Mumbai-IoT",
+      "dst": "VPC-Apps",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Blr-IoT",
+      "dst": "Delhi-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Blr-IoT",
+      "dst": "Mumbai-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Blr-IoT",
+      "dst": "Sg-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Blr-IoT",
+      "dst": "VPC-Apps",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Sg-IoT",
+      "dst": "Delhi-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Sg-IoT",
+      "dst": "Mumbai-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Sg-IoT",
+      "dst": "Blr-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Sg-IoT",
+      "dst": "VPC-Apps",
+      "proto": "icmp",
+      "port": null,
+      "ours": "dropped",
+      "batfish": "dropped",
+      "agree": true
+    },
+    {
+      "src": "VPC-Apps",
+      "dst": "Delhi-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "VPC-Apps",
+      "dst": "Mumbai-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "VPC-Apps",
+      "dst": "Blr-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "VPC-Apps",
+      "dst": "Sg-IoT",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    },
+    {
+      "src": "Sg-IoT",
+      "dst": "VPC-Apps",
+      "proto": "tcp",
+      "port": 8883,
+      "ours": "delivered",
+      "batfish": "dropped",
+      "agree": false
+    }
+  ],
+  "parse_warnings": [
+    "configs/BENGALURU-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BENGALURU-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BENGALURU-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BENGALURU-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/CLOUDVPC-VGW.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/CLOUDVPC-VGW.cfg:18: authentication pre-share (This syntax is unrecognized)",
+    "configs/DELHI-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/DELHI-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/DELHI-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/DELHI-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/DELHI-R1.cfg:18: authentication pre-share (This syntax is unrecognized)",
+    "configs/MUMBAI-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/MUMBAI-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/MUMBAI-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/MUMBAI-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/SINGAPORE-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/SINGAPORE-ACC2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/SINGAPORE-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/SINGAPORE-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/SINGAPORE-R1.cfg:18: authentication pre-share (This syntax is unrecognized)"
+  ],
+  "ipsec_sessions": [
+    "cloudvpc-vgw -> delhi-r1: IPSEC_PHASE2_FAILED",
+    "delhi-r1 -> singapore-r1: IPSEC_PHASE2_FAILED",
+    "delhi-r1 -> cloudvpc-vgw: IPSEC_PHASE2_FAILED",
+    "singapore-r1 -> delhi-r1: IPSEC_PHASE2_FAILED"
+  ]
+}

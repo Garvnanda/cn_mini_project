@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+﻿import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 import bundle from "./fixtures/bundle.json";
@@ -36,10 +36,11 @@ describe("App", () => {
     await waitFor(() => expect(screen.getByRole("status").textContent).toContain("Server ready"));
     await waitFor(() => expect((screen.getByLabelText("Design input (editable JSON)") as HTMLTextAreaElement).value).toContain("metro_man"));
     fireEvent.click(screen.getByRole("button", { name: /Design network/ }));
-    await waitFor(() => expect(screen.getByText(/verify PASS/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/The simulated plan passes/)).toBeTruthy());
+    fireEvent.click(screen.getByRole("button", { name: "Network map" }));
     expect(screen.getByRole("img", { name: "Network topology" })).toBeTruthy();
-    for (const tab of ["Decisions", "IP Plan", "Configs", "Verify", "Security", "BOM", "Versions", "Report"]) {
-      fireEvent.click(screen.getByRole("tab", { name: tab }));
+    for (const tab of ["Why these choices?", "Address plan", "Device instructions", "Checks", "Security", "Equipment & costs", "Saved versions", "Export & report"]) {
+      fireEvent.click(screen.getByRole("button", { name: tab }));
     }
     expect(screen.getByText(/NetArchitect design report/)).toBeTruthy();
   });
@@ -65,8 +66,21 @@ describe("App", () => {
     await waitFor(() => expect(screen.getByRole("status").textContent).toContain("Server ready"));
     await waitFor(() => expect((screen.getByLabelText("Design input (editable JSON)") as HTMLTextAreaElement).value).toContain("metro_man"));
     fireEvent.click(screen.getByRole("button", { name: /Design network/ }));
+    await waitFor(() => screen.getByRole("button", { name: "Network map" }));
+    fireEvent.click(screen.getByRole("button", { name: "Network map" }));
     await waitFor(() => screen.getByRole("button", { name: /Trace packet/ }));
     fireEvent.click(screen.getByRole("button", { name: /Trace packet/ }));
     await waitFor(() => expect(screen.getByText(/DELIVERED: reached/)).toBeTruthy());
   });
+
+  it("explains the project before a design and provides terminal commands", async () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "How to use" }));
+    expect(screen.getByText("Four ways to use the same engine")).toBeTruthy();
+    expect(screen.getByText(/python.exe tui.py/)).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("Search networking terms"), { target: { value: "VLSM" } });
+    expect(screen.getByText("Subnet / VLSM")).toBeTruthy();
+    expect(screen.queryByText("Transceiver")).toBeNull();
+  });
 });
+

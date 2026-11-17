@@ -7,12 +7,12 @@ import time
 import zipfile
 from collections import defaultdict, deque
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
 
 from engine.env import load_env
 
@@ -51,8 +51,14 @@ class TraceReq(BaseModel):
     input: dict[str, Any]
     src: str  # segment name or IP
     dst: str
-    proto: str = "icmp"
-    port: int | None = None
+    proto: Literal["icmp", "tcp", "udp"] = "icmp"
+    port: int | None = Field(default=None, ge=1, le=65535)
+
+    @model_validator(mode="after")
+    def valid_port_protocol(self) -> "TraceReq":
+        if self.port is not None and self.proto == "icmp":
+            raise ValueError("ICMP does not use ports; choose TCP or UDP")
+        return self
 
 
 class WhatIfReq(BaseModel):

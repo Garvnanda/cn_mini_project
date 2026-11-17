@@ -5,7 +5,10 @@
 web
 
 ## Users
-Computer Networks students designing and defending enterprise network architectures.
+Beginners as well as Computer Networks students designing and defending enterprise network architectures.
+The owner explicitly needs explanations of what the project does, how to read its
+results, and when to use web, CLI, TUI, and API. Show essentials first and explain
+technical terms at the point of use; keep advanced details available on demand.
 The current owner is building a CIC-307 mini-project; viva presentation is the
 working context inferred from idea.md, pending further user preference.
 

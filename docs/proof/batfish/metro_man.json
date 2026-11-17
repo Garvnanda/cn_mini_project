@@ -1,0 +1,213 @@
+{
+  "status": "ok",
+  "message": "Batfish: 21 flows compared, 0 disagreement(s)",
+  "undefined_references": [],
+  "comparisons": [
+    {
+      "src": "HQ-Users",
+      "dst": "HQ-Voice",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Users",
+      "dst": "Branch-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Users",
+      "dst": "Colo-Ops",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Users",
+      "dst": "Colo-Trading",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Voice",
+      "dst": "HQ-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Voice",
+      "dst": "Branch-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Voice",
+      "dst": "Colo-Ops",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "HQ-Voice",
+      "dst": "Colo-Trading",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Branch-Users",
+      "dst": "HQ-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Branch-Users",
+      "dst": "HQ-Voice",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Branch-Users",
+      "dst": "Colo-Ops",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Branch-Users",
+      "dst": "Colo-Trading",
+      "proto": "icmp",
+      "port": null,
+      "ours": "dropped",
+      "batfish": "dropped",
+      "agree": true
+    },
+    {
+      "src": "Colo-Ops",
+      "dst": "HQ-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Ops",
+      "dst": "HQ-Voice",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Ops",
+      "dst": "Branch-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Ops",
+      "dst": "Colo-Trading",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Trading",
+      "dst": "HQ-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Trading",
+      "dst": "HQ-Voice",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Trading",
+      "dst": "Branch-Users",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Colo-Trading",
+      "dst": "Colo-Ops",
+      "proto": "icmp",
+      "port": null,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    },
+    {
+      "src": "Branch-Users",
+      "dst": "Colo-Trading",
+      "proto": "tcp",
+      "port": 443,
+      "ours": "delivered",
+      "batfish": "delivered",
+      "agree": true
+    }
+  ],
+  "parse_warnings": [
+    "configs/BRANCH-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BRANCH-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BRANCH-CORE2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/BRANCH-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/COLO-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/COLO-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/COLO-CORE2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/COLO-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/COLO-R2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/HQ-ACC1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/HQ-CORE1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/HQ-CORE2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/HQ-R1.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)",
+    "configs/HQ-R2.cfg:9: enable secret CHANGE_ME_ENABLE (This syntax is unrecognized)"
+  ],
+  "ipsec_sessions": []
+}

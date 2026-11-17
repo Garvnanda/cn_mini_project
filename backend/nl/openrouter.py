@@ -69,11 +69,14 @@ def complete(text: str, client: httpx.Client | None = None) -> dict:
                 continue
             if r.status_code != 200:
                 raise OpenRouterError(f"OpenRouter HTTP {r.status_code}: {r.text[:200]}")
-            content = r.json()["choices"][0]["message"]["content"]
             try:
-                return json.loads(content)
-            except json.JSONDecodeError as e:
-                raise OpenRouterError(f"model did not return JSON: {e}") from None
+                content = r.json()["choices"][0]["message"]["content"]
+                data = json.loads(content)
+            except (ValueError, KeyError, IndexError, TypeError):
+                raise OpenRouterError("provider returned an invalid JSON response") from None
+            if not isinstance(data, dict):
+                raise OpenRouterError("model output must be a JSON object")
+            return data
         raise OpenRouterError(f"OpenRouter unreachable after {RETRIES + 1} attempts: {last}")
     finally:
         if own:

@@ -17,6 +17,13 @@ export function InputPanel({ ready, busy, onDesign }: Props) {
   const [text, setText] = useState("");
   const [nl, setNl] = useState<NLResult | null>(null);
   const [nlErr, setNlErr] = useState("");
+  const [extracting, setExtracting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const descriptions: Record<string, [string, string]> = {
+    campus_lan: ["Campus LAN", "Three nearby buildings. Learn how computers, guests and servers are connected and separated."],
+    metro_man: ["Metro MAN", "A head office, a branch and a data center across a city. Explore backup connections."],
+    global_wan: ["Global WAN", "Offices across four cities and a cloud network. Explore long-distance connections."],
+  };
 
   useEffect(() => {
     if (!ready) return;
@@ -25,7 +32,9 @@ export function InputPanel({ ready, busy, onDesign }: Props) {
 
   useEffect(() => {
     if (!ready) return;
-    api.preset(preset).then((p) => setJson(JSON.stringify(p, null, 2))).catch(() => undefined);
+    let active = true;
+    api.preset(preset).then((p) => { if (active) { setJson(JSON.stringify(p, null, 2)); setJsonErr(""); } }).catch(() => { if (active) setJsonErr("Could not load this example. Check the backend and choose it again."); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, [ready, preset]);
 
   function run() {
@@ -41,20 +50,23 @@ export function InputPanel({ ready, busy, onDesign }: Props) {
   async function extract() {
     setNlErr("");
     setNl(null);
+    setExtracting(true);
     try {
       setNl(await api.nl(text));
     } catch (e) {
       setNlErr(e instanceof ApiFailure ? e.body.message : (e as Error).message);
+    } finally {
+      setExtracting(false);
     }
   }
 
   return (
     <section className="panel input-panel" aria-label="Design input">
-      <div className="seg-toggle" role="tablist">
-        <button role="tab" aria-selected={mode === "preset"} className={mode === "preset" ? "on" : ""} onClick={() => setMode("preset")}>
-          Preset / JSON
+      <div className="seg-toggle" role="group" aria-label="Input method">
+        <button aria-pressed={mode === "preset"} className={mode === "preset" ? "on" : ""} onClick={() => setMode("preset")}>
+          Examples
         </button>
-        <button role="tab" aria-selected={mode === "nl"} className={mode === "nl" ? "on" : ""} onClick={() => setMode("nl")}>
+        <button aria-pressed={mode === "nl"} className={mode === "nl" ? "on" : ""} onClick={() => setMode("nl")}>
           Plain English
         </button>
       </div>
@@ -69,7 +81,7 @@ export function InputPanel({ ready, busy, onDesign }: Props) {
             placeholder="3-building campus, 1600 users, PoE APs, buildings 250 m and 380 m from the main building, redundant core"
             onChange={(e) => setText(e.target.value)}
           />
-          <button disabled={!ready || !text.trim()} onClick={extract}>Extract parameters</button>
+          <button disabled={!ready || !text.trim() || extracting} onClick={extract}>{extracting ? "Reading your description…" : "Extract parameters"}</button>
           {nlErr && <p className="error">{nlErr}</p>}
           {nl && (
             <div className="nl-result">
@@ -109,16 +121,20 @@ export function InputPanel({ ready, busy, onDesign }: Props) {
 
       {mode === "preset" && (
         <div className="json">
-          <label htmlFor="preset">Preset</label>
-          <select id="preset" value={preset} onChange={(e) => setPreset(e.target.value)} disabled={!ready}>
+          <label htmlFor="preset">Choose a starting point</label>
+          <select id="preset" value={preset} onChange={(e) => { setLoading(true); setPreset(e.target.value); }} disabled={!ready || busy}>
             {presets.map((p) => (
-              <option key={p.name} value={p.name}>{p.name} ({p.endpoints} endpoints)</option>
+              <option key={p.name} value={p.name}>{descriptions[p.name]?.[0] ?? p.name}</option>
             ))}
           </select>
+          <p className="preset-description">{descriptions[preset]?.[1]}</p>
+          <p className="muted">LAN means local network. MAN spans a city. WAN connects distant locations.</p>
+          <details className="advanced-input"><summary>Edit requirements <span className="muted">· advanced JSON</span></summary><p className="muted">JSON is a structured text format. Change the example’s requirements here; the engine validates them before designing.</p>
           <label htmlFor="json">Design input (editable JSON)</label>
           <textarea id="json" className="mono" rows={16} spellCheck={false} value={json} onChange={(e) => setJson(e.target.value)} />
+          </details>
           {jsonErr && <p className="error">{jsonErr}</p>}
-          <button className="primary" disabled={!ready || busy || !json} onClick={run}>
+          <button className="primary" disabled={!ready || busy || loading || !json} onClick={run}>
             {busy ? "Designing…" : "Design network"}
           </button>
         </div>
