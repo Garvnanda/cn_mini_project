@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
@@ -6,7 +7,8 @@ from typer.testing import CliRunner
 from cli import app
 
 runner = CliRunner()
-EX = "examples"
+BACKEND = Path(__file__).resolve().parents[1]
+EX = BACKEND / "examples"
 
 
 def run(*args):
@@ -81,7 +83,7 @@ def test_bom():
 
 
 def test_diff(tmp_path):
-    d = json.loads(open("presets/campus_lan.json", encoding="utf-8").read())
+    d = json.loads((BACKEND / "presets" / "campus_lan.json").read_text(encoding="utf-8"))
     d["links"][1]["distance_m"] = 420
     p = tmp_path / "c2.json"
     p.write_text(json.dumps(d))

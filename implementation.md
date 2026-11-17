@@ -1,8 +1,16 @@
 # Implementation Plan — NetArchitect
 
 Phases are ordered by dependency. Each task is small enough for one session.
+- [x] Local review handoff: running API/web, three-preset live HTTP and CLI smoke checks, and `LOCAL_REVIEW.md` (2026-11-18).
 Tick `[x]` only after code + tests pass and `implemented.md` is updated.
 Each phase ends with an **Exit check** that must hold before moving on.
+
+Current independent audit: `docs/project_audit.md` (2026-11-18). Remaining work is
+external validation and acceptance across Phases 13, 18, 25 and 26; see its limits
+for completed-code phases too.
+
+- [x] Audit follow-up: portable CLI test fixture paths and Codex `AGENTS.md` initializer
+  (2026-11-18; 423 backend tests passed, 1 skipped; 4 frontend tests passed).
 
 ---
 

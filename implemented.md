@@ -12,6 +12,10 @@ Only list items whose tests were actually run and passed.
 ```
 
 ## Status summary
+
+Independent baseline (2026-11-18): see `docs/project_audit.md` for current evidence,
+remaining acceptance work and documentation discrepancies. Local implementation
+passing tests does not establish real IOS/lab compatibility.
 | Phase | Status |
 |---|---|
 | 0 Skeleton | done |
@@ -43,6 +47,19 @@ Only list items whose tests were actually run and passed.
 | 26 Audit & docs | done except 26.3 Packet Tracer screenshots (owner) |
 
 ## Done
+### Local review services (2026-11-18)
+- Added `LOCAL_REVIEW.md` with web/API links, restart commands and CLI/TUI/web/API review steps.
+- Started API on 127.0.0.1:8000 and Vite on 127.0.0.1:5173. Live HTTP design requests and CLI verification pass for all three presets; web GET returns 200.
+- Checks: backend `.venv/Scripts/python -m pytest -o addopts='' -q` -> 423 passed, 1 skipped, 1 warning in 6.32s; frontend lint/build pass and npm test -> 4 passed.
+- External lab evidence, live Batfish and browser visual acceptance remain open.
+
+### Independent project audit and assistant initializer (2026-11-18)
+- Files: `AGENTS.md`, `docs/project_audit.md`, `implementation.md`, `implemented.md`, `backend/tests/test_cli.py`.
+- Read project guardrails, plans, reference docs and assignment PDF; compared local source/test evidence with phase claims. Added Codex initializer that incorporates CLAUDE.md.
+- Fixed CLI tests using working-directory-relative examples/preset paths; paths now derive from the test file. Root test execution initially failed 3 cases; after fix it passes. No engine or golden changes.
+- Tests: from repository root, `./backend/.venv/Scripts/python -m pytest -o addopts='' -q backend/tests` -> 423 passed, 1 skipped, 1 warning in 6.50s. From frontend: `npm run lint` passed; `npm test` -> 4 passed; `npm run build` passed.
+- Limits: live Batfish skipped; Docker daemon unavailable; no lab import, browser visual acceptance, current OpenRouter call or hosted deployment verified. Existing external tasks remain open.
+
 ### Docs bootstrap  (2026-11-10)
 - Files: `idea.md`, `CLAUDE.md`, `implementation.md`, `implemented.md`, `ai_audit_log.md`, `docs/standards.md`, `docs/ios_reference.md`, `docs/decisions.md`
 - Tests: n/a (no code yet)
