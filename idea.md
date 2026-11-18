@@ -1,11 +1,11 @@
 # NetArchitect — Idea Document
 
-**Course:** CIC-307 Computer Networks Mini-Project · **Mode:** Solo · **Status:** Fresh rewrite (Phase 2)
+**Course:** CIC-307 Computer Networks Mini-Project · **Mode:** Solo · **Status:** Local application implemented; external lab acceptance incomplete
 
 ## 1. One-liner
 
 A network-design engine that **thinks like an architect, explains like a teacher, and checks its own work like an auditor.**
-You describe a network (preset, JSON, or plain English). NetArchitect designs it end to end. It picks media, VLSM, routing, topology and Cisco IOS configs, and it justifies every choice with physics, math and RFC references. Then it **parses its own configs back in and proves they work** by tracing packets hop by hop. You can break links to watch failover, see the cost of every decision, and export a ready-to-run GNS3 lab.
+You describe a network (preset, JSON, or plain English). NetArchitect designs it end to end. It picks media, VLSM, routing, topology and Cisco IOS configs, and it justifies every choice with physics, math and RFC references. Then it **parses its own configs back in and proves they work** by tracing packets hop by hop. You can break links to watch failover, see the cost of every decision, and export device configs and a cabling guide. Automatic GNS3 archives remain deferred under D-030.
 
 Most submissions stop at "generate configs". NetArchitect's distinguishing claim is **closed-loop design**: *design → explain → verify → break → re-verify*.
 

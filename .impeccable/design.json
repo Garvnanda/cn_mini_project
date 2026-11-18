@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T11:43:18.079670+00:00",
+  "title": "Design System: NetArchitect",
+  "extensions": {
+    "shadows": [],
+    "motion": [
+      {
+        "name": "button-state",
+        "value": "background .18s ease, border-color .18s ease",
+        "purpose": "Button hover transitions; disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "mobile",
+        "value": "800px"
+      },
+      {
+        "name": "narrow-mobile",
+        "value": "460px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "description": "Primary button extracted from the implemented stylesheet.",
+      "html": "<button class=\"ds-primary\">Design network</button>",
+      "css": ".ds-primary{font:600 14px/1.6 \"Segoe UI\",system-ui,sans-serif;border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-height:38px;cursor:pointer;transition:background .18s ease,border-color .18s ease;background:var(--button-bg);border-color:var(--button-bg);color:#fff}.ds-primary:hover:not(:disabled){background:color-mix(in srgb,var(--button-bg) 85%,black)}.ds-primary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}.ds-primary:disabled{opacity:.5;cursor:default}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "description": "Secondary button extracted from the implemented stylesheet.",
+      "html": "<button class=\"ds-secondary\">Open the guide</button>",
+      "css": ".ds-secondary{font:600 14px/1.6 \"Segoe UI\",system-ui,sans-serif;border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-height:38px;cursor:pointer;transition:background .18s ease,border-color .18s ease;background:var(--panel);color:var(--fg)}.ds-secondary:hover:not(:disabled){background:var(--bg);border-color:var(--accent)}.ds-secondary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}",
+      "refersTo": "button-secondary"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "description": "Text field extracted from the implemented stylesheet.",
+      "html": "<label class=\"ds-label\" for=\"ds-filter\">Filter decisions</label><input id=\"ds-filter\" class=\"ds-field\" placeholder=\"Filter decisions\">",
+      "css": ".ds-label{display:block;font:600 14px/1.6 \"Segoe UI\",system-ui,sans-serif;margin:8px 0 4px}.ds-field{font:14px/1.6 \"Segoe UI\",system-ui,sans-serif;color:var(--fg);background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:6px 10px;caret-color:var(--accent)}.ds-field::placeholder{color:var(--muted);opacity:1}.ds-field:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}",
+      "refersTo": "input"
+    },
+    {
+      "name": "Result navigation",
+      "kind": "nav",
+      "description": "Result navigation extracted from the implemented stylesheet.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Design results\"><button aria-pressed=\"true\">Overview</button><button aria-pressed=\"false\">Network map</button></nav>",
+      "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--border);padding-bottom:18px}.ds-nav button{font:600 14px/1.6 \"Segoe UI\",system-ui,sans-serif;border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-height:38px;cursor:pointer;transition:background .18s ease,border-color .18s ease;border:0;background:transparent;color:var(--muted);font-size:12px;padding:8px 10px}.ds-nav button:hover{background:var(--bg)}.ds-nav button[aria-pressed=true]{background:var(--button-bg);color:white}.ds-nav button:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}@media(max-width:800px){.ds-nav{flex-wrap:nowrap;overflow-x:auto}.ds-nav button{white-space:nowrap}}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Rule pill",
+      "kind": "chip",
+      "description": "Rule pill extracted from the implemented stylesheet.",
+      "html": "<span class=\"ds-pill\">L1.media</span>",
+      "css": ".ds-pill{font:11.5px/1.6 \"Segoe UI\",system-ui,sans-serif;border:1px solid var(--border);border-radius:10px;padding:0 6px;color:var(--muted)}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "description": "Panel extracted from the implemented stylesheet.",
+      "html": "<section class=\"ds-panel\"><strong>Build your network</strong><p>Start with an example.</p></section>",
+      "css": ".ds-panel{font:14px/1.6 \"Segoe UI\",system-ui,sans-serif;background:var(--panel);color:var(--fg);border:1px solid var(--border);border-radius:14px;padding:22px;min-width:0}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}",
+      "refersTo": "panel"
+    },
+    {
+      "name": "Verification banner",
+      "kind": "custom",
+      "description": "Verification banner extracted from the implemented stylesheet.",
+      "html": "<section class=\"ds-verification\"><strong>The simulated plan passes its checks.</strong><p>Real equipment still needs separate lab validation.</p></section>",
+      "css": ".ds-verification{font:14px/1.6 \"Segoe UI\",system-ui,sans-serif;background:color-mix(in srgb,var(--ok) 7%,var(--panel));padding:22px;border-radius:12px;margin:30px 0;color:var(--fg)}.ds-verification p{max-width:70ch;color:var(--muted)}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Network planning, explained.",
+    "overview": "The implemented interface is a calm, readable workspace for learning and inspecting network plans. It pairs plain-language introductions with progressively revealed technical material. This captures the existing UI, not a new visual identity: PRODUCT.md leaves visual choices as provisional implementation judgment.\n\nThe light theme uses cool pale surfaces and a deep green header. The dark theme switches the workspace to charcoal and blue accents while retaining the header. Generous section spacing supports the dense tables, configuration text, and network diagrams.",
+    "keyCharacteristics": [
+      "Plain-language headings with detailed evidence available on demand.",
+      "Flat bordered surfaces and restrained semantic color.",
+      "Native controls, visible keyboard focus, and scrollable technical content."
+    ],
+    "rules": [],
+    "dos": [
+      "Do preserve plain-language orientation before dense technical evidence.",
+      "Do use existing semantic tokens and retain dark-theme overrides.",
+      "Do preserve visible focus, labelled controls, keyboard map interaction, and reduced-motion support.",
+      "Do keep long tables, maps and code scrollable within their containers."
+    ],
+    "donts": [
+      "Don't present simulator success as real-device certification.",
+      "Don't replace text status and topology legends with color alone.",
+      "Don't describe provisional visual choices as a user-approved permanent brand identity."
+    ]
+  }
+}

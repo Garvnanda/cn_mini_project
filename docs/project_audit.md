@@ -1,125 +1,88 @@
-# Project audit — 2026-11-18
+# Project audit - 2026-11-18
 
 ## Current stage
 
-Local review update (2026-11-18): API and web started on localhost ports 8000 and
-5173. All three presets pass live HTTP /design and CLI verification. Latest backend
-suite: 423 passed, 1 skipped; frontend lint/build and 4 tests pass. See
-`LOCAL_REVIEW.md` for all interface commands. This adds HTTP integration evidence;
-browser visual acceptance and external lab validation remain unverified.
-
-NetArchitect is a substantially implemented application in final integration,
-external validation, and submission preparation. It is not an early prototype and
-is not yet a fully validated submission. No entire numbered phase is wholly absent:
-the missing work is concentrated in partially complete phases and acceptance evidence.
-This audit covers the root planning/status documents, all docs reference files,
-the assignment PDF, source and test inspection, and local automated checks. It is
-not a claim of exhaustive line-by-line review or real device certification.
+**Final local integration; external lab acceptance incomplete.** Web, CLI, TUI and
+API are implemented and locally tested. The redesigned web adds a beginner guide,
+glossary, overview and progressively disclosed technical detail. No whole numbered
+phase is absent, but automatic GNS3 archives are absent. The entire project and
+assignment submission must not yet be called complete.
 
 ## Phase status
 
 | Phases | Evidence-based status | Remaining qualification |
 |---|---|---|
-| 0–2: tooling, models, rationale | Implemented; local suite passes | Fresh-machine dependency installation not repeated |
-| 3: physical media | Implemented and tested | Optical constants still `[verify]`; real cable/optic validation absent |
-| 4: bitwise VLSM | Implemented and tested | Boundary, oracle, and property coverage exists |
-| 5–7: topology, L2, routing | Implemented and tested in internal model | Real STP/HSRP, routing and failure behavior needs lab evidence |
-| 8: IOS generation | Implemented; golden and documented-command checks pass | Device/platform compatibility still unverified |
-| 9–12: presets, parser, simulator, verifier | Implemented; local checks pass | Built-in simulation has deliberate fidelity limits |
-| 13: optional Batfish | Adapter present; live acceptance incomplete | 13.2 and 13.3 open; Docker executable exists, daemon unavailable |
-| 14–17: failure analysis, security, BOM, diff | Implemented and tested | Convergence is estimated; security score is a rule score; prices are placeholders |
-| 18: exporters | CFG, JSON, Markdown report and cabling guide present | GNS3 project archive absent/deferred (18.2, D-030) |
-| 19–20: CLI and API | Implemented and locally tested | Public deployment not demonstrated |
-| 21: natural language | Client and offline fallback implemented; mocked tests present | Source records a historical live run; no live call repeated in this audit |
-| 22: TUI | Implemented; pilot smoke tests in suite | Interactive human acceptance not repeated |
-| 23–24: web | Implemented; lint, 4 mocked UI tests and build pass | Real browser/API workflows, responsive and print layout acceptance not checked |
-| 25: deployment | Render/Vercel configs and instructions present | 25.3 open; no live URLs or deployment evidence verified |
-| 26: docs and AI audit | Documents and three historical bug entries present | 26.3 open: actual lab proof absent; status text needs reconciliation |
+| 0-2: tooling, models, rationale | Implemented and locally tested | Fresh-machine installation not repeated |
+| 3: physical media | Implemented; threshold tests pass | OS2 attenuation, ER budget and other flagged values unresolved |
+| 4: VLSM | Implemented; boundary, oracle and property checks pass | No new limitation identified |
+| 5-8: topology, routing, IOS | Implemented; local/golden checks pass | Platform acceptance and access management IPs remain open |
+| 9-12: presets, parser, simulator, verifier | Implemented; all presets pass internally | Simplified model needs external acceptance |
+| 13: Batfish | Implemented and live-tested locally | Campus 90/90 and Metro 21/21 agree; WAN has 14/21 disagreements |
+| 14-17: failures, security, costs, diff | Implemented and tested | Timer estimates; placeholder prices; model/rule scores |
+| 18: exporters | CFG, ZIP, JSON, Markdown and cabling implemented | 18.2 GNS3 archive absent/deferred under D-030 |
+| 19-20: CLI/API | Implemented and locally tested | Public hosting deferred by owner |
+| 21: natural language | Client, fallback and malformed-response handling implemented | Mocked provider tests; no new live provider call |
+| 22: TUI | Implemented; help page and pilot tests | Human terminal acceptance pending |
+| 23-24: web | Redesigned; unit, lint, build and browser checks pass | No screen-reader or exhaustive browser-matrix certification |
+| 25: deployment | Configurations present | 25.3 deferred: local review before deployment |
+| 26: docs and AI audit | Updated; historical bug records retained | 26.3 actual Packet Tracer/GNS3 proof incomplete |
 
-## Highest-priority missing evidence
+## Current checks
 
-1. **Assignment acceptance: load all three presets in Packet Tracer or GNS3.**
-   `docs/proof/` contains only its README. Capture topology, routing neighbors and
-   tables, gateway failover where applicable, allowed flows and intended denied
-   flows. Preserve lab files, device/platform versions and commands/output alongside
-   screenshots. Fix and regression-test any genuine failures before marking 26.3 done.
-2. **Resolve physical/IOS uncertainty.** `docs/standards.md` still flags OS2 loss,
-   SR/LR/ER channel budgets, interface bandwidth assumptions and other platform
-   values. `docs/ios_reference.md` has `?` compatibility entries for HSRPv2, VTI,
-   MQC and crypto commands. Verify primary sources and the selected lab platform;
-   follow CLAUDE.md for new commands and owner confirmation. Do not remove flags
-   based on passing internal tests.
-3. **Exercise the web against the actual backend.** Test all presets, custom errors,
-   permitted/denied traces, link and node failures, NL confirmation, pasted-config
-   lint, saved-version diff, downloads and print-to-PDF. The four current frontend
-   tests mock fetch; they do not establish this integration or visual correctness.
-4. **Deploy and smoke-test if retaining the hosted-product goal.** Set backend and
-   frontend URLs/CORS, verify a cold start and the main workflows, and record real
-   URLs and results. Historical RAM measurements are not a fresh deployment test.
-5. **Optional/full-idea work:** live Batfish comparisons (13.2/13.3) and a real-schema
-   GNS3 archive exporter (18.2). The assignment permits Packet Tracer OR GNS3, so an
-   automatic GNS3 project archive is not required to satisfy that deliverable.
+From `backend/`, with `BATFISH_HOST=localhost`:
+`.venv/Scripts/python -m pytest -o addopts='' -q`
+returned **433 passed, 1 warning in 71.90s**, no skips. Without Batfish configured,
+the earlier run returned **431 passed, 2 skipped, 1 warning in 14.09s**.
+The warning is Starlette's httpx TestClient deprecation. Live tests cover Campus
+and Metro; this total does not imply WAN agreement. Historical logs keep original totals.
 
-## Implementation limits and discrepancies
+From `frontend/`: `npm run lint`, `npm test`, `npm run build` passed: **5 UI tests**;
+JS 267.42 kB / 82.08 kB gzip. No runtime dependency was added.
 
-- The verifier parses generated configs, which is useful, but generator and verifier
-  share project assumptions. External validation is still needed. The simulator
-  models L2 domains rather than STP blocking; one representative host per segment
-  and one-way probes do not model full ARP/session/return-path behavior.
-- Metro latency checks cover propagation. Configuring LLQ does not establish a
-  measured sub-5 ms end-to-end result under load; switching, serialization and queueing
-  are not proven by that check.
-- Access-switch management addressing remains an acknowledged implementation gap.
-  PoE watts are calculated, but a validated hardware selection/power budget is not
-  established merely by that calculation.
-- Generated credentials are `CHANGE_ME_*`, public underlay addresses are lab
-  documentation addresses, and BOM prices are placeholders. These are lab outputs
-  with explicit assumptions, not production deployment certification.
-- `idea.md` still labels the project a fresh rewrite and promises ready-to-import
-  GNS3 labs. D-030 defers those labs; D-033 replaces React Flow/Monaco with SVG/pre.
-  Update the idea/demo wording to reflect these decisions before presenting it.
-- README/rubric/historical logs contain different test totals (419/420/422).
-  Current measured total is **423 passed, 1 skipped**. Historical entries should
-  retain their original results; current summaries should use the new baseline.
-- `implemented.md` calls the OpenRouter path unverified, but `nl/openrouter.py`
-  records a live check on 2026-11-10 using `openrouter/free`. `DEPLOY.md` says
-  `openrouter/auto` is the default. Actual code default is `openrouter/free`.
-  Historical/live-now evidence must be kept distinct; no key or paid call was used here.
-- `ai_audit_log.md` contains three entries; entries 2 and 3 provide before/after
-  packet-flow narratives and corresponding regression tests. Entry 1 explicitly
-  lacks packet-flow proof. Original prompt/model provenance cannot be independently
-  authenticated from these files; do not invent further evidence.
-- The print report contains verification and BOM sections but does not enumerate
-  security findings as a dedicated section. Check final report expectations against
-  actual print output before calling the full idea complete.
-- No CI workflow was found in the tracked project layout. CI is a useful optional
-  reproducibility improvement, not a stated assignment requirement.
+From root: `node scripts/browser_review.cjs <installed-playwright-path>` passed with
+installed Edge against the real API: all three designs, Campus guest denial,
+Metro TCP 443 allowed/ICMP denied, TCP-to-ICMP switching, keyboard link failure and
+survival, all views, guide, mobile width, light/dark captures, PDF generation,
+and Metro/WAN ZIP/JSON/Markdown/cabling downloads. An intentionally intercepted
+HTTP 503 checked export error feedback; that check is injected, not a real outage.
+Captures are in `.impeccable/review/`. The Campus PDF has 29 pages including configs;
+pages 1 and 5 were visually inspected, including the added security findings.
 
-## Checks performed and one fix
+CLI checks passed for all preset verification, guest denial (expected exit 1),
+Metro TCP 443 delivery, HQ link failure survival and identical-input diff (exit 0).
+TUI pilot checks run in pytest. API/web run on ports 8000/5173; restart commands are
+in `LOCAL_REVIEW.md`.
 
-Initial working tree was clean. No secret values were read or printed.
+## Remaining work and external evidence
 
-- From `backend/`: `.venv/Scripts/python -m pytest -q` succeeded (double quiet
-  suppresses totals because pytest.ini also sets `-q`).
-- Additional root invocation exposed three failures in `tests/test_cli.py` caused
-  by relative examples/preset paths. Changed these to paths relative to `__file__`;
-  no application behavior or golden config changed.
-- From repository root after the fix:
-  `./backend/.venv/Scripts/python -m pytest -o addopts='' -q backend/tests`
-  → **423 passed, 1 skipped, 1 warning in 6.50s**.
-- Skipped check is live Batfish. Warning is Starlette TestClient's httpx deprecation;
-  it does not fail the suite. No dependency was added to suppress it.
-- From `frontend/`: `npm run lint` passed; `npm test` → **4 passed**;
-  `npm run build` passed, JS 247.77 kB / gzip 76.06 kB.
-- `docker info` could not connect to Docker Desktop's Linux-engine named pipe.
-- Assignment PDF text was extracted with pypdf and compared with the rubric.
-  No browser visual QA, actual lab import, current external-service verification,
-  hosted deployment, fresh dependency installation or new RAM measurement was performed.
+1. **WAN disagreement:** actual reports are in `docs/proof/batfish/`. Four directed
+   IPsec sessions report phase-2 failure. Batfish grammar differs from generated
+   IKE syntax; that does not establish every discrepancy is parser-only. Real IOS
+   validation remains required; cryptography was not weakened to make tests green.
+2. **Real labs:** owner confirmed Packet Tracer 9.0.1 is installed and no GNS3
+   project/images exist. Installed help was inspected: Netcon REST controls a
+   simulated network-controller device; IPC requires an external app registered
+   through the GUI. No actual lab was loaded or packet capture produced. Stack
+   interface names, VTI, HSRPv2 and MQC support remain unresolved. No .pkt was fabricated.
+3. **GNS3 archive:** D-030 requires comparison against a real GNS3 export. No usable
+   project/image exists here, so 18.2 remains absent rather than silently checked.
+4. **Standards:** SR 2.9 dB and LR 6.2 dB now have primary-source links in standards.md.
+   Remaining [verify] and ? entries are unresolved; their values were not invented
+   or silently approved. Equipment, optic and fiber selection needs real validation.
+5. **Access management IPs:** still an acknowledged gap. SSH configuration alone
+   does not provide reachability. A management-address design requires rationale,
+   regression tests and deliberate golden updates.
+6. **Deployment:** deliberately not performed; owner wants local review first.
 
-## Completion order
+## Model limits
 
-Close lab/platform and standards gaps first, fix real findings with regression
-tests, then run the actual browser/API acceptance flow. Complete deployment if
-wanted, and optionally Batfish/GNS3 archive export for full idea scope. Finally
-reconcile docs, regenerate exports only if code changed, and record evidence for
-each acceptance gate. Keep unchecked tasks open until their evidence exists.
+The verifier parses generated text but shares assumptions with the generator.
+It models L2 domains rather than actual STP blocking, representative hosts and
+one-way probes rather than full ARP/session/return-path behavior. Metro latency
+checks cover propagation only. PoE calculations do not validate a chassis power
+budget. Credentials are CHANGE_ME placeholders, underlay IPs are documentation
+addresses, and equipment prices are placeholders. Security/resilience scores are
+rule/model scores. Passing simulation is not Cisco compatibility, real encryption,
+measured convergence, optical viability or end-to-end latency certification.
+AI audit provenance was not independently authenticated; no new networking mistake
+was fabricated for the log.

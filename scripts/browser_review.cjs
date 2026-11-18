@@ -39,8 +39,43 @@ const fs = require('node:fs');
   await page.mouse.move(0,0); await page.waitForTimeout(300);
   await page.screenshot({path:'.impeccable/review/dark.png',fullPage:true});
   await page.getByLabel('Theme',{exact:true}).selectOption('light');
+  const nav = page.getByRole('navigation',{name:'Design results'});
+  for (const preset of ['metro_man','global_wan']) {
+    await page.getByLabel('Choose a starting point').selectOption(preset);
+    await page.waitForFunction(name => JSON.parse(document.querySelector('#json').value).profile === name, preset);
+    await page.getByRole('button',{name:'Design network',exact:true}).click();
+    await page.getByRole('button',{name:'Design network',exact:true}).waitFor();
+    await page.getByText('The simulated plan passes its checks.',{exact:true}).waitFor();
+    if (preset === 'metro_man') {
+      await nav.getByRole('button',{name:'Network map',exact:true}).click();
+      await page.locator('.toolbar select').nth(0).selectOption('Branch-Users');
+      await page.locator('.toolbar select').nth(1).selectOption('Colo-Trading');
+      await page.locator('.toolbar select').nth(2).selectOption('tcp');
+      await page.getByLabel('Port',{exact:true}).fill('443');
+      await page.getByRole('button',{name:'Trace packet',exact:true}).click();
+      await page.getByRole('heading',{name:'Connection delivered',exact:true}).waitFor();
+      await page.locator('.toolbar select').nth(2).selectOption('icmp');
+      await page.getByRole('button',{name:'Trace packet',exact:true}).click();
+      await page.getByRole('heading',{name:'Connection blocked',exact:true}).waitFor();
+      await page.getByLabel('Enable failure testing').check();
+      await page.getByRole('button',{name:'Fail link HQ-R1 to BRANCH-R1',exact:true}).press('Enter');
+      await page.getByRole('heading',{name:/Network survives:/}).waitFor();
+      await page.getByRole('button',{name:'Clear',exact:true}).click();
+    }
+    await nav.getByRole('button',{name:'Export & report',exact:true}).click();
+    for (const button of ['Download configs + reports (.zip)','Report (.md)','Design (.json)','Cabling guide']) {
+      const downloadEvent = page.waitForEvent('download');
+      await page.getByRole('button',{name:button,exact:true}).click();
+      const file = await downloadEvent;
+      if (await file.failure()) throw new Error('Download failed: '+button);
+      await file.saveAs('.impeccable/review/'+file.suggestedFilename());
+    }
+  }
+  await page.route('**/export/zip', route => route.fulfill({status:503,body:'Unavailable'}));
+  await page.getByRole('button',{name:'Download configs + reports (.zip)',exact:true}).click();
+  await page.getByRole('alert').filter({hasText:'download could not finish'}).waitFor();
   await browser.close();
   if (errors.length || overflow) throw new Error(JSON.stringify({errors,overflow}));
-  console.log('Browser review passed: real API design, denied trace, all result views, guide, print, mobile without page overflow.');
+  console.log('Browser review passed: all three real API designs, allowed/denied traces, TCP-to-ICMP switch, keyboard failure simulation, downloads, export error recovery, all views, guide, print, mobile without page overflow.');
 })().catch(e=>{console.error(e);process.exit(1)});
 

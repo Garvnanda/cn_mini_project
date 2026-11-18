@@ -31,7 +31,7 @@ Dashboard menu names below were correct when written; if a button is named sligh
    |---|---|
    | `CORS_ORIGINS` | `http://localhost:5173` for now (you replace it in step 3) |
    | `OPENROUTER_API_KEY` | your OpenRouter key, or leave empty (then `/nl` uses the offline parser) |
-   | `OPENROUTER_MODEL` | optional, e.g. a model id from openrouter.ai/models; empty = `openrouter/auto` |
+   | `OPENROUTER_MODEL` | optional, e.g. a model id from openrouter.ai/models; empty = `openrouter/free` |
 4. **Apply** / **Deploy**. First build takes a few minutes (`pip install -r requirements.txt`).
 5. When it shows **Live**, copy the URL, e.g. `https://netarchitect-api.onrender.com`.
 6. Test it in a browser:

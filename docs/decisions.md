@@ -117,3 +117,9 @@ Do not change a decision without adding a new entry that supersedes it.
 
 ### D-034 — One-round-trip API (2026-11-10)
 - Decision: `POST /design` returns design + graph + configs + verification + lint + BOM + SPOF together, because the free Render instance is slow to wake; the other endpoints stay for tools/what-if/trace.
+
+### D-035 — Beginner-first interfaces and explicit verification scope (2026-11-18)
+- Context: owner requested a self-explanatory interface and guidance across web, CLI, TUI and API.
+- Decision: web starts with an overview and offers a guide/glossary before a design. Technical input and trace detail use disclosures; failure actions require an explicit mode. The TUI includes a guide. Engine decisions remain deterministic and unchanged.
+- Verification results are labeled as model checks. Batfish disagreements are distinct from success and include parser/IPsec diagnostics. Independent live evidence does not certify real devices.
+- Deployment remains deferred until local owner review; external acceptance tasks retain their open status.

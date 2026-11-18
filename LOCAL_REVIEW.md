@@ -54,15 +54,15 @@ should deliver. Identical inputs should produce no diff.
 
 ## Web review
 
-1. Design each of the three presets; inspect all tabs.
+1. Open **How to use** for the glossary and interface guide. Design each example and start with **Overview**.
 2. Trace Guest-C to Servers in Campus, then Branch-Users to Colo-Trading with TCP
    port 443 in Metro. Inspect the displayed hop details.
-3. Fail a link or device in Network and inspect broken/rerouted flows.
+3. Fail a link or device in **Network map** (enable failure testing first) and inspect broken/rerouted flows.
 4. Edit custom JSON; try invalid JSON and the files under backend/examples.
 5. Extract plain English, review assumptions and confirm the resulting parameters.
 6. Save two versions with a changed distance and inspect the diff.
 7. Paste a config in Security; inspect BOM; download ZIP/configs/report/JSON/cabling.
-8. Open Report, print to PDF, and inspect page breaks before saving.
+8. Open **Export & report**, print to PDF, and inspect page breaks before saving.
 
 ## API review
 
@@ -72,8 +72,22 @@ and /export/{fmt} using their request schemas.
 
 ## Verified baseline
 
-2026-11-18: backend suite 423 passed, 1 skipped (Batfish), 1 warning;
-frontend lint/build pass and 4 tests pass. Each preset passed CLI verification
-and live POST /design verification. Web GET returned HTTP 200.
-TUI is covered by automated pilot tests; browser visual acceptance remains a
-user review task. See docs/project_audit.md for external lab/platform gaps.
+2026-11-18: 433 backend tests passed with live Batfish enabled; no skips, one
+Starlette deprecation warning. Frontend lint/build and 5 tests passed. Actual
+browser/API checks cover all three presets, allowed/blocked traces, keyboard link
+failure, downloads, guide, responsive views and PDF generation. TUI is covered
+by the automated pilot and includes its own How to use tab.
+
+Campus and Metro agree with live Batfish. Global WAN has 14 disagreements among
+21 comparisons; see docs/proof/batfish/. These software checks do not replace
+actual Packet Tracer/GNS3 labs. Remaining work is in docs/project_audit.md.
+
+## Pick an interface
+
+- Web: learning, network map, packet tracing, guide, version comparison and reports.
+- TUI: terminal dashboard for presets, explanations and failure experiments.
+- CLI: repeatable commands, export files and automation. A denied trace exits 1 by design.
+- API: integrate another program; /docs provides interactive request examples.
+
+Neither web, CLI, TUI nor API changes your real network. Exported device instructions
+need platform validation and replacement of placeholder credentials before use.

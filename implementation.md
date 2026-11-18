@@ -6,7 +6,7 @@ Tick `[x]` only after code + tests pass and `implemented.md` is updated.
 Each phase ends with an **Exit check** that must hold before moving on.
 
 Current independent audit: `docs/project_audit.md` (2026-11-18). Remaining work is
-external validation and acceptance across Phases 13, 18, 25 and 26; see its limits
+external validation and acceptance across Phases 18, 25 and 26, plus WAN cross-check discrepancies; see its limits
 for completed-code phases too.
 
 - [x] Audit follow-up: portable CLI test fixture paths and Codex `AGENTS.md` initializer
@@ -129,8 +129,8 @@ for completed-code phases too.
 
 ## Phase 13 — Batfish adapter (optional, local)
 - [x] 13.1 Detect `BATFISH_HOST`; skip cleanly if absent
-- [ ] 13.2 Upload snapshot, run reachability + undefined-references questions (code written, UNVERIFIED: no live Batfish run yet)
-- [ ] 13.3 Compare with own verifier, report differences (code written, UNVERIFIED: no live Batfish run yet)
+- [x] 13.2 Upload snapshot, run reachability + undefined-references questions (live local run 2026-11-18; diagnostics preserved in docs/proof/batfish/)
+- [x] 13.3 Compare with own verifier, report differences (Campus/Metro agree; Global WAN reports 14/21 disagreements, unresolved external validation)
 - [x] 13.4 Test marked `@pytest.mark.batfish` (skipped by default)
 
 ## Phase 14 — What-if failure engine
@@ -221,3 +221,5 @@ for completed-code phases too.
 - [x] 26.2 README final: features, screenshots, run, deploy, test
 - [ ] 26.3 (owner) Load 3 preset exports into Packet Tracer/GNS3, screenshot proof in `docs/proof/`
 - [x] 26.4 Rubric self-check against PDF (each row mapped to file/test)
+
+- [x] Beginner-friendly web redesign and guide, accessible failure controls, TUI guide, report security section, export/copy error feedback, and real-browser integration review (2026-11-18).

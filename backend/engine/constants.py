@@ -18,11 +18,11 @@ SPLICE_DB = 0.3           # TIA-568 max per fusion splice
 DEFAULT_CONNECTORS = 2    # one patch panel at each end
 LOW_MARGIN_DB = 3.0       # below this margin the rationale warns (D-012)
 
-# UNVERIFIED: IEEE 802.3ae max channel insertion loss, see docs/standards.md [verify]
+# Channel insertion loss: source links and remaining uncertainty in docs/standards.md.
 CHANNEL_LOSS_DB = {
-    "10GBASE-SR": 2.9,    # OM4 400 m (UNVERIFIED)
-    "10GBASE-LR": 6.2,
-    "10GBASE-ER": 11.0,
+    "10GBASE-SR": 2.9,    # TIA FOTC OM4 application table, checked 2026-11-18
+    "10GBASE-LR": 6.2,    # Cisco 10G SFP+ datasheet, checked 2026-11-18
+    "10GBASE-ER": 11.0,   # UNVERIFIED: still requires a matching channel-loss source
 }
 
 # --- Addressing

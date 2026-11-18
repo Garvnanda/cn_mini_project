@@ -1,20 +1,32 @@
 import { download } from "./api";
+import { useState } from "react";
 import { Topology } from "./Topology";
 import type { Bundle } from "./types";
 
 export function Report({ bundle }: { bundle: Bundle }) {
   const d = bundle.design;
   const name = d.input.profile;
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
+  async function exportFile(format: string, filename: string) {
+    setExporting(true);
+    setExportError("");
+    try { await download(format, d.input, filename); }
+    catch { setExportError("The download could not finish. Check that the API server is running, then try again."); }
+    finally { setExporting(false); }
+  }
   const fmt = (n: number) => n.toLocaleString("en-IN", { maximumFractionDigits: 0 });
   return (
     <div className="report">
       <div className="row no-print">
         <button className="primary" onClick={() => window.print()}>Print / save as PDF</button>
-        <button onClick={() => download("zip", d.input, `${name}.zip`)}>Download configs + reports (.zip)</button>
-        <button onClick={() => download("report", d.input, `${name}_report.md`)}>Report (.md)</button>
-        <button onClick={() => download("json", d.input, `${name}_design.json`)}>Design (.json)</button>
-        <button onClick={() => download("cabling", d.input, `${name}_cabling.md`)}>Cabling guide</button>
+        <button disabled={exporting} onClick={() => exportFile("zip", `${name}.zip`)}>Download configs + reports (.zip)</button>
+        <button disabled={exporting} onClick={() => exportFile("report", `${name}_report.md`)}>Report (.md)</button>
+        <button disabled={exporting} onClick={() => exportFile("json", `${name}_design.json`)}>Design (.json)</button>
+        <button disabled={exporting} onClick={() => exportFile("cabling", `${name}_cabling.md`)}>Cabling guide</button>
       </div>
+      {exporting && <p role="status" className="no-print">Preparing your download…</p>}
+      {exportError && <p role="alert" className="no-print">{exportError}</p>}
       <h1>NetArchitect design report: {name}</h1>
       <ul>
         <li>Root prefix: <code>{d.input.root_prefix}</code></li>

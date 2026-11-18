@@ -5,13 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 from engine.planner import design
 from verify.batfish_adapter import run_batfish
-from pybatfish.client.session import Session
-result = design(json.loads(Path("presets/global_wan.json").read_text()))
+result = design(json.loads((Path(__file__).resolve().parents[1] / "backend/presets/global_wan.json").read_text()))
 report = run_batfish(result)
-print(report.message)
-b = Session(host="localhost")
-b.set_network("netarchitect")
-b.set_snapshot("design")
-for name in ["parseWarning", "ipsecSessionStatus", "initIssues"]:
-    print(name)
-    print(getattr(b.q, name)().answer().frame().to_string(index=False))
+print(report.model_dump_json(indent=2))
+sys.exit(0 if report.status == "ok" else 1)

@@ -12,3 +12,7 @@ exports/tmp/
 # frontend
 frontend/dist/
 frontend/.env
+
+# Local service logs and documentation scratch output
+.impeccable/*.log
+.impeccable/pt-api.txt

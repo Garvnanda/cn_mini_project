@@ -25,6 +25,38 @@ from verify.verifier import verify
 
 PRESETS = Path(__file__).resolve().parent / "presets"
 
+GUIDE = """# Start here
+NetArchitect turns network requirements into an explained plan and device instructions.
+It checks that plan in a software model. It does not connect to or change your equipment.
+
+1. Choose an example above, then select **Design** (or press **r**).
+2. Read **Decisions** to learn why the plan uses particular cables and routing rules.
+3. **IP Plan** lists address groups (subnets) and their gateways, the devices that forward traffic.
+4. **Configs** contains the generated Cisco instructions for each device.
+5. **Verify** compares simulated connections with the intended rules. A blocked connection can be correct.
+6. In **What-if**, choose a link or device and select **Fail it**. This failure only affects the model.
+   Re-run the design to return to the original plan.
+7. **BOM** means bill of materials: equipment quantities and placeholder prices.
+   **Lint** lists configuration security findings and suggested fixes.
+
+Use **Tab / Shift+Tab** to move between controls and **Enter** to activate one.
+Press **q** to quit. A wider terminal makes the tables easier to read.
+
+## Which interface should I use?
+- **Web**: start here if you are learning. Includes the network map, packet tracing,
+  a searchable glossary, saved comparisons, downloads and printable reports.
+- **TUI (this terminal dashboard)**: inspect presets and failures without opening a browser.
+- **CLI (one command at a time)**: repeat checks, export files and automate work.
+  From backend, run `.venv/Scripts/python cli.py --help`.
+- **API**: connect another program; start the API server and open its `/docs` page.
+
+## What a pass means
+The model passed its checks, not a real-device certification. Real routing convergence,
+encryption, optical performance and latency under load still require a lab.
+Security scores summarize rules; cost figures are estimates. Replace CHANGE_ME credentials
+before a real lab run. See LOCAL_REVIEW.md and docs/project_audit.md for current evidence.
+"""
+
 
 class NetArchTUI(App):
     TITLE = "NetArchitect"
@@ -50,6 +82,8 @@ class NetArchTUI(App):
             yield Button("Design", id="run", variant="primary")
             yield Static("", id="status")
         with TabbedContent(id="tabs"):
+            with TabPane("How to use", id="t-help"):
+                yield Markdown(GUIDE, id="guide")
             with TabPane("Decisions", id="t-dec"):
                 yield Markdown(id="decisions")
             with TabPane("IP Plan", id="t-ip"):

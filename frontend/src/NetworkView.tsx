@@ -24,7 +24,7 @@ export function NetworkView({ bundle }: { bundle: Bundle }) {
     setFailed([]);
     setBusy(true);
     try {
-      const t = await api.trace(input, src, dst, proto, port ? Number(port) : null);
+      const t = await api.trace(input, src, dst, proto, proto !== "icmp" && port ? Number(port) : null);
       setTrace(t);
       setStep(0);
       // animate the path hop by hop

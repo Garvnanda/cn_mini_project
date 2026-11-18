@@ -60,7 +60,14 @@ export function IpPlan({ subnets }: { subnets: Subnet[] }) {
 export function Configs({ configs }: { configs: Record<string, string> }) {
   const hosts = Object.keys(configs);
   const [host, setHost] = useState(hosts[0]);
+  const [copyStatus, setCopyStatus] = useState("");
   const current = configs[host] ?? configs[hosts[0]];
+  async function copyConfig() {
+    try {
+      await navigator.clipboard.writeText(current);
+      setCopyStatus("Copied device instructions.");
+    } catch { setCopyStatus("Copy is unavailable. Download the .cfg file or select the text below."); }
+  }
   return (
     <div>
       <div className="row">
@@ -68,8 +75,9 @@ export function Configs({ configs }: { configs: Record<string, string> }) {
           {hosts.map((h) => <option key={h}>{h}</option>)}
         </select>
         <button onClick={() => saveText(current, `${host}.cfg`)}>Download .cfg</button>
-        <button onClick={() => navigator.clipboard?.writeText(current)}>Copy</button>
+        <button onClick={copyConfig}>Copy</button>
       </div>
+      {copyStatus && <p role="status">{copyStatus}</p>}
       <pre className="config">{current}</pre>
     </div>
   );

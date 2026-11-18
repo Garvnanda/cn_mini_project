@@ -2,12 +2,15 @@
 
 Explainable network design engine (CIC-307 Computer Networks mini-project).
 
-You describe a network (preset, JSON, or plain English). NetArchitect designs it end to end: cabling and
-transceivers, topology tier, VLANs/trunks/STP/HSRP, bitwise VLSM, OSPF areas with summarization, eBGP to
-the cloud, IPsec, ACLs, QoS. It justifies every decision with IEEE / RFC references, generates Cisco IOS
-configs, then **parses its own configs back and proves they work** with a packet-level simulator. You can
-break links or devices to watch failover, lint the security posture, estimate a bill of materials, diff two
-designs and export everything.
+Describe the buildings, people and connections you need. NetArchitect produces a network
+plan, explains its choices, generates device instructions and tests connections in a software model.
+Explore the map, try a broken link, compare plans, and export reports. It does not change your network.
+A passing simulation still needs validation on the intended equipment.
+
+**Start locally:** [web dashboard](http://localhost:5173) ? [interactive API](http://localhost:8000/docs).
+See [LOCAL_REVIEW.md](LOCAL_REVIEW.md) for startup commands and a guided tour of web, CLI, TUI and API.
+The web **How to use** page explains networking terms and when to use each interface.
+Current completion status and remaining acceptance work: [project audit](docs/project_audit.md).
 
 > design → explain → verify → break → re-verify
 
@@ -40,7 +43,7 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 
 # frontend
-cd frontend
+cd ../frontend
 npm install
 cp .env.example .env        # VITE_API_URL=http://localhost:8000
 ```
@@ -71,7 +74,7 @@ Exit codes: 0 ok, 1 verification/trace/failure check failed, 2 invalid parameter
 
 ## Test
 ```bash
-cd backend && pytest            # 419 tests (1 live-Batfish test skipped without a container)
+cd backend && python -m pytest -o addopts='' -q  # use the project virtual environment
 cd frontend && npm run lint && npm test && npm run build
 ```
 
@@ -84,7 +87,7 @@ cd frontend && npm run lint && npm test && npm run build
 
 ## Optional: Batfish cross-check (local only)
 ```bash
-docker run -d -p 9996:9996 batfish/allinone
+docker run -d --name netarchitect-batfish -p 127.0.0.1:9996:9996 batfish/allinone
 pip install -r backend/requirements-batfish.txt
 BATFISH_HOST=localhost pytest -m batfish
 ```

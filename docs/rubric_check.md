@@ -37,7 +37,7 @@ Test command: `cd backend && pytest` (Python) and `cd frontend && npm test` (UI)
 | Distance violations | `tests/test_media.py::test_copper_101m_raises`, `test_beyond_er`, `test_multimode_preference`, `test_latency_budget_violation` |
 | Address space exhaustion | `tests/test_vlsm.py::test_exhaustion`, `test_absurd_host_count_exhausts`, `tests/test_presets.py::test_invalid_examples` |
 | Wildcard masks across edge-case subnets | `tests/test_bitmath.py::test_mask_and_wildcard_all_prefixes` (/0 to /32), `/31` and `/32` tests |
-| Totals | 419 Python tests (1 live-Batfish test skipped), 4 Vitest UI tests |
+| Totals | 433 Python tests passed with live Batfish enabled; 5 Vitest UI tests passed (2026-11-18) |
 
 ## 5. AI code audit & defense (20)
 | Requirement | Where |

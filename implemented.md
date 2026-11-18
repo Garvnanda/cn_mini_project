@@ -167,3 +167,35 @@ passing tests does not establish real IOS/lab compatibility.
 - `backend/engine/env.py`: stdlib `.env` loader (real env vars win), called at start of `api.py`, `cli.py`, `tui.py`; `backend/.env.example` lists every setting; `backend/.env` is git-ignored (checked with `git check-ignore`). Test: `tests/test_env.py`.
 - `DEPLOY.md`: step-by-step Render (blueprint) + Vercel + CORS + live checks.
 - Run: `cd backend && pytest` -> 422 passed, 1 skipped.
+
+
+### Completion and usability pass (2026-11-18)
+- Web: beginner overview, readable navigation, onboarding, searchable glossary,
+  CLI/TUI/API guidance, responsive/light/dark layouts, keyboard failure controls,
+  explicit failure mode and progressive technical details. PRODUCT.md and DESIGN.md
+  record intent and actual visual tokens; .impeccable/design.json stores previews.
+- Report includes security findings and scope. Downloads show progress/error recovery;
+  config copy reports success or fallback. Fixed stale TCP port sent with ICMP.
+- TUI gains a first-tab guide explaining controls, terms, model limits and interfaces.
+- API validates trace protocols/ports. NL client handles malformed provider envelopes
+  and nonobject payloads; added meaningful API and provider regression cases.
+- Batfish: unique snapshots, explicit disagreement status, parse warnings and IPsec
+  diagnostics, CLI crosscheck command. Real evidence in docs/proof/batfish/: Campus
+  90/90 and Metro 21/21 agree, WAN 14/21 disagreements remain. Diagnostic script now
+  reads its own current report instead of querying an obsolete shared snapshot.
+- Standards: sourced SR/LR channel limits; remaining uncertain values unchanged.
+- Checks from backend with BATFISH_HOST=localhost:
+  `.venv/Scripts/python -m pytest -o addopts='' -q` -> 433 passed, 1 warning in 71.90s,
+  zero skips. No-host run: 431 passed, 2 skipped, 1 warning in 14.09s. Warning:
+  Starlette httpx TestClient deprecation. TUI pilot included.
+- From frontend: `npm run lint`, `npm test`, `npm run build` passed; 5 UI tests;
+  JS 267.42 kB / gzip 82.08 kB. No new runtime dependency.
+- Root `node scripts/browser_review.cjs <playwright-path>` passed using installed
+  Edge and real API: three presets, allowed/denied traces, TCP-to-ICMP regression,
+  keyboard link failure, all views/guide, exports, mobile width and PDF. Export HTTP
+  503 was intentionally injected to check recovery. Inspected PDF pages 1 and 5.
+- CLI verification all presets, guest denial, Metro TCP443 allow, HQ link failure
+  and unchanged diff returned expected codes. Services restarted on 8000/5173.
+- Remaining: actual labs, WAN discrepancy resolution, GNS3 archive, unresolved
+  standards/platform checks, access management addresses. Deployment remains deferred
+  until owner local review. No git mutation or new AI audit provenance was fabricated.
