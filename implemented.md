@@ -199,3 +199,6 @@ passing tests does not establish real IOS/lab compatibility.
 - Remaining: actual labs, WAN discrepancy resolution, GNS3 archive, unresolved
   standards/platform checks, access management addresses. Deployment remains deferred
   until owner local review. No git mutation or new AI audit provenance was fabricated.
+
+### README refresh (2026-11-18)
+Reworked first-run instructions, guided examples, interface choices, recorded verification results, and Render/UptimeRobot setup. Checked all 13 relative README links and ran git diff --check. Documentation-only change.

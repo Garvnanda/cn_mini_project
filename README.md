@@ -1,114 +1,102 @@
-# NetArchitect
+﻿# NetArchitect
 
-Explainable network design engine (CIC-307 Computer Networks mini-project).
+NetArchitect is a network planning tool built for the CIC-307 Computer Networks mini-project. Give it a list of buildings, distances and user groups. It chooses cables, divides the available network addresses among the groups, and writes Cisco device configurations. You can open any design decision to see the rule and inputs behind it.
 
-Describe the buildings, people and connections you need. NetArchitect produces a network
-plan, explains its choices, generates device instructions and tests connections in a software model.
-Explore the map, try a broken link, compare plans, and export reports. It does not change your network.
-A passing simulation still needs validation on the intended equipment.
+The simulator reads the generated configurations back and follows traffic through the proposed network. For example, if campus guests must be isolated from servers, a **blocked** guest connection is the result you want.
 
-**Start locally:** [web dashboard](http://localhost:5173) ? [interactive API](http://localhost:8000/docs).
-See [LOCAL_REVIEW.md](LOCAL_REVIEW.md) for startup commands and a guided tour of web, CLI, TUI and API.
-The web **How to use** page explains networking terms and when to use each interface.
-Current completion status and remaining acceptance work: [project audit](docs/project_audit.md).
+## Run locally
 
-> design → explain → verify → break → re-verify
+Use Python 3.11 and Node.js 24 with npm. Open **two PowerShell terminals in the repository root**. Run the install commands once and keep both servers running while using the dashboard.
 
-See `idea.md` (concept), `implemented.md` (what exists), `docs/rubric_check.md` (rubric → code/tests),
-`ai_audit_log.md` (real AI bugs with packet traces).
+**Terminal 1 — start the API**
 
-## Features
-| Area | What it does |
-|---|---|
-| L1 media | ≤100 m Cat6a, ≤400 m OM4, else OS2 LR/ER; optical budget; latency budget; `PhysicalDistanceViolationError` |
-| Topology | collapsed core or three-tier, access stacks sized from host counts, PoE budget, redundancy |
-| L2 | pruned 802.1Q trunks, unused native VLAN, Rapid PVST+ roots, PortFast + BPDU Guard, HSRPv2 |
-| L3 | bitwise VLSM (/31 p2p, /32 loopbacks), single/multi-area OSPF with exact summaries, MD5 auth, eBGP to cloud, IPsec VTI |
-| Policy / QoS | ACLs from segment policies; LLQ (EF priority) on latency-budget links |
-| Explainability | every decision is a `Rationale` with rule id, threshold and standard reference |
-| Verification | IOS parser + simulator: reachability matrix, policy intent, loops, overlaps, trunk scope; optional Batfish |
-| What-if | fail links/devices, see broken and rerouted flows; single points of failure + resilience score |
-| Security | 13-rule linter with score; works on pasted configs |
-| BOM | cable, optics, switches, routers, PoE, monthly WAN (placeholder INR prices) |
-| Diff | decisions, IP plan and config diff between two designs |
-| Interfaces | web dashboard (React), CLI (Typer), terminal UI (Textual), HTTP API (FastAPI) |
-| Natural language | OpenRouter LLM or offline parser fills the input form; the engine makes every decision |
-
-## Setup
-```bash
-# backend
+```powershell
 cd backend
 python -m venv .venv
-# Windows: .venv\Scripts\activate    Linux/macOS: source .venv/bin/activate
-pip install -r requirements-dev.txt
-
-# frontend
-cd ../frontend
-npm install
-cp .env.example .env        # VITE_API_URL=http://localhost:8000
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m uvicorn api:app --host 127.0.0.1 --port 8000
 ```
 
-## Run
-```bash
-cd backend && uvicorn api:app --reload          # API on :8000 (docs at /docs)
-cd frontend && npm run dev                      # dashboard on :5173
-cd backend && python tui.py                     # terminal UI
+**Terminal 2 — start the dashboard**
+
+```powershell
+cd frontend
+npm ci
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-## CLI
-```bash
+Open the [dashboard](http://localhost:5173). The [interactive API](http://localhost:8000/docs) and [health check](http://localhost:8000/health) run on port 8000. On Linux or macOS, use `.venv/bin/python` in place of the Windows virtual environment executable.
+
+## Try a design
+
+1. Choose **Campus LAN** and select **Design network**. **Overview** shows the size of the proposed network. **Why these choices?** explains the equipment and addressing decisions.
+2. Open **Network map**, choose **Guest-C** as the source and **Servers** as the destination, then select **Trace packet**. The campus security rule blocks the connection. Expand the trace to see where it stopped.
+3. Try **Metro MAN** to explore backup paths. Enable **failure testing** on the map and select an HQ-to-branch connection. The result shows which traffic took another route and which connections broke.
+4. Open **Export & report** to download device instructions and a cabling guide or save a printable report. **How to use** includes a searchable glossary and terminal examples.
+
+| Starting point | What you can investigate |
+|---|---|
+| Campus LAN | How three nearby buildings share infrastructure while keeping guest traffic separate |
+| Metro MAN | How a head office, branch and data center stay connected across a city |
+| Global WAN | How offices across four cities exchange traffic with a cloud network |
+| Custom requirements | Edit an example as JSON or describe your network in plain English, then review the extracted fields |
+
+Plain-English input uses an offline parser or an optional OpenRouter key configured on the backend. The same deterministic rules generate the plan from the reviewed inputs in either case.
+
+## Choose an interface
+
+| Interface | When to use it | Where to start |
+|---|---|---|
+| Web | Learn visually, compare saved designs, trace traffic or print a report | [Dashboard](http://localhost:5173) |
+| TUI (terminal dashboard) | Browse presets and simulate failures interactively in a terminal | Run `tui.py` |
+| CLI (command line) | Repeat a check, export files or write a script | Run `cli.py --help` |
+| API | Send requirements from another program or inspect a request and its response | [API explorer](http://localhost:8000/docs) |
+
+From a third PowerShell terminal in the repository root:
+
+```powershell
 cd backend
-python cli.py --help
-python cli.py design metro_man --export ../exports/metro_man
-python cli.py explain campus_lan --domain L1
-python cli.py verify global_wan
-python cli.py trace campus_lan Guest-C Servers
-python cli.py fail metro_man --link HQ-R1--BRANCH-R1     # no options = SPOF report
-python cli.py lint some_router.cfg
-python cli.py bom metro_man
-python cli.py diff campus_lan my_campus.json
-```
-Presets: `campus_lan`, `metro_man`, `global_wan` (or a JSON file path). Invalid-input examples: `backend/examples/`.
-Exit codes: 0 ok, 1 verification/trace/failure check failed, 2 invalid parameter, 3 invalid prefix,
-4 physical distance violation, 5 address space exhausted, 6 topology error.
-
-## Test
-```bash
-cd backend && python -m pytest -o addopts='' -q  # use the project virtual environment
-cd frontend && npm run lint && npm test && npm run build
+.\.venv\Scripts\python.exe tui.py
+# Press q to exit the dashboard before running the commands below.
+.\.venv\Scripts\python.exe cli.py verify campus_lan
+.\.venv\Scripts\python.exe cli.py trace metro_man Branch-Users Colo-Trading --proto tcp --port 443
+.\.venv\Scripts\python.exe cli.py design metro_man --export ../exports/tmp/metro_demo
 ```
 
-## Deploy (free tier)
-- **Backend → Render:** `render.yaml` (blueprint, root `backend`, `uvicorn api:app`, health check `/health`).
-  Set `CORS_ORIGINS` to the Vercel URL; `OPENROUTER_API_KEY` / `OPENROUTER_MODEL` are optional.
-  Measured locally: ~56 MB idle, ~60 MB after designing all three presets (limit 512 MB).
-- **Frontend → Vercel:** project root `frontend`, `frontend/vercel.json`; set `VITE_API_URL` to the Render URL.
-  The UI shows a "waking server" state while the free Render instance cold-starts.
+The Metro trace above should be delivered. The [local walkthrough](LOCAL_REVIEW.md) includes the corresponding denial example, failure tests, configuration checks and design comparisons.
 
-## Optional: Batfish cross-check (local only)
-```bash
-docker run -d --name netarchitect-batfish -p 127.0.0.1:9996:9996 batfish/allinone
-pip install -r backend/requirements-batfish.txt
-BATFISH_HOST=localhost pytest -m batfish
+## Verification and remaining work
+
+The latest recorded local run on **18 November 2026** passed **433 backend tests** with live Batfish enabled and **5 frontend tests**. Browser checks exercised all three presets against the API, including packet traces, failure simulation and downloads.
+
+Batfish is an independent configuration analysis tool. It agreed with the built-in simulator on all **90 Campus** and **21 Metro** comparisons. For Global WAN, **14 of 21 comparisons disagreed**. VPN behavior still needs lab validation. The three presets include configuration files and cabling guides. Packet Tracer or GNS3 acceptance, automatic GNS3 project export, access-switch management addresses and some optical assumptions remain open. Equipment prices are estimates and generated credentials are placeholders. [Comparison reports](docs/proof/batfish/) · [Full project audit](docs/project_audit.md)
+
+To rerun the checks, use the backend virtual environment and the installed frontend dependencies:
+
+```powershell
+# From backend/
+.\.venv\Scripts\python.exe -m pytest -o addopts='' -q
+
+# From frontend/
+npm run lint
+npm test
+npm run build
 ```
 
-## Layout
-```
-backend/
-  engine/     media, VLSM, topology, L2, routing, ACLs, QoS, config generator, planner
-  verify/     IOS parser, simulator (packet trace), verifier, Batfish adapter
-  analysis/   what-if + SPOF, security linter, BOM, design diff
-  export/     report, cabling guide, design.json, per-device .cfg
-  nl/         OpenRouter client + offline parser
-  presets/ examples/ templates/ data/ tests/
-  api.py  cli.py  tui.py
-frontend/     React + Vite dashboard
-docs/         standards, IOS reference, decisions, rubric check, proof/
-exports/      generated configs and reports for the 3 presets
-```
+The two optional live Batfish tests skip when its host is unconfigured. See the [Batfish setup and reproduction notes](docs/proof/batfish/README.md).
 
-## Known limits
-- Fiber loss figures, some IOS commands (HSRPv2, IPsec VTI, MQC) and Packet Tracer compatibility are marked
-  `[verify]` / `?` in `docs/standards.md` and `docs/ios_reference.md`.
-- Passwords, OSPF key and IPsec PSK in configs are `CHANGE_ME_*` placeholders; BOM prices are placeholders.
-- GNS3 project export is deferred (D-030); Packet Tracer gets per-device configs + a cabling guide.
+## Deploy on Render
+
+1. Push the version you want to publish. Create the API from the repository's [Render Blueprint](render.yaml). It builds from `backend/` and checks `/health`.
+2. Create a **Static Site** from the same branch. Set the root to `frontend`, build command to `npm ci && npm run build`, and publish directory to `dist`. Set `VITE_API_URL` to the API's public HTTPS origin before building.
+3. In the API environment, set `CORS_ORIGINS` to the static site's public HTTPS origin and redeploy the API. Use both origins without trailing slashes. Open the public dashboard and run the Campus example to verify the connection.
+4. In UptimeRobot, create an HTTP monitor for the API's public `/health` URL and enable your alert contact. A second monitor can check the dashboard homepage. [UptimeRobot setup](https://help.uptimerobot.com/en/articles/11358364-how-to-create-your-first-monitor-on-uptimerobot-quick-setup-guide)
+
+The repository also includes an [alternative deployment guide using Vercel for the frontend](DEPLOY.md).
+
+## Explore the project
+
+- [Design engine](backend/engine/) and [configuration verifier](backend/verify/) — how requirements become a plan and how the simulator checks it.
+- [Exported examples](exports/) — inspect the three designs without starting a server.
+- [Standards](docs/standards.md) and [design decisions](docs/decisions.md) — the sources and assumptions behind the rules.
+- [Assignment rubric](docs/rubric_check.md) and [AI audit log](ai_audit_log.md) — evidence for the course deliverables and worked examples of networking bugs.
